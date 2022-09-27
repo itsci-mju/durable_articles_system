@@ -1,0 +1,51 @@
+body {
+	font-family: 'THSarabunNew', sans-serif;
+	background-color: #d8ecfb;
+}
+
+.input-group .input-group-btn {
+     line-height: 1!important;
+ }
+
+/* padding style */
+.makePadding {
+	padding-top: 1px;
+}
+
+.panel-info>.panel-heading {
+	color: white;
+	background-color: #325d8d;
+	border-color: #325d8d;
+}
+
+/* navbar background */
+.navbar {
+	background-color: #283e56;
+}
+/** hover navbar logo **/
+/* hover logo */
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus
+	{
+	color: #FFFFFF;
+}
+/* navbar logo */
+.navbar-default .navbar-brand {
+	color: #b9bfc8;
+}
+
+/**********************************************hover navbar menu **********************************************/
+/* hover menu */
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus
+	{
+	color: #FFFFFF;
+}
+
+/* navbar logo */
+.navbar-default .navbar-nav>li>a {
+	color: #b9bfc8;
+}
+
+/* input group */
+.input-group-btn>.btn {
+	height: @input-height-base: 16px;
+}

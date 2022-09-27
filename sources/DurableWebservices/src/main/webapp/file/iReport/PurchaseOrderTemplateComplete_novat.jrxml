@@ -1,0 +1,1156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.15.0.final using JasperReports Library version 6.15.0-dd49bfb94918336b8321d5507193f0169ead4e95  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PurchaseOrder" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2e558cbe-7c89-452d-8d8b-266326dc289c">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="dataset1" uuid="b0766055-956b-40df-9a77-36bfa24ba039">
+		<parameter name="did" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+     request_order_item_list.`prescription` AS request_order_item_list_prescription,
+     request_order_item_list.`note` AS request_order_item_list_note,
+     request_order_item_list.`total_price` AS request_order_item_list_total_price,
+     request_order_item_list.`document_doc_id` AS request_order_item_list_document_doc_id,
+     request_order_item_list.`item_item_id` AS request_order_item_list_item_item_id,
+     request_order_item_list.`item_price` AS request_order_item_list_item_price,
+     item.`item_name` AS item_item_name,
+     item.`item_unit` AS item_item_unit,
+     request_order_item_list.`amount` AS request_order_item_list_amount,
+     item.`item_price` AS item_item_price
+FROM
+     `item` item INNER JOIN `request_order_item_list` request_order_item_list ON item.`item_id` = request_order_item_list.`item_item_id`
+
+where request_order_item_list.`document_doc_id` = $P{did}]]>
+		</queryString>
+		<field name="request_order_item_list_prescription" class="java.sql.Timestamp"/>
+		<field name="request_order_item_list_note" class="java.lang.String"/>
+		<field name="request_order_item_list_total_price" class="java.lang.Double"/>
+		<field name="request_order_item_list_document_doc_id" class="java.lang.String"/>
+		<field name="request_order_item_list_item_item_id" class="java.lang.String"/>
+		<field name="request_order_item_list_item_price" class="java.lang.Double"/>
+		<field name="item_item_name" class="java.lang.String"/>
+		<field name="item_item_unit" class="java.lang.String"/>
+		<field name="request_order_item_list_amount" class="java.lang.Integer"/>
+		<field name="item_item_price" class="java.lang.Double"/>
+	</subDataset>
+	<subDataset name="dataset2" uuid="d1e4649a-1d6c-408c-ab78-87bede2fe13a">
+		<parameter name="c_did" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+     committee.`personnel_personnel_id` AS committee_personnel_personnel_id,
+     committee.`document_doc_id` AS committee_document_doc_id,
+     personnel.`personnel_id` AS personnel_personnel_id,
+     personnel.`personnel_first_name` AS personnel_personnel_first_name,
+     personnel.`personnel_last_name` AS personnel_personnel_last_name,
+     personnel.`personnel_position` AS personnel_personnel_position,
+     personnel.`personnel_prefix` AS personnel_personnel_prefix,
+     personnel.`id_major` AS personnel_id_major,
+     personnel.`position_id` AS personnel_position_id,
+     personnel.`personnel_tier` AS personnel_personnel_tier,
+     personnel.`personnel_executive_position` AS personnel_personnel_executive_position,
+     committee.`committee_status` AS committee_status
+FROM
+     `personnel` personnel INNER JOIN `committee` committee ON personnel.`personnel_id` = committee.`personnel_personnel_id`
+
+where committee.`document_doc_id` = $P{c_did}
+order by committee.`committee_status` DESC]]>
+		</queryString>
+		<field name="committee_personnel_personnel_id" class="java.lang.String"/>
+		<field name="committee_document_doc_id" class="java.lang.String"/>
+		<field name="personnel_personnel_id" class="java.lang.String"/>
+		<field name="personnel_personnel_first_name" class="java.lang.String"/>
+		<field name="personnel_personnel_last_name" class="java.lang.String"/>
+		<field name="personnel_personnel_position" class="java.lang.String"/>
+		<field name="personnel_personnel_prefix" class="java.lang.String"/>
+		<field name="personnel_id_major" class="java.lang.Integer"/>
+		<field name="personnel_position_id" class="java.lang.String"/>
+		<field name="personnel_personnel_tier" class="java.lang.String"/>
+		<field name="personnel_personnel_executive_position" class="java.lang.String"/>
+		<field name="committee_status" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="dataset3" uuid="6b98adee-fad3-4db6-afd6-d78b34653d4d">
+		<parameter name="requisition_person" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT
+     personnel.`personnel_id` AS personnel_personnel_id,
+     personnel.`personnel_first_name` AS personnel_personnel_first_name,
+     personnel.`personnel_last_name` AS personnel_personnel_last_name,
+     personnel.`personnel_position` AS personnel_personnel_position,
+     personnel.`personnel_prefix` AS personnel_personnel_prefix,
+     personnel.`id_major` AS personnel_id_major,
+     personnel.`position_id` AS personnel_position_id,
+     personnel.`personnel_tier` AS personnel_personnel_tier,
+     personnel.`personnel_executive_position` AS personnel_personnel_executive_position
+FROM
+     `personnel` personnel
+where personnel.`personnel_id` = $P{requisition_person}]]>
+		</queryString>
+		<field name="personnel_personnel_id" class="java.lang.String"/>
+		<field name="personnel_personnel_first_name" class="java.lang.String"/>
+		<field name="personnel_personnel_last_name" class="java.lang.String"/>
+		<field name="personnel_personnel_position" class="java.lang.String"/>
+		<field name="personnel_personnel_prefix" class="java.lang.String"/>
+		<field name="personnel_id_major" class="java.lang.Integer"/>
+		<field name="personnel_position_id" class="java.lang.String"/>
+		<field name="personnel_personnel_tier" class="java.lang.String"/>
+		<field name="personnel_personnel_executive_position" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="dataset4" uuid="d3485d7a-7cdc-40b4-a028-f2022980c824">
+		<parameter name="purchase_id" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT
+     personnel.`personnel_id` AS personnel_personnel_id,
+     personnel.`personnel_first_name` AS personnel_personnel_first_name,
+     personnel.`personnel_last_name` AS personnel_personnel_last_name,
+     personnel.`personnel_position` AS personnel_personnel_position,
+     personnel.`personnel_prefix` AS personnel_personnel_prefix,
+     personnel.`id_major` AS personnel_id_major,
+     personnel.`position_id` AS personnel_position_id,
+     personnel.`personnel_tier` AS personnel_personnel_tier,
+     personnel.`personnel_executive_position` AS personnel_personnel_executive_position
+FROM
+     `personnel` personnel
+where personnel.`personnel_id` = $P{purchase_id}]]>
+		</queryString>
+		<field name="personnel_personnel_id" class="java.lang.String"/>
+		<field name="personnel_personnel_first_name" class="java.lang.String"/>
+		<field name="personnel_personnel_last_name" class="java.lang.String"/>
+		<field name="personnel_personnel_position" class="java.lang.String"/>
+		<field name="personnel_personnel_prefix" class="java.lang.String"/>
+		<field name="personnel_id_major" class="java.lang.Integer"/>
+		<field name="personnel_position_id" class="java.lang.String"/>
+		<field name="personnel_personnel_tier" class="java.lang.String"/>
+		<field name="personnel_personnel_executive_position" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="dataset5" uuid="e78f96fc-9e39-43dc-81d1-ee3c4ca81820">
+		<parameter name="acc" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT
+     personnel.`personnel_id` AS personnel_personnel_id,
+     personnel.`personnel_first_name` AS personnel_personnel_first_name,
+     personnel.`personnel_last_name` AS personnel_personnel_last_name,
+     personnel.`personnel_position` AS personnel_personnel_position,
+     personnel.`personnel_prefix` AS personnel_personnel_prefix,
+     personnel.`id_major` AS personnel_id_major,
+     personnel.`position_id` AS personnel_position_id,
+     personnel.`personnel_tier` AS personnel_personnel_tier,
+     personnel.`personnel_executive_position` AS personnel_personnel_executive_position
+FROM
+     `personnel` personnel
+where personnel.`personnel_id` = $P{acc}]]>
+		</queryString>
+		<field name="personnel_personnel_id" class="java.lang.String"/>
+		<field name="personnel_personnel_first_name" class="java.lang.String"/>
+		<field name="personnel_personnel_last_name" class="java.lang.String"/>
+		<field name="personnel_personnel_position" class="java.lang.String"/>
+		<field name="personnel_personnel_prefix" class="java.lang.String"/>
+		<field name="personnel_id_major" class="java.lang.Integer"/>
+		<field name="personnel_position_id" class="java.lang.String"/>
+		<field name="personnel_personnel_tier" class="java.lang.String"/>
+		<field name="personnel_personnel_executive_position" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="dataset6" uuid="9b74bfda-d84b-4a9c-9a3e-ffe2e6ed8893">
+		<parameter name="cof" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT
+     personnel.`personnel_id` AS personnel_personnel_id,
+     personnel.`personnel_first_name` AS personnel_personnel_first_name,
+     personnel.`personnel_last_name` AS personnel_personnel_last_name,
+     personnel.`personnel_position` AS personnel_personnel_position,
+     personnel.`personnel_prefix` AS personnel_personnel_prefix,
+     personnel.`id_major` AS personnel_id_major,
+     personnel.`position_id` AS personnel_position_id,
+     personnel.`personnel_tier` AS personnel_personnel_tier,
+     personnel.`personnel_executive_position` AS personnel_personnel_executive_position
+FROM
+     `personnel` personnel
+where personnel.`personnel_id` = $P{cof}]]>
+		</queryString>
+		<field name="personnel_personnel_id" class="java.lang.String"/>
+		<field name="personnel_personnel_first_name" class="java.lang.String"/>
+		<field name="personnel_personnel_last_name" class="java.lang.String"/>
+		<field name="personnel_personnel_position" class="java.lang.String"/>
+		<field name="personnel_personnel_prefix" class="java.lang.String"/>
+		<field name="personnel_id_major" class="java.lang.Integer"/>
+		<field name="personnel_position_id" class="java.lang.String"/>
+		<field name="personnel_personnel_tier" class="java.lang.String"/>
+		<field name="personnel_personnel_executive_position" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="dataset7" uuid="d408eb87-1e3a-46f9-b93e-fc5a622a9978">
+		<parameter name="secretary" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT
+     personnel.`personnel_id` AS personnel_personnel_id,
+     personnel.`personnel_first_name` AS personnel_personnel_first_name,
+     personnel.`personnel_last_name` AS personnel_personnel_last_name,
+     personnel.`personnel_position` AS personnel_personnel_position,
+     personnel.`personnel_prefix` AS personnel_personnel_prefix,
+     personnel.`id_major` AS personnel_id_major,
+     personnel.`position_id` AS personnel_position_id,
+     personnel.`personnel_tier` AS personnel_personnel_tier,
+     personnel.`personnel_executive_position` AS personnel_personnel_executive_position
+FROM
+     `personnel` personnel
+where personnel.`personnel_id` = $P{secretary}]]>
+		</queryString>
+		<field name="personnel_personnel_id" class="java.lang.String"/>
+		<field name="personnel_personnel_first_name" class="java.lang.String"/>
+		<field name="personnel_personnel_last_name" class="java.lang.String"/>
+		<field name="personnel_personnel_position" class="java.lang.String"/>
+		<field name="personnel_personnel_prefix" class="java.lang.String"/>
+		<field name="personnel_id_major" class="java.lang.Integer"/>
+		<field name="personnel_position_id" class="java.lang.String"/>
+		<field name="personnel_personnel_tier" class="java.lang.String"/>
+		<field name="personnel_personnel_executive_position" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="dataset8" uuid="12e96185-d86c-46c0-87b8-e9f73d6d4a83">
+		<parameter name="dean_id" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT
+     personnel.`personnel_id` AS personnel_personnel_id,
+     personnel.`personnel_first_name` AS personnel_personnel_first_name,
+     personnel.`personnel_last_name` AS personnel_personnel_last_name,
+     personnel.`personnel_position` AS personnel_personnel_position,
+     personnel.`personnel_prefix` AS personnel_personnel_prefix,
+     personnel.`id_major` AS personnel_id_major,
+     personnel.`position_id` AS personnel_position_id,
+     personnel.`personnel_tier` AS personnel_personnel_tier,
+     personnel.`personnel_executive_position` AS personnel_personnel_executive_position
+FROM
+     `personnel` personnel
+where personnel.`personnel_id` = $P{dean_id}]]>
+		</queryString>
+		<field name="personnel_personnel_id" class="java.lang.String"/>
+		<field name="personnel_personnel_first_name" class="java.lang.String"/>
+		<field name="personnel_personnel_last_name" class="java.lang.String"/>
+		<field name="personnel_personnel_position" class="java.lang.String"/>
+		<field name="personnel_personnel_prefix" class="java.lang.String"/>
+		<field name="personnel_id_major" class="java.lang.Integer"/>
+		<field name="personnel_position_id" class="java.lang.String"/>
+		<field name="personnel_personnel_tier" class="java.lang.String"/>
+		<field name="personnel_personnel_executive_position" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="dataset9" uuid="14833792-ffa9-4a43-ab36-d5887806134e"/>
+	<subDataset name="dataset10" uuid="86341e72-d128-4e7d-82b5-37cdf0e6ea18"/>
+	<parameter name="doc_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="purchaseOrderID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="item_size" class="java.lang.String"/>
+	<parameter name="path" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     purchase_order_document.`making_date` AS purchase_order_document_making_date,
+     purchase_order_document.`faculty_dean` AS purchase_order_document_faculty_dean,
+     purchase_order_document.`purchase_order_doc_describe` AS purchase_order_document_purchase_order_doc_describe,
+     purchase_order_document.`purchase_order_document_id` AS purchase_order_document_purchase_order_document_id,
+     purchase_order_document.`purchase_order_type` AS purchase_order_document_purchase_order_type,
+     purchase_order_document.`requisition_person` AS purchase_order_document_requisition_person,
+     purchase_order_document.`doc_id` AS purchase_order_document_doc_id,
+     document.`doc_id` AS document_doc_id,
+     document.`accounting_officer` AS document_accounting_officer,
+     document.`budget` AS document_budget,
+     document.`chief_of_procurement` AS document_chief_of_procurement,
+     document.`doc_date` AS document_doc_date,
+     document.`depart_id` AS document_depart_id,
+     document.`depart_name` AS document_depart_name,
+     document.`doc_dear` AS document_doc_dear,
+     document.`doc_reason_describe` AS document_doc_reason_describe,
+     document.`doc_reason_title` AS document_doc_reason_title,
+     document.`doc_title` AS document_doc_title,
+     document.`doc_title_describe` AS document_doc_title_describe,
+     document.`fund_id` AS document_fund_id,
+     document.`fund_name` AS document_fund_name,
+     document.`money_used` AS document_money_used,
+     document.`plan_id` AS document_plan_id,
+     document.`plan_name` AS document_plan_name,
+     document.`price_txt` AS document_price_txt,
+     document.`request_order_person` AS document_request_order_person,
+     document.`secretary` AS document_secretary,
+     document.`doc_status` AS document_doc_status,
+     document.`work_name` AS document_work_name,
+     document.`total_price` AS document_total_price,
+     document.`price_with_out_tax` AS document_price_with_out_tax,
+     document.`tax` AS document_tax,
+     purchase_order_document.`purchase_order_1` AS purchase_order_document_purchase_order_1,
+     purchase_order_document.`purchase_order_3` AS purchase_order_document_purchase_order_3,
+     purchase_order_document.`pruchase_order_4` AS purchase_order_document_pruchase_order_4,
+     purchase_order_document.`purchase_order_5` AS purchase_order_document_purchase_order_5
+FROM
+     `document` document INNER JOIN `purchase_order_document` purchase_order_document ON document.`doc_id` = purchase_order_document.`doc_id`
+WHERE
+     document.doc_id = $P{doc_id}
+ AND purchase_order_document.purchase_order_document_id = $P{purchaseOrderID}]]>
+	</queryString>
+	<field name="purchase_order_document_making_date" class="java.sql.Timestamp"/>
+	<field name="purchase_order_document_faculty_dean" class="java.lang.String"/>
+	<field name="purchase_order_document_purchase_order_doc_describe" class="java.lang.String"/>
+	<field name="purchase_order_document_purchase_order_document_id" class="java.lang.String"/>
+	<field name="purchase_order_document_purchase_order_type" class="java.lang.String"/>
+	<field name="purchase_order_document_requisition_person" class="java.lang.String"/>
+	<field name="purchase_order_document_doc_id" class="java.lang.String"/>
+	<field name="document_doc_id" class="java.lang.String"/>
+	<field name="document_accounting_officer" class="java.lang.String"/>
+	<field name="document_budget" class="java.lang.String"/>
+	<field name="document_chief_of_procurement" class="java.lang.String"/>
+	<field name="document_doc_date" class="java.sql.Timestamp"/>
+	<field name="document_depart_id" class="java.lang.String"/>
+	<field name="document_depart_name" class="java.lang.String"/>
+	<field name="document_doc_dear" class="java.lang.String"/>
+	<field name="document_doc_reason_describe" class="java.lang.String"/>
+	<field name="document_doc_reason_title" class="java.lang.String"/>
+	<field name="document_doc_title" class="java.lang.String"/>
+	<field name="document_doc_title_describe" class="java.lang.String"/>
+	<field name="document_fund_id" class="java.lang.String"/>
+	<field name="document_fund_name" class="java.lang.String"/>
+	<field name="document_money_used" class="java.lang.String"/>
+	<field name="document_plan_id" class="java.lang.String"/>
+	<field name="document_plan_name" class="java.lang.String"/>
+	<field name="document_price_txt" class="java.lang.String"/>
+	<field name="document_request_order_person" class="java.lang.String"/>
+	<field name="document_secretary" class="java.lang.String"/>
+	<field name="document_doc_status" class="java.lang.String"/>
+	<field name="document_work_name" class="java.lang.String"/>
+	<field name="document_total_price" class="java.lang.Double"/>
+	<field name="document_price_with_out_tax" class="java.lang.Double"/>
+	<field name="document_tax" class="java.lang.Double"/>
+	<field name="purchase_order_document_purchase_order_1" class="java.lang.String"/>
+	<field name="purchase_order_document_purchase_order_3" class="java.lang.String"/>
+	<field name="purchase_order_document_pruchase_order_4" class="java.lang.String"/>
+	<field name="purchase_order_document_purchase_order_5" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="672" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="283" width="235" height="18" uuid="d983d169-bb68-4a3a-ab60-ba218fb0f7c3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[จํานวนเงิน (ตัวอักษร)]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement positionType="Float" mode="Transparent" x="0" y="283" width="236" height="18" uuid="f48ba0b3-1899-48cc-aacd-7bed787d659f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" mode="Transparent" x="402" y="389" width="151" height="20" uuid="220f77dc-8e48-47ad-bab9-919a9b4c4938"/>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" x="402" y="389" width="149" height="20" uuid="fae06324-1843-451c-9248-806ea87b6daa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[แต่งตั้งเป็น]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement positionType="Float" mode="Transparent" x="244" y="389" width="158" height="20" uuid="f025aa86-5479-44fa-b82f-0d5739029567"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" mode="Transparent" x="23" y="389" width="221" height="20" uuid="4e20710e-ddd3-4d07-9ea8-57aa6855159d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" mode="Transparent" x="-2" y="389" width="25" height="20" uuid="3b9a43b8-c333-48ab-ad07-016ab1ac47a2"/>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" x="-1" y="389" width="24" height="20" uuid="79a32908-7850-4076-8d09-5aa5f67a6d8a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ที่]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="243" y="389" width="159" height="20" uuid="c7393647-0241-4add-b91d-f6fab36f316f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ตําแหน่ง/สังกัด]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="23" y="389" width="220" height="20" uuid="ef2e476a-2ede-420a-b611-dac1d248f97e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ชื่อ-สกุล]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement positionType="Float" mode="Transparent" x="395" y="267" width="39" height="16" uuid="7ef17e39-ffc4-4dfa-902c-090ebe8510ef"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" mode="Transparent" x="236" y="267" width="159" height="16" uuid="94a2edc8-8cba-4ae4-8df8-db65028121c5"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" mode="Transparent" x="0" y="267" width="236" height="16" uuid="f74491a0-ba57-4d3e-8a9f-cee7181b0209"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="-1" y="89" width="63" height="20" uuid="0f715d59-d800-4adb-b35f-301e64cc9064"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[รหัสแผนงาน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="109" width="74" height="20" uuid="784864da-07a6-48a4-9c89-a51e079ad5f4"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[รหัสหน่วยงาน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="129" width="63" height="20" uuid="25599918-cb2b-4f22-ad69-3ac8812ec276"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[รหัสกองทุน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="149" width="27" height="20" uuid="c4dffbc2-ec3f-4fa9-b431-693c0b53a317"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ใช้เงิน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="213" y="49" width="100" height="20" uuid="578d7123-e410-4ddd-a49c-eb3e79075147"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[มหาวิทยาลัยแม่โจ้]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="-2" y="247" width="556" height="20" uuid="ed52f741-958e-49a9-ab63-1646fc51ff0f"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="f2cfb055-94d2-4ef0-bcf4-e637171063e7">
+						<datasetParameter name="did">
+							<datasetParameterExpression><![CDATA[$P{doc_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="556">
+						<textField>
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="17" y="0" width="89" height="20" uuid="1e5e8f1d-2e72-4db9-a53c-b1502e11b36b"/>
+							<box>
+								<pen lineWidth="1.0"/>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{request_order_item_list_document_doc_id}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="106" y="0" width="132" height="20" uuid="85184d82-2119-4bc9-9335-0a34d19558c7"/>
+							<box>
+								<pen lineWidth="1.0"/>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{item_item_name}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="238" y="0" width="39" height="20" uuid="f7764278-8f28-4082-acf8-f4026da2ccd8"/>
+							<box>
+								<pen lineWidth="1.0"/>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{item_item_unit}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="277" y="0" width="28" height="20" uuid="a7af472c-0146-4d62-9962-4a82c90c622b"/>
+							<box>
+								<pen lineWidth="1.0"/>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{request_order_item_list_amount}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="305" y="0" width="45" height="20" uuid="ce11e393-79e4-49f7-9d3d-bc7e77189f52"/>
+							<box>
+								<pen lineWidth="1.0"/>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[new java.text.DecimalFormat("0.00").format($F{request_order_item_list_item_price})]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="350" y="0" width="47" height="20" uuid="56b922fe-93be-4a8d-ab8f-e36f0bd6b890"/>
+							<box>
+								<pen lineWidth="1.0"/>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[new java.text.DecimalFormat("0.00").format($F{item_item_price})]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="397" y="0" width="39" height="20" uuid="9e9f5fb5-b89e-4fba-aa16-c62696393c63"/>
+							<box>
+								<pen lineWidth="1.0"/>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[new java.text.DecimalFormat("0.00").format($F{request_order_item_list_total_price})]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="436" y="0" width="72" height="20" uuid="635f0372-904b-47fb-9ada-9339d4c1d6b7"/>
+							<box>
+								<pen lineWidth="1.0"/>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd MMMM yyyy" , new Locale("th","TH")).format($F{request_order_item_list_prescription})]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="508" y="0" width="48" height="20" uuid="c5b540d0-c422-41e4-86bc-54ac4e5cf367"/>
+							<box>
+								<pen lineWidth="1.0"/>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{request_order_item_list_note}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="2" y="0" width="15" height="20" uuid="b01222c1-6975-4451-8fb3-2c7344e1979d"/>
+							<box>
+								<pen lineWidth="1.0"/>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="212" y="69" width="100" height="20" uuid="d0a5400a-5c5a-430a-a385-b3f71eee6b2a"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ใบขอซื้อ/จ้าง]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="86" width="48" height="20" uuid="571d4dd7-ce04-404f-80b0-25c363b23262"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[แผนงาน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="106" width="48" height="20" uuid="fc8baa5c-836c-45a1-86f5-dfa221cad23b"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[หน่วยงาน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="126" width="48" height="20" uuid="b47ced3d-17ef-4d99-b682-cca5248930e3"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[กองทุน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="146" width="48" height="20" uuid="4400cd61-603e-4e78-aa39-16975f8b0ebb"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[งาน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="166" width="48" height="20" uuid="38c847e2-5d84-4735-82a0-39e31a9207a2"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[งบ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="186" width="48" height="20" uuid="6cfb280b-fe27-42b8-8815-34e292b2d75b"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[วันที่]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="454" y="28" width="100" height="20" uuid="9e7d3094-359a-451d-9054-e62efcd09238"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{purchase_order_document_purchase_order_document_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="410" y="28" width="24" height="20" uuid="c829e35d-de0e-4b5b-b88d-7f7f7806e562"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[เลขที่]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="396" y="86" width="158" height="20" uuid="f75dd89a-6acb-468d-a1b3-cac5832225eb"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{document_plan_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="106" width="158" height="20" uuid="9e230e46-f1ab-4efe-b226-b690689630fd"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{document_depart_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="126" width="158" height="20" uuid="62b2f8b9-a1e0-4b23-9f9b-e99a87ec9225"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{document_fund_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="146" width="158" height="20" uuid="95696cdd-4cb8-4468-9f5d-6d183395404a"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{document_work_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="166" width="158" height="20" uuid="1f029331-58d1-4dc2-b12b-556b575e3845"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{document_fund_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="186" width="158" height="20" uuid="127c4b17-a84c-4f76-9818-9f38a07c52c8"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd MMMM yyyy" , new Locale("th","TH")).format($F{purchase_order_document_making_date})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="38" y="149" width="158" height="20" uuid="c0f82462-4235-446b-82b4-2b545850ed03"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{document_money_used}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="14" y="207" width="89" height="40" uuid="9d97eafe-a84e-44d2-bdac-bd28661166d4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[เลขที่ใบเสนอซื้อ/จ้าง]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="207" width="15" height="40" uuid="d859d1af-c95e-48df-8931-dbe605ae4bf2"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="104" y="207" width="132" height="40" uuid="6c8edd25-3f69-4f9f-be1b-9e798e276c1e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[รายการ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="104" y="207" width="132" height="40" uuid="b7bdc72a-db05-49a5-a99b-e64d26da0574"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="238" y="207" width="37" height="40" uuid="09de74cb-562f-42e1-9e02-84148bce3683"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[หน่วยนับ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="275" y="207" width="29" height="40" uuid="01b8b677-058d-4ee2-ae7f-401009a6179d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[จํานวน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="303" y="207" width="45" height="40" uuid="648edb92-eeb5-4848-abba-0849b279a9ce"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ราคา/หน่วย]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="349" y="207" width="47" height="40" uuid="cb8d1fca-43fe-4662-bd2b-bdc655f8c808"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ราคากลาง
+ของวัสดุ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="396" y="207" width="37" height="40" uuid="8a3cffa9-74fd-45d3-af4b-2b96c2cbd6ed"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[วงเงินที่จะซื้อ (ราคารวม Vat)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="434" y="207" width="72" height="40" uuid="ba342b66-d4b9-4c26-bdb3-9861b50e1a5d"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[กําหนดเวลาที่ต้อง
+การใช้
+หรือแล้วเสร็จ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-1" y="207" width="16" height="40" uuid="55f1bb51-fb1f-4cd8-adb7-675c435ab316"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ที่]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="15" y="207" width="89" height="40" uuid="dc244ca5-95b3-47e2-9a60-8e29a0a931f6"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="506" y="207" width="47" height="40" uuid="85763ad0-cb5f-4dc5-87a8-bfa3bb76dcee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[หมายเหตุ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="236" y="207" width="39" height="40" uuid="5f3fba9b-e4bd-4017-88f7-d17a4f711639"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="275" y="207" width="28" height="40" uuid="965d8a42-9868-4cf2-80b7-8b25345560d3"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="303" y="207" width="45" height="40" uuid="11c13663-de46-40a3-9abc-7edf0bf7eff1"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="348" y="207" width="47" height="40" uuid="d0490302-6872-4e21-8edb-eb274b03d60d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="395" y="207" width="39" height="40" uuid="204bfc12-403b-4388-857f-da1c09880f1f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="434" y="207" width="72" height="40" uuid="b554def1-21ff-4983-b23a-8413e9e20aa3"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="506" y="207" width="48" height="40" uuid="d458cbba-5159-4b3f-8033-68763ca81395"/>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="Float" x="236" y="267" width="158" height="16" uuid="1e2025af-b007-409c-9fe6-92442a181c9b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[รวมเป็นเงินทั้งสิ้น]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="395" y="267" width="39" height="16" uuid="610984b5-0a5d-4e3a-9c96-e15e8f2d9a2e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("0.00").format($F{document_total_price})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="104" y="267" width="132" height="16" uuid="61e2fcd5-14f2-47b5-87f3-48296769c8bc"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[รายการ]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="68" y="267" width="36" height="16" uuid="b09306a3-77e3-4f3f-9453-5da2406da523"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{item_size}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="267" width="24" height="16" uuid="e26090f3-87c2-43cb-af6e-fba0fa89b106"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[รวม]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement positionType="Float" mode="Transparent" x="434" y="267" width="72" height="16" uuid="8307aa21-55e0-42d0-a48b-87501c2ec124"/>
+			</rectangle>
+			<rectangle>
+				<reportElement positionType="Float" mode="Transparent" x="506" y="267" width="48" height="16" uuid="cdb6d594-4646-4903-bd1b-71618947b631"/>
+			</rectangle>
+			<textField>
+				<reportElement positionType="Float" x="237" y="283" width="318" height="18" uuid="5e9b2992-7383-488a-8084-8289b3a924cd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{document_price_txt}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="312" width="72" height="20" uuid="05764cac-54db-45f7-a59e-36a800a6f3c5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Niramit AS" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[เหตุผลความจําเป็น]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="84" y="312" width="471" height="20" uuid="f8cd00b0-b0aa-466f-9909-b70e01376b55"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{document_doc_reason_describe}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="332" width="71" height="18" uuid="bb05b079-0484-474d-8c93-f73e84bb9730"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[จัดซื้อจัดจ้าง โดยวิธี]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="82" y="332" width="471" height="20" uuid="c0c0400d-2ce1-4794-bbe8-f2f128eb67ad"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{purchase_order_document_purchase_order_type}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="352" width="552" height="18" uuid="e3665002-624d-4db9-b0c2-3069ad7b67c9"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<text><![CDATA[เนื่องจากการจัดซื้อจัดจ้างพัสดุที่มีการผลิต จําหน่าย ก่อสร้าง หรือให้บริการทั่วไป และมีวงเงินในการจัดซื้อจัดจ้างครั้งหนึ่งไม่เกิน 500,000 บาท ที่กําหนดในกระทรวง]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="370" width="552" height="18" uuid="2dc39154-ee9c-4a32-94e8-2f9f039d0523"/>
+				<textElement>
+					<font fontName="TH Sarabun New" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[หลักเกณฑ์การพิจารณาคัดเลือกข้อเสนอ เกณฑ์ราคา และเห็นควรแต่งตั้งกรรมการตรวจรับพัสดุ ดังนี้]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement positionType="Float" x="-2" y="409" width="555" height="20" uuid="6dc45c99-5981-439d-83c0-877aaaf362ad"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset2" uuid="eab3e2a0-5041-4736-a17c-cf0104c60100">
+						<datasetParameter name="c_did">
+							<datasetParameterExpression><![CDATA[$F{document_doc_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="20" width="555">
+						<textField>
+							<reportElement positionType="Float" x="26" y="0" width="218" height="20" uuid="92146835-0a03-499a-a40c-05412f85c808"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{personnel_personnel_prefix}+""+$F{personnel_personnel_first_name}+" "+$F{personnel_personnel_last_name}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement positionType="Float" x="246" y="0" width="158" height="20" uuid="d7c49e41-66fe-474f-aefc-8ef7993d24fd"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{personnel_personnel_position}+" "+ ($F{personnel_personnel_tier} == null ? "" :$F{personnel_personnel_tier})]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" x="1" y="0" width="24" height="20" uuid="7a2b255f-8881-42e3-a4ec-f205568f77e2"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" x="405" y="0" width="148" height="20" uuid="dbd90a06-f70c-4bc7-a73e-f059b6a9737f"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="false"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{committee_status}]]></textFieldExpression>
+						</textField>
+						<rectangle>
+							<reportElement positionType="Float" mode="Transparent" x="0" y="0" width="25" height="20" uuid="8b54c0c9-c470-4c1f-9b10-afb97f84c122"/>
+						</rectangle>
+						<rectangle>
+							<reportElement positionType="Float" mode="Transparent" x="25" y="0" width="221" height="20" uuid="44662699-3d77-4f65-8fbe-d6bcbd9abf0a"/>
+						</rectangle>
+						<rectangle>
+							<reportElement positionType="Float" mode="Transparent" x="246" y="0" width="158" height="20" uuid="92d59b0c-4824-47fb-b05c-dcf68aefa191"/>
+						</rectangle>
+						<rectangle>
+							<reportElement positionType="Float" mode="Transparent" x="404" y="0" width="151" height="20" uuid="fd8d1a3b-6824-4363-97c8-bc84e4c3f2db"/>
+						</rectangle>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="212" y="464" width="152" height="71" uuid="33561eef-4f5c-476a-8e12-0260b0de9835"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset4" uuid="701f1b47-0054-43d2-b35e-daedf58625ea">
+						<datasetParameter name="purchase_id">
+							<datasetParameterExpression><![CDATA[$F{purchase_order_document_requisition_person}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="71" width="152">
+						<textField>
+							<reportElement positionType="Float" x="0" y="20" width="152" height="20" uuid="404c0ad8-da1e-4481-afab-8c78a73f74a7"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA['('+$F{personnel_personnel_prefix}+""+$F{personnel_personnel_first_name}+" "+$F{personnel_personnel_last_name}+')']]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement positionType="Float" x="0" y="39" width="152" height="20" uuid="cd71e6b5-84d2-4db9-aaa3-e8aed488b923"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="true"/>
+							</textElement>
+							<text><![CDATA[ผู้จัดซื้อจัดจ้าง]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="Float" x="0" y="2" width="152" height="20" uuid="d1c3ccfe-f230-489d-9ec3-b5976e7e3734"/>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font fontName="TH Sarabun New" size="12" isBold="false"/>
+							</textElement>
+							<text><![CDATA[.......................................................................]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="402" y="464" width="152" height="71" uuid="15ed4b22-bf74-476b-afdb-8655c773175e"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset5" uuid="00454fcc-4906-4b81-ba4e-f0814dc370eb">
+						<datasetParameter name="acc">
+							<datasetParameterExpression><![CDATA[$F{purchase_order_document_purchase_order_3}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="71" width="152">
+						<textField>
+							<reportElement positionType="Float" x="1" y="20" width="151" height="20" uuid="402b8b16-fc2d-4892-af2b-aef662f060e6"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA['('+$F{personnel_personnel_prefix}+""+$F{personnel_personnel_first_name}+" "+$F{personnel_personnel_last_name}+')']]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement positionType="Float" x="0" y="1" width="152" height="20" uuid="f12760f6-860a-406e-a63d-4afbf3777ba7"/>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font fontName="TH Sarabun New" size="12" isBold="false"/>
+							</textElement>
+							<text><![CDATA[.......................................................................]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="Float" x="1" y="40" width="150" height="20" uuid="b09695af-dc33-4b70-b42d-911d444287f7"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="true"/>
+							</textElement>
+							<text><![CDATA[ผู้ตรวจสอบบัญชีงบประมาณอนุมัติ]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="212" y="555" width="152" height="71" uuid="08d66428-d810-4aaa-8179-7b9bfcb773c7"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset7" uuid="2dc2088d-e9a1-4be0-a6af-aadc92b5b45f">
+						<datasetParameter name="secretary">
+							<datasetParameterExpression><![CDATA[$F{purchase_order_document_purchase_order_5}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="71" width="152">
+						<textField>
+							<reportElement positionType="Float" x="0" y="20" width="152" height="20" uuid="b2c3a63c-6907-4c67-8277-2bd5a9e29057"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA['('+$F{personnel_personnel_prefix}+""+$F{personnel_personnel_first_name}+" "+$F{personnel_personnel_last_name}+')']]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" x="0" y="39" width="152" height="20" uuid="f7015a71-6b5e-416e-9cea-b9a8c1844d7a"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{personnel_personnel_position}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement positionType="Float" x="1" y="0" width="151" height="20" uuid="e14f6d97-e773-4cdf-9c3b-523600857f00"/>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<text><![CDATA[.......................................................................]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="401" y="555" width="152" height="71" uuid="f9d5bffa-c7c2-4e93-bf52-c114c0e71be0"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset8" uuid="92458e5a-a05a-4c6a-bdc1-b2b4c554265a">
+						<datasetParameter name="dean_id">
+							<datasetParameterExpression><![CDATA[$F{purchase_order_document_faculty_dean}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="71" width="152">
+						<textField>
+							<reportElement positionType="Float" x="0" y="18" width="151" height="20" uuid="ff87310d-97a0-4561-86d8-5aff25c65fbe"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA['('+$F{personnel_personnel_prefix}+""+$F{personnel_personnel_first_name}+" "+$F{personnel_personnel_last_name}+')']]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement positionType="Float" x="0" y="1" width="151" height="20" uuid="941a0eed-a178-4bd0-86be-3facd6009374"/>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font fontName="TH Sarabun New" size="12" isBold="false"/>
+							</textElement>
+							<text><![CDATA[.......................................................................]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="Float" x="0" y="39" width="151" height="20" uuid="5b55be16-054d-43f2-9f41-08e4c2a1a6ea"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="true"/>
+							</textElement>
+							<text><![CDATA[คณบดีคณะวิทยาศาสตร์]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<rectangle>
+				<reportElement positionType="Float" mode="Transparent" x="236" y="283" width="318" height="18" uuid="2ecc0b2d-3f8a-40d2-b11f-bed06dc3c7b4"/>
+			</rectangle>
+			<componentElement>
+				<reportElement positionType="Float" x="0" y="555" width="153" height="71" uuid="0e64c118-f157-4429-a6e7-037a355a86c6"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset6" uuid="c6de86a0-a919-4a03-9fbf-2f9678414534">
+						<datasetParameter name="cof">
+							<datasetParameterExpression><![CDATA[$F{purchase_order_document_pruchase_order_4}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="71" width="153">
+						<textField>
+							<reportElement positionType="Float" x="1" y="21" width="152" height="20" uuid="b458048c-5b37-42f1-8600-6e472377d3dc"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA['('+$F{personnel_personnel_prefix}+""+$F{personnel_personnel_first_name}+" "+$F{personnel_personnel_last_name}+')']]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" x="1" y="39" width="152" height="20" uuid="804a542c-66e1-4624-a765-6da462625378"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{personnel_personnel_executive_position}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement positionType="Float" x="1" y="1" width="152" height="20" uuid="07e1b1e9-6a87-4c7a-b693-00267fa94a55"/>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<text><![CDATA[.......................................................................]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement positionType="Float" x="1" y="466" width="154" height="71" uuid="52574113-bba4-40f8-93c3-d83b067eb02c"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset3" uuid="efe419cf-f498-4acc-ae0b-fb38fa3b47b0">
+						<datasetParameter name="requisition_person">
+							<datasetParameterExpression><![CDATA[$F{purchase_order_document_purchase_order_1}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="71" width="154">
+						<textField>
+							<reportElement positionType="Float" x="1" y="21" width="153" height="20" uuid="e80f9ee5-39b1-47d7-b480-769b464faed8"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA['('+$F{personnel_personnel_prefix}+""+$F{personnel_personnel_first_name}+" "+$F{personnel_personnel_last_name}+')']]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement positionType="Float" x="0" y="0" width="154" height="20" uuid="3d0c8890-48b1-4016-a1f6-c6ce8752c54e"/>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font fontName="TH Sarabun New" size="12"/>
+							</textElement>
+							<text><![CDATA[.......................................................................]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="Float" x="0" y="40" width="154" height="20" uuid="0a95e550-53e2-41ec-a8e2-a644571d29e2"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="TH Sarabun New" size="12" isBold="true"/>
+							</textElement>
+							<text><![CDATA[ผู้จัดทําเอกสาร]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<image>
+				<reportElement x="242" y="0" width="62" height="48" uuid="1dfaab1a-0838-4495-8ba1-f45cdebde7d7"/>
+				<imageExpression><![CDATA[$P{path}+"/maejo_university_logo.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<summary>
+		<band height="400" splitType="Stretch"/>
+	</summary>
+</jasperReport>
