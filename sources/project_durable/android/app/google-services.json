@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "533136103919",
+    "project_id": "flutter-storage-durable",
+    "storage_bucket": "flutter-storage-durable.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533136103919:android:924254d80e880b6dacbe1a",
+        "android_client_info": {
+          "package_name": "com.example.project_durable"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533136103919-7gdtb943q24btiokgs4qk5eoh5e3gbc7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGa1LhWYxuhrKNayGa9dnuFNzDJNa6DQw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533136103919-7gdtb943q24btiokgs4qk5eoh5e3gbc7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
