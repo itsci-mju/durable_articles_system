@@ -88,6 +88,7 @@ class _QRViewExampleState extends State<QRViewExample> {
     var log = Logger();
     log.e(listcode);
     String durable_code = listcode[0].replaceAll('_','/');
+    log.e(durable_code);
     preferences.setString('durable_code', durable_code);
   }
 

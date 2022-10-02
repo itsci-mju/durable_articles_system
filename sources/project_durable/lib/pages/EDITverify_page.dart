@@ -18,6 +18,7 @@ import 'package:project_durable/storage_service.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
+import '../Strings.dart';
 import '../manager/durable_manager.dart';
 import '../manager/login_manager.dart';
 import '../manager/verify_manager.dart';
@@ -30,7 +31,7 @@ import 'View_verifybymajor_page.dart';
 import 'home_page.dart';
 import 'login_page.dart';
 import 'my_drawer_header.dart';
-
+import 'package:http/http.dart' as http;
 class EditVerify_Page extends StatefulWidget {
   @override
   _EditVerify_PageState createState() => _EditVerify_PageState();
@@ -40,6 +41,7 @@ class _EditVerify_PageState extends State<EditVerify_Page> {
   var log = Logger();
   bool isLoading = true;
   bool hide = true;
+  bool? isVisibleupload ;
   var emailController = TextEditingController();
   var passController = TextEditingController();
   String? codedurable;
@@ -54,35 +56,65 @@ class _EditVerify_PageState extends State<EditVerify_Page> {
   var durablecode_controller = TextEditingController();
   String? person;
   DateTime now = DateTime.now();
-  File? image;
   String? imagepathname;
   String? selectedValuestatus;
   String? selectedValueyears;
 
+  List<PlatformFile>? _files;
+  File? image;
+  File? _image;
 
-  Future pickImageGallery() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
-      final imageTemp = File(image.path);
-      imagepathname = image.name.toString();
-      setState(() => this.image = imageTemp);
-    } on PlatformException catch (e) {
-      log.e("Failed to pick image: $e");
+  void uploadfile() async{
+    var  url= Uri.parse(Strings.url + Strings.url_uploadimage);
+    var request = http.MultipartRequest('Post',url);
+    if(_files ==[]){
+      request.files.add(await http.MultipartFile.fromPath('file', _image!.path.toString()));
+    }else{
+      request.files.add(await http.MultipartFile.fromPath('file',_image!.path.toString())) ;
     }
+
+
+    request.files.add(await http.MultipartFile.fromString('duralbe_code', durablecode_controller.text));
+    var response = await request.send();
+
+    final res = await http.Response.fromStream(response);
+    print(res);
+    if(response.statusCode == 200){
+      print('Uploaded ...');
+    }
+    else{
+      print('Something went wrong');
+    }
+  }
+
+
+  void pickImageGallery()async{
+    _files = (await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: false,
+        allowedExtensions: null
+    ))!.files;
+
+    setState(() {
+      _image = File(_files!.first.path.toString());
+    });
+    print("เลือกรูป:+++++ :"+_files!.first.path.toString());
   }
 
   Future pickImageCamera() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.camera);
       if (image == null) return;
-      final imageTemp = File(image.path);
-       imagepathname = image.name.toString();
-      setState(() => this.image = imageTemp);
+      _image = File(image.path);
+      imagepathname = image.name.toString();
+      setState(() => this.image = _image);
+
+      print("กล้อง:+++++ :"+image.path.toString());
     } on PlatformException catch (e) {
       log.e("Failed to pick image: $e");
     }
   }
+
 
 
   void findUser() async {
@@ -104,7 +136,14 @@ class _EditVerify_PageState extends State<EditVerify_Page> {
       noteController.text = vd!.note.toString(),
       setState(() {
         isLoading = false;
+       /* if(selectedValuestatus == "ดี"){
+          isVisibleupload = false;
+        }else{
+          isVisibleupload = true;
+        }*/
       }),
+
+
     });
 
     vm.listyears().then((value) => {
@@ -130,6 +169,7 @@ class _EditVerify_PageState extends State<EditVerify_Page> {
       if (s!.major.ID_Major.toString() == "999") {
         Majorlogin = "SCI";
       }
+
     });
 
 
@@ -236,6 +276,8 @@ class _EditVerify_PageState extends State<EditVerify_Page> {
   @override
   void initState() {
     super.initState();
+    imageCache!.clear();
+    imageCache!.clearLiveImages();
     findUser();
   }
 
@@ -264,13 +306,16 @@ class _EditVerify_PageState extends State<EditVerify_Page> {
     String? img;
     String durableimg = d == null ? "" : d!.Durable_image.toString();
     if (durableimg != "-") {
-      img =
+      img = Strings.url+"/file/durable_image/" +durableimg;
+
+     /* img =
           "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-              durableimg;
+              durableimg;*/
     } else {
       img =
           "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
     }
+    log.e(img);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -313,25 +358,7 @@ class _EditVerify_PageState extends State<EditVerify_Page> {
                           child: Column(
                             children: [
                               SizedBox(width: 5),
-                             /* FutureBuilder(
-                                  future: storage.downloadURL(d!.durable_code.toString().replaceAll('/', "-")+'.jpg'),
-                                  builder: (BuildContext context, AsyncSnapshot<String> snapshot){
-                                    if(snapshot.connectionState == ConnectionState.done &&
-                                    snapshot.hasData){
-                                      return Container(
-                                          width: 200, height: 200,
-                                        child: Image.network(snapshot.data!,
-                                        fit: BoxFit.cover),
-                                      );
-                                    }
-                                    if(snapshot.connectionState == ConnectionState.waiting &&
-                                        snapshot.hasData){
-                                      return CircularProgressIndicator();
-                                    }
-                                    return Container();
-                                  },
-                              ),*/
-                             Image.network(img!, width: 300, height: 300),
+                             Image.network(img!+"?v=1", width: 300, height: 300),
                               SizedBox(width: 5),
                               Column(
                                 children: [
@@ -510,6 +537,11 @@ class _EditVerify_PageState extends State<EditVerify_Page> {
                                                 setState(() {
                                                   selectedValuestatus = newValue!;
                                                 });
+                                               /* if(selectedValuestatus != "ดี"){
+                                                  isVisibleupload = true;
+                                                }else{
+                                                  isVisibleupload = false;
+                                                }*/
                                               },
                                               buttonHeight: 40,
                                               buttonWidth: 160,
@@ -576,137 +608,144 @@ class _EditVerify_PageState extends State<EditVerify_Page> {
                                     ],
                                   ),
                                   SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: const [
-                                          Text("รูปภาพ :",
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
-                                      const SizedBox(width: 20),
-                                      Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              SizedBox(width: 20),
-                                              MaterialButton(
-                                                onPressed: () {
-                                                  showDialog(
-                                                      context: context,
-                                                      builder:
-                                                          (BuildContext context) {
-                                                        return AlertDialog(
-                                                          title: Text(
-                                                              "เลือกรายการอัปโหลด",
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .indigo)),
-                                                          content: Container(
-                                                            height: 150.0,
-                                                            width: 200.0,
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Container(
-                                                                  child: InkWell(
-                                                                    onTap: () {
-                                                                      pickImageCamera();
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop(
-                                                                              false);
-                                                                    },
-                                                                    splashColor:
-                                                                        Colors
-                                                                            .blueAccent,
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .all(
-                                                                          16.0),
-                                                                      child: Row(
-                                                                        children: [
-                                                                          Icon(
-                                                                              Icons
-                                                                                  .camera,
-                                                                              color:
-                                                                                  Colors.indigo),
-                                                                          SizedBox(
-                                                                              width:
-                                                                                  10),
-                                                                          Text(
-                                                                              "กล้อง")
-                                                                        ],
+                                  Visibility(
+                                     /*  visible: isVisibleupload!,*/
+                                      visible: isVisibleupload=true,
+                                    child: Row(
+                                      children: [
+                                        Column(
+                                          children: const [
+                                            Text("รูปภาพ :",
+                                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                          ],
+                                        ),
+                                        const SizedBox(width: 20),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                SizedBox(width: 20),
+                                                MaterialButton(
+                                                  onPressed: () {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder:
+                                                            (BuildContext context) {
+                                                          return AlertDialog(
+                                                            title: Text(
+                                                                "เลือกรายการอัปโหลด",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .indigo)),
+                                                            content: Container(
+                                                              height: 150.0,
+                                                              width: 200.0,
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Container(
+                                                                    child: InkWell(
+                                                                      onTap: () {
+                                                                        pickImageCamera();
+                                                                        Navigator.of(
+                                                                                context)
+                                                                            .pop(
+                                                                                false);
+                                                                      },
+                                                                      splashColor:
+                                                                          Colors
+                                                                              .blueAccent,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: const EdgeInsets
+                                                                                .all(
+                                                                            16.0),
+                                                                        child: Row(
+                                                                          children: [
+                                                                            Icon(
+                                                                                Icons
+                                                                                    .camera,
+                                                                                color:
+                                                                                    Colors.indigo),
+                                                                            SizedBox(
+                                                                                width:
+                                                                                    10),
+                                                                            Text(
+                                                                                "กล้อง")
+                                                                          ],
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                                SizedBox(
-                                                                    height: 10),
-                                                                Container(
-                                                                  child: InkWell(
-                                                                    onTap: () {
-                                                                      pickImageGallery();
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .pop(
-                                                                              false);
-                                                                    },
-                                                                    splashColor:
-                                                                        Colors
-                                                                            .blueAccent,
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .all(
-                                                                          16.0),
-                                                                      child: Row(
-                                                                        children: [
-                                                                          Icon(
-                                                                              Icons
-                                                                                  .image,
-                                                                              color:
-                                                                                  Colors.indigo),
-                                                                          SizedBox(
-                                                                              width:
-                                                                                  10),
-                                                                          Text(
-                                                                              "แกลลอรี่")
-                                                                        ],
+                                                                  SizedBox(
+                                                                      height: 10),
+                                                                  Container(
+                                                                    child: InkWell(
+                                                                      onTap: () {
+                                                                        pickImageGallery();
+                                                                        Navigator.of(
+                                                                                context)
+                                                                            .pop(
+                                                                                false);
+                                                                      },
+                                                                      splashColor:
+                                                                          Colors
+                                                                              .blueAccent,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: const EdgeInsets
+                                                                                .all(
+                                                                            16.0),
+                                                                        child: Row(
+                                                                          children: [
+                                                                            Icon(
+                                                                                Icons
+                                                                                    .image,
+                                                                                color:
+                                                                                    Colors.indigo),
+                                                                            SizedBox(
+                                                                                width:
+                                                                                    10),
+                                                                            Text(
+                                                                                "แกลลอรี่")
+                                                                          ],
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ],
+                                                                ],
+                                                              ),
                                                             ),
-                                                          ),
-                                                        );
-                                                      });
-                                                },
-                                                child: Text("อัปโหลด",
-                                                    style: TextStyle(
-                                                        color: Colors.white)),
-                                                color: Colors.blueAccent,
-                                              )
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                                          );
+                                                        });
+                                                  },
+                                                  child: Text("อัปโหลด",
+                                                      style: TextStyle(
+                                                          color: Colors.white)),
+                                                  color: Colors.blueAccent,
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   const SizedBox(width: 5),
-                                  image != null
-                                      ? Image.file(image!,
-                                          width: 160,
-                                          height: 160,
-                                          fit: BoxFit.cover)
-                                      : Text("")
+                                  _files != null
+                                      ?  _image!=null? Image.file(_image!,
+                                      width: 160,
+                                      height: 160,
+                                      fit: BoxFit.cover):Text(""):
+                                  _image!=null? Image.file(_image!,
+                                      width: 160,
+                                      height: 160,
+                                      fit: BoxFit.cover):Text(""),
                                 ],
                               ),
                               const SizedBox(
@@ -787,14 +826,16 @@ class _EditVerify_PageState extends State<EditVerify_Page> {
       editinform_error('ท่านไม่สามารถแก้ไขข้อมูลนี้ได้ !');
     }
     else if (result.toString() != "") {
+
       result = await vm.updateverifyForm(
           selectedValuestatus.toString(),
           now.toString(),
           noteController.text,
-          d!.Durable_code.toString(),
+          d!.Durable_code+".jpg",
           s!.id_staff.toString(),
           selectedValueyears.toString(),
           d!.Durable_code.toString());
+      uploadfile();
      // storage.uploadFile(image!.path,d!.Durable_code.toString().replaceAll('/', '-')+".jpg").then((value) => print('สำเร็จ'));
           editinform_suc('แก้ไขข้อมูลสำเร็จ !');
 

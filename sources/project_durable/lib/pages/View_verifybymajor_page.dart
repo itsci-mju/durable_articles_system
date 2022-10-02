@@ -646,7 +646,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
           children: [
             ListTile(
               //leading: const Icon(Icons.event_seat,color: Colors.indigo),
-              title: Text("ครุภัณฑ์ทั้งหมด : " + numberalldurable!),
+              title: Text(numberalldurable ==null?"ครุภัณฑ์ทั้งหมด : ": "ครุภัณฑ์ทั้งหมด : "+numberalldurable!),
             ),
             const Divider(
               height: 0.6,
@@ -654,7 +654,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
             ),
             ListTile(
               //leading: const Icon(Icons.favorite,color: Colors.indigo),
-              title: Text("ตรวจแล้ว : " + numberdurabled!),
+              title: Text(numberdurabled ==null?"ตรวจแล้ว : ": "ตรวจแล้ว : "+numberdurabled!),
             ),
             const Divider(
               height: 0.6,
@@ -662,7 +662,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
             ),
             ListTile(
               //leading: const Icon(Icons.favorite_border,color: Colors.indigo),
-              title: Text("ยังไม่ได้ตรวจ : " + numbernotdurabled!),
+              title: Text(numbernotdurabled ==null?"ยังไม่ได้ตรวจ : ":"ยังไม่ได้ตรวจ : " + numbernotdurabled!),
             ),
             const Divider(
               height: 0.6,

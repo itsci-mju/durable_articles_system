@@ -19,6 +19,7 @@ import 'package:project_durable/pages/viewdurable.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
+import '../Strings.dart';
 import '../manager/Repairdurable_manager.dart';
 import '../manager/durable_manager.dart';
 import '../manager/inform_manager.dart';
@@ -185,6 +186,8 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
   @override
   void initState() {
     super.initState();
+    imageCache!.clear();
+    imageCache!.clearLiveImages();
     findUser();
     getFirstRoom();
   }
@@ -203,16 +206,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
       const Icon(Icons.logout, size: 30, color: Colors.white),
     ];
 
-    String? img;
-    String durableimg = d == null ? "" : d!.Durable_image.toString();
-    if (durableimg != "-") {
-      img =
-          "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-              durableimg;
-    } else {
-      img =
-          "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
-    }
+
     return DefaultTabController(
       length: 4,
       child: Scaffold(
@@ -333,10 +327,10 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                           labelColor: Colors.white,
                           unselectedLabelColor: Colors.black,
                           tabs: [
-                            Tab(text: 'ยังไม่ได้ตรวจสอบ'),
-                            Tab(text: 'ตรวจสอบแล้ว'),
-                            Tab(text: 'ส่งซ่อมสำเร็จ'),
-                            Tab(text: 'ส่งซ่อมไม่สำเร็จ'),
+                            Tab(text: 'ยังไม่ได้\nตรวจสอบ'),
+                            Tab(text: 'ตรวจสอบ\nแล้ว'),
+                            Tab(text: 'ส่งซ่อม\nสำเร็จ'),
+                            Tab(text: 'ส่งซ่อม\nไม่สำเร็จ'),
                           ],
                         ),
                       ),
@@ -443,9 +437,9 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
               formatter.formatInBuddhistCalendarThai(durable.dateinform);
           String? img;
           if (durable.durable.Durable_image.toString() != "-") {
-            img =
-                "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-                    durable.durable.Durable_image.toString();
+            img =   Strings.url+"/file/inform_repair/" + durable.durable.Durable_image.toString();
+            log.e(img);
+          // img =         "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +  durable.durable.Durable_image.toString();
           } else {
             img =
                 "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -537,9 +531,8 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
       final durable = durables[index];
       String? img;
       if (durable.informrepair.durable.Durable_image.toString() != "-") {
-        img =
-            "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-                durable.informrepair.durable.Durable_image.toString();
+        img =  Strings.url+"/file/durable_image/" + durable.informrepair.durable.Durable_image.toString();
+      //  img =        "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +     durable.informrepair.durable.Durable_image.toString();
       } else {
         img =
         "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -626,9 +619,8 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
       final durable = durables[index];
       String? img;
       if (durable.informrepair.durable.Durable_image.toString() != "-") {
-        img =
-            "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-                durable.informrepair.durable.Durable_image.toString();
+        img =  Strings.url+"/file/durable_image/" + durable.informrepair.durable.Durable_image.toString();
+      //  img =       "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" + durable.informrepair.durable.Durable_image.toString();
       } else {
         img =
         "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -715,9 +707,8 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
       final durable = durables[index];
       String? img;
       if (durable.durable.Durable_image.toString() != "-") {
-        img =
-            "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-                durable.durable.Durable_image.toString();
+        img =  Strings.url+"/file/durable_image/" + durable.durable.Durable_image.toString();
+       // img =       "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +durable.durable.Durable_image.toString();
       } else {
         img =
         "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -791,10 +782,10 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                 ),
               ),
               isThreeLine: true,
-              /*trailing: Icon(
+              trailing: Icon(
                 Icons.create,
                 // color: Colors.green.shade700
-              ),*/
+              ),
               onTap: () {
                 convertcodetoedit(durable.durable.Durable_code.toString(),durable.verifyinform_.verify_id.toString());
               },

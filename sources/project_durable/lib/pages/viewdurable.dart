@@ -14,6 +14,7 @@ import 'package:project_durable/pages/verify_page.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../Strings.dart';
 import '../manager/inform_manager.dart';
 import '../manager/login_manager.dart';
 import '../model/durable_model.dart';
@@ -174,6 +175,11 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
   @override
   void initState() {
     super.initState();
+      imageCache!.clear();
+      imageCache!.clearLiveImages();
+    setState(){
+      print('refreshing');
+    }
     findUser();
   }
 
@@ -427,9 +433,13 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
     String? img;
 
     if (d!.Durable_image.toString() != "-") {
-      img =
+      setState(() {
+        img =   Strings.url+"/file/durable_image/" +d!.Durable_image.toString();
+        /* img =
           "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-              d!.Durable_image.toString();
+              d!.Durable_image.toString();*/
+      });
+      log.e(img);
     } else {
       img =
           "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -442,7 +452,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
           child: Container(
             height: 300,
             width: 300,
-            child: Image.network(img),
+            child: Image.network(img!+"?v=1"),
           ),
         )
       ],
@@ -806,13 +816,14 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString('getdurable', d!.toString());
 
-    if (inform != null && Majorlogin == "SCI") {
+   /* if (inform != null && Majorlogin == "SCI") {
       alerttolistrepairAD("มีการแจ้งซ่อมนี้อยู่แล้ว !");
     } else {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => Inform_Page()));
-    }
-
+    }*/
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => Inform_Page()));
     // var log = Logger();
     // log.e(d!.toString());
   }

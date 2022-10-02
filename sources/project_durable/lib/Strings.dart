@@ -30,7 +30,6 @@ class Strings {
   static const String url_listrepairform = "/appinfromrepair/informrepair/getlistformrepair";
   static const String url_listrepairformverifyed = "/appinfromrepair/informrepair/getlistformrepairverifyed";
   static const String url_listverifynotinmaintenance = "/appinfromrepair/informrepair/getlistverifynotinmaintenance";
-
   static const String url_lisAlltrepairform = "/appinfromrepair/informrepair/getAlllistformrepair";
   static const String url_getInform_repairbyID = "/appinfromrepair/inform_repair/getinform_repair";
   static const String url_editinformrepair = "/appinfromrepair/inform/update";
@@ -66,6 +65,8 @@ class Strings {
   static const String url_urllistRepairHistory = "/apprepairdurable/repairdurable/listRepairHistory";
   static const String url_urlgetRepairHistory = "/apprepairdurable/repairdurable/getRepairHistory";
 
-
-
+  //UPLOADIMAGE
+  static const String url_uploadimage= "/appverify/verify/uploadimage";
+  static const String url_uploadimageinform= "/appinfromrepair/inform/uploadimageinform";
+  static const String url_uploadimage2 = "/appverify/verify/uploadimage2";
 }

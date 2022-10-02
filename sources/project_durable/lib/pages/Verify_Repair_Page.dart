@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:buddhist_datetime_dateformat_sns/buddhist_datetime_dateformat_sns.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:project_durable/model/InformRepair_model.dart';
 import 'package:project_durable/model/veify_model.dart';
 import 'package:project_durable/pages/scan_page.dart';
@@ -18,6 +20,8 @@ import 'package:project_durable/storage_service.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uri_to_file/uri_to_file.dart';
+import '../Strings.dart';
 import '../manager/durable_manager.dart';
 import '../manager/inform_manager.dart';
 import '../manager/login_manager.dart';
@@ -32,7 +36,7 @@ import 'View_verifybymajor_page.dart';
 import 'home_page.dart';
 import 'login_page.dart';
 import 'my_drawer_header.dart';
-
+import 'package:http/http.dart' as http;
 class Verify_Repair_Page extends StatefulWidget {
   @override
   Verify_Repair_PageState createState() => Verify_Repair_PageState();
@@ -53,6 +57,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
   List<Verify>? v;
   var detailController = TextEditingController();
   var noteController = TextEditingController();
+  var durablecode_controller = TextEditingController();
   final List<String> statusdurable = [
     'ส่งซ่อม',
     'ซ่อมเอง',
@@ -65,34 +70,50 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
 
   DateTime now = DateTime.now();
   var formatter =  DateFormat.yMMMMd();
-
+  List<PlatformFile>? _files;
   File? image;
+  File? _image;
+  String? urlimg;
 
-  Future pickImageGallery() async {
+  Future<void> convertUriToFile() async {
     try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
 
-      final imageTemp = File(image.path);
-
-      setState(() => this.image = imageTemp);
-    } on PlatformException catch (e) {
-      log.e("Failed to pick image: $e");
+      _image = await toFile(urlimg.toString()); // Converting uri to file
+    } on UnsupportedError catch (e) {
+      print(e.message); // Unsupported error for uri not supported
+    } on IOException catch (e) {
+      print(e); // IOException for system error
+    } catch (e) {
+      print(e); // General exception
     }
   }
 
-  Future pickImageCamera() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (image == null) return;
+  void uploadfile() async{
+    var  url = Uri.parse(Strings.url + Strings.url_uploadimage2);
+    var request = http.MultipartRequest('Post',url);
+    var _urlimg = Uri.parse(urlimg.toString());
+    convertUriToFile();
+ /*   if(_files ==[]){
+      request.files.add(await http.MultipartFile.fromPath('file', _image!.path.toString()));
+    }else{
+      request.files.add(await http.MultipartFile.fromPath('file',_image!.path.toString())) ;
+    }*/
 
-      final imageTemp = File(image.path);
 
-      setState(() => this.image = imageTemp);
-    } on PlatformException catch (e) {
-      log.e("Failed to pick image: $e");
+    request.files.add(await http.MultipartFile.fromString('duralbe_code', durablecode_controller.text));
+    var response = await request.send();
+
+    final res = await http.Response.fromStream(response);
+    print(res);
+    if(response.statusCode == 200){
+      print('Uploaded ...');
+    }
+    else{
+      print('Something went wrong');
     }
   }
+
+
 
   /*Future<File> saveImagePermanently(String imagePath)async {
     final directory = await getApplicationDocumentsDirectory();
@@ -133,6 +154,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
       ir = value,
       noteController.text = ir!.details.toString(),
       selectedValuestatus = "ส่งซ่อม",
+      durablecode_controller.text = ir!.durable.Durable_code.toString(),
       setState(() {
         isLoading = false;
       }),
@@ -247,14 +269,18 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
   @override
   void initState() {
     super.initState();
+    imageCache!.clear();
+    imageCache!.clearLiveImages();
     findUser();
   }
 
 
   @override
   Widget build(BuildContext context) {
+    var showDate;
+    ir==null? "": showDate = formatter.formatInBuddhistCalendarThai(ir!.dateinform);
 
-    var showDate = formatter.formatInBuddhistCalendarThai(ir!.dateinform);
+
     final Storage storage = Storage();
     if (isLoading) {
       return const Center(
@@ -271,9 +297,12 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
     String? img;
     String durableimg = d == null ? "" : d!.Durable_image.toString();
     if (durableimg != "-") {
-      img =
-          "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-              durableimg;
+      img = Strings.url+"/file/inform_repair/" + durableimg;
+      log.e(img);
+      setState(() {
+        urlimg = img;
+      });
+     // img =  "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +       durableimg;
     } else {
       img =
       "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -627,8 +656,13 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
 
     if (selectedValuestatus.toString() == "") {
       alertverify_error('กรุณาเลือกสถานะ !');
-    } else if (result.toString() != "") {
+    }else if(selectedValuestatus.toString() != "ส่งซ่อม" && selectedValuestatus.toString() != "ซ่อมเอง" ){
       result = await vrm.insertverifyinForm(ir!.Informid.toString(),selectedValuestatus!,detailController.text);
+      alertverify_suc('บันทึกข้อมูลสำเร็จ !');
+    }
+    else if (selectedValuestatus.toString() == "ส่งซ่อม" || selectedValuestatus.toString() == "ซ่อมเอง" ) {
+      result = await vrm.insertverifyinForm(ir!.Informid.toString(),selectedValuestatus!,detailController.text);
+      uploadfile();
       alertverify_suc('บันทึกข้อมูลสำเร็จ !');
     } else {
       alertverify_error('เกิดข้อผิดพลาดลองใหม่อีกครั้ง !');

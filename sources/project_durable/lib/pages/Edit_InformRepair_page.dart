@@ -17,6 +17,7 @@ import 'package:project_durable/storage_service.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
+import '../Strings.dart';
 import '../manager/durable_manager.dart';
 import '../manager/inform_manager.dart';
 import '../manager/login_manager.dart';
@@ -30,7 +31,7 @@ import 'View_verifybymajor_page.dart';
 import 'home_page.dart';
 import 'login_page.dart';
 import 'my_drawer_header.dart';
-
+import 'package:http/http.dart' as http;
 class Edit_Inform_Page extends StatefulWidget {
   @override
   Edit_Inform_PageState createState() => Edit_Inform_PageState();
@@ -53,48 +54,65 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
   var durablename_controller = TextEditingController();
   var durablecode_controller = TextEditingController();
   DateTime now = DateTime.now();
-  File? image;
+
   final List<String> statusdurable = [
     'ชำรุด',
   ];
   String? selectedValuestatus ;
   String? selectedValueyears;
+  List<PlatformFile>? _files;
+  File? image;
+  File? _image;
 
-
-  Future pickImageGallery() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
-
-      final imageTemp = File(image.path);
-
-      setState(() => this.image = imageTemp);
-    } on PlatformException catch (e) {
-      log.e("Failed to pick image: $e");
+  void uploadfile() async{
+    var  url= Uri.parse(Strings.url + Strings.url_uploadimageinform);
+    var request = http.MultipartRequest('Post',url);
+    if(_files ==[]){
+      request.files.add(await http.MultipartFile.fromPath('file', _image!.path.toString()));
+    }else{
+      request.files.add(await http.MultipartFile.fromPath('file',_image!.path.toString())) ;
     }
+
+
+    request.files.add(await http.MultipartFile.fromString('duralbe_code', durablecode_controller.text));
+    var response = await request.send();
+
+    final res = await http.Response.fromStream(response);
+    print(res);
+    if(response.statusCode == 200){
+      print('Uploaded ...');
+    }
+    else{
+      print('Something went wrong');
+    }
+  }
+
+
+  void pickImageGallery()async{
+    _files = (await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: false,
+        allowedExtensions: null
+    ))!.files;
+
+    setState(() {
+      _image = File(_files!.first.path.toString());
+    });
+    print("เลือกรูป:+++++ :"+_files!.first.path.toString());
   }
 
   Future pickImageCamera() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.camera);
       if (image == null) return;
+      _image = File(image.path);
+      setState(() => this.image = _image);
 
-      final imageTemp = File(image.path);
-
-      setState(() => this.image = imageTemp);
+      print("กล้อง:+++++ :"+image.path.toString());
     } on PlatformException catch (e) {
       log.e("Failed to pick image: $e");
     }
   }
-
-  /*Future<File> saveImagePermanently(String imagePath)async {
-    final directory = await getApplicationDocumentsDirectory();
-    final name = basename(imagePath);
-    final image = File('${directory.path}/$name');
-
-    return File(imagePath).copy(image.path);
-  }*/
-
   void findUser() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     durable_manager dm = durable_manager();
@@ -244,6 +262,8 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
   @override
   void initState() {
     super.initState();
+    imageCache!.clear();
+    imageCache!.clearLiveImages();
     findUser();
   }
 
@@ -266,9 +286,10 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
     String? img;
     String durableimg = d == null ? "" : d!.Durable_image.toString();
     if (durableimg != "-") {
-      img =
+      img =   Strings.url+"/file/inform_repair/" +durableimg;
+    /*  img =
           "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-              durableimg;
+              durableimg;*/
     } else {
       img =
       "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -315,7 +336,7 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                           child: Column(
                             children: [
                               SizedBox(height: 10),
-                              Image.network(img!, width: 200, height: 200),
+                              Image.network(img!+"?v=1", width: 300, height: 300),
                               Column(
                                 children: [
                                   Row(
@@ -596,12 +617,15 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                                     ],
                                   ),
                                   const SizedBox(width: 5),
-                                  image != null
-                                      ? Image.file(image!,
+                                  _files != null
+                                      ?  _image!=null? Image.file(_image!,
                                       width: 160,
                                       height: 160,
-                                      fit: BoxFit.cover)
-                                      : Text("")
+                                      fit: BoxFit.cover):Text(""):
+                                  _image!=null? Image.file(_image!,
+                                      width: 160,
+                                      height: 160,
+                                      fit: BoxFit.cover):Text(""),
                                 ],
                               ),
                               const SizedBox(
@@ -665,9 +689,10 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
           ir!.dateinform.year.toString()+"-"+ ir!.dateinform.month.toString()+"-"+ir!.dateinform.day.toString()+" "
               +ir!.dateinform.hour.toString()+":"+ir!.dateinform.minute.toString()+":"+ir!.dateinform.second.toString(),
           noteController.text,
-          ir!.durable.Durable_code,
+          ir!.durable.Durable_code+".jpg",
           s!.id_staff.toString(),
           ir!.durable.Durable_code.toString());
+      uploadfile();
       editinform_suc('แก้ไขข้อมูลสำเร็จ !');
      // storage.uploadinform(image!.path,d!.Durable_code.toString().replaceAll('/', '-')+"-repair.jpg").then((value) => print('สำเร็จ'));
     } else {

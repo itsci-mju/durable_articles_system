@@ -17,6 +17,7 @@ import 'package:project_durable/pages/viewdurable.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
+import '../Strings.dart';
 import '../manager/Repairdurable_manager.dart';
 import '../manager/durable_manager.dart';
 import '../manager/inform_manager.dart';
@@ -30,7 +31,7 @@ import 'List_repairADMIN_page.dart';
 import 'List_repair_page.dart';
 import 'home_page.dart';
 import 'login_page.dart';
-
+import 'package:http/http.dart' as http;
 class Edit_Maintenance_Page extends StatefulWidget {
   @override
   Edit_Maintenance_PageState createState() => Edit_Maintenance_PageState();
@@ -61,41 +62,58 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
 
   DateTime now = DateTime.now();
   var formatter = DateFormat.yMMMMd();
+  List<PlatformFile>? _files;
   File? image;
-
-  Future pickImageGallery() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
-
-      final imageTemp = File(image.path);
-
-      setState(() => this.image = imageTemp);
-    } on PlatformException catch (e) {
-      log.e("Failed to pick image: $e");
+  File? _image;
+  void uploadfile() async{
+    var  url= Uri.parse(Strings.url + Strings.url_uploadimage);
+    var request = http.MultipartRequest('Post',url);
+    if(_files ==[]){
+      request.files.add(await http.MultipartFile.fromPath('file', _image!.path.toString()));
+    }else{
+      request.files.add(await http.MultipartFile.fromPath('file',_image!.path.toString())) ;
     }
+
+
+    request.files.add(await http.MultipartFile.fromString('duralbe_code', durablecodeController.text));
+    var response = await request.send();
+
+    final res = await http.Response.fromStream(response);
+    print(res);
+    if(response.statusCode == 200){
+      print('Uploaded ...');
+    }
+    else{
+      print('Something went wrong');
+    }
+  }
+
+
+  void _openFileExplorer()async{
+    _files = (await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: false,
+        allowedExtensions: null
+    ))!.files;
+
+    setState(() {
+      _image = File(_files!.first.path.toString());
+    });
+    print("เลือกรูป:+++++ :"+_files!.first.path.toString());
   }
 
   Future pickImageCamera() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.camera);
       if (image == null) return;
+      _image = File(image.path);
+      setState(() => this.image = _image);
 
-      final imageTemp = File(image.path);
-
-      setState(() => this.image = imageTemp);
+      print("กล้อง:+++++ :"+image.path.toString());
     } on PlatformException catch (e) {
       log.e("Failed to pick image: $e");
     }
   }
-
-  /*Future<File> saveImagePermanently(String imagePath)async {
-    final directory = await getApplicationDocumentsDirectory();
-    final name = basename(imagePath);
-    final image = File('${directory.path}/$name');
-
-    return File(imagePath).copy(image.path);
-  }*/
 
   void findUser() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -242,6 +260,8 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
   @override
   void initState() {
     super.initState();
+    imageCache!.clear();
+    imageCache!.clearLiveImages();
     findUser();
   }
 
@@ -271,15 +291,14 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
     String? img;
     String durableimg = d == null ? "" : d!.Durable_image.toString();
     if (durableimg != "-") {
-      img =
-          "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-              durableimg;
+      img =  d != null ?  Strings.url+"/file/durable_image/" + d!.Durable_image.toString():"" ;
+    //  img =     "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" + durableimg;
     } else {
       img =
           "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
     }
-
-    var showDate = formatter.formatInBuddhistCalendarThai(ir!.dateinform);
+    var showDate;
+    ir==null? "": showDate = formatter.formatInBuddhistCalendarThai(ir!.dateinform);
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -581,6 +600,143 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
                                       ),
                                     ],
                                   ),
+
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: const [
+                                          Text("รูปภาพ :",
+                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 20),
+                                      Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              SizedBox(width: 20),
+                                              MaterialButton(
+                                                onPressed: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder:
+                                                          (BuildContext context) {
+                                                        return AlertDialog(
+                                                          title: Text(
+                                                              "เลือกรายการอัปโหลด",
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                                  color: Colors
+                                                                      .indigo)),
+                                                          content: Container(
+                                                            height: 150.0,
+                                                            width: 200.0,
+                                                            child: Column(
+                                                              mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                              children: [
+                                                                Container(
+                                                                  child: InkWell(
+                                                                    onTap: () {
+                                                                      pickImageCamera();
+                                                                      Navigator.of(
+                                                                          context)
+                                                                          .pop(
+                                                                          false);
+                                                                    },
+                                                                    splashColor:
+                                                                    Colors
+                                                                        .blueAccent,
+                                                                    child:
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          16.0),
+                                                                      child: Row(
+                                                                        children: [
+                                                                          Icon(
+                                                                              Icons
+                                                                                  .camera,
+                                                                              color:
+                                                                              Colors.indigo),
+                                                                          SizedBox(
+                                                                              width:
+                                                                              10),
+                                                                          Text(
+                                                                              "กล้อง")
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                    height: 10),
+                                                                Container(
+                                                                  child: InkWell(
+                                                                    onTap: () {
+                                                                      _openFileExplorer();
+                                                                      Navigator.of(
+                                                                          context)
+                                                                          .pop(
+                                                                          false);
+                                                                    },
+                                                                    splashColor:
+                                                                    Colors
+                                                                        .blueAccent,
+                                                                    child:
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          16.0),
+                                                                      child: Row(
+                                                                        children: [
+                                                                          Icon(
+                                                                              Icons
+                                                                                  .image,
+                                                                              color:
+                                                                              Colors.indigo),
+                                                                          SizedBox(
+                                                                              width:
+                                                                              10),
+                                                                          Text(
+                                                                              "แกลลอรี่")
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      });
+                                                },
+                                                child: Text("อัปโหลด",
+                                                    style: TextStyle(
+                                                        color: Colors.white)),
+                                                color: Colors.blueAccent,
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 5),
+                                  _files != null
+                                      ?  _image!=null? Image.file(_image!,
+                                      width: 160,
+                                      height: 160,
+                                      fit: BoxFit.cover):Text(""):
+                                  _image!=null? Image.file(_image!,
+                                      width: 160,
+                                      height: 160,
+                                      fit: BoxFit.cover):Text(""),
+
+
                                   Row(
                                     children: [
                                       Column(
@@ -667,7 +823,7 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
           selectedValuestatus!,
           durablecodeController.text,
           verifyid!);
-
+      uploadfile();
       Alert_suc("บันทึกข้อมูลสำเร็จ");
       /* Scaffold.of(context).showSnackBar(const SnackBar(
         content: Text('บันทึกข้อมูลสำเร็จ !'),

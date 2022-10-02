@@ -227,6 +227,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    setState(){
+      print('refreshing');
+    }imageCache!.clear();
+    imageCache!.clearLiveImages();
     getFirstRoom();
     findUser();
   }
@@ -666,9 +670,10 @@ class _HomePageState extends State<HomePage> {
           final durable = durables[index];
           String? img;
           if (durable.pk.durable.Durable_image.toString() != "-") {
-            img =
+            img = Strings.url+"/file/durable_image/" +  durable.pk.durable.Durable_image.toString();
+          /*  img =
                 "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-                    durable.pk.durable.Durable_image.toString();
+                    durable.pk.durable.Durable_image.toString();*/
           } else {
             img =
                 "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -683,7 +688,7 @@ class _HomePageState extends State<HomePage> {
                 child: ListTile(
                   leading: CircleAvatar(
                     radius: 24,
-                    backgroundImage: NetworkImage(img),
+                    backgroundImage: NetworkImage(img+"?v=1"),
                   ),
                   title:
                       Text("ชื่อครุภัณฑ์ : " + durable.pk.durable.Durable_name),
@@ -763,9 +768,10 @@ class _HomePageState extends State<HomePage> {
           final durable = durables[index];
           String? img;
           if (durable.Durable_image.toString() != "-") {
-            img =
+            img = Strings.url+"/file/durable_image/" + durable.Durable_image.toString();
+           /* img =
                 "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-                    durable.Durable_image.toString();
+                    durable.Durable_image.toString();*/
           } else {
             img =
                 "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -776,7 +782,7 @@ class _HomePageState extends State<HomePage> {
               child: ListTile(
                 leading: CircleAvatar(
                   radius: 24,
-                  backgroundImage: NetworkImage(img),
+                  backgroundImage: NetworkImage(img+"?v=1"),
                 ),
                 title: Text("ชื่อครุภัณฑ์ : " + durable.Durable_name),
                 subtitle: Column(
@@ -849,9 +855,10 @@ class _HomePageState extends State<HomePage> {
       final durable = durables[index];
       String? img;
       if (durable.Durable_image.toString() != "-") {
-        img =
+        img = Strings.url+"/file/durable_image/" + durable.Durable_image.toString();
+       /* img =
             "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-                durable.Durable_image.toString();
+                durable.Durable_image.toString();*/
       } else {
         img =
         "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -862,7 +869,7 @@ class _HomePageState extends State<HomePage> {
           child: ListTile(
             leading: CircleAvatar(
               radius: 24,
-              backgroundImage: NetworkImage(img),
+              backgroundImage: NetworkImage(img+"?v=1"),
             ),
             title: Text("ชื่อครุภัณฑ์ : " + durable.Durable_name),
             subtitle: Column(
@@ -934,9 +941,10 @@ class _HomePageState extends State<HomePage> {
       final durable = durables[index];
       String? img;
       if (durable.pk.durable.Durable_image.toString() != "-") {
-        img =
+        img = Strings.url+"/file/durable_image/" + durable.pk.durable.Durable_image.toString();
+       /* img =
             "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
-                durable.pk.durable.Durable_image.toString();
+                durable.pk.durable.Durable_image.toString();*/
       } else {
         img =
         "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -951,7 +959,7 @@ class _HomePageState extends State<HomePage> {
             child: ListTile(
               leading: CircleAvatar(
                 radius: 24,
-                backgroundImage: NetworkImage(img),
+                backgroundImage: NetworkImage(img+"?v=1"),
               ),
               title:
               Text("ชื่อครุภัณฑ์ : " + durable.pk.durable.Durable_name),
@@ -1026,7 +1034,7 @@ class _HomePageState extends State<HomePage> {
   );
   Future<void> convertcode(String code) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    List<String> listcode = code.split(".PNG");
+    List<String> listcode = code.split(".png");
     String durable_code = listcode[0].replaceAll(':', '/');
     preferences.setString('durable_code', durable_code);
     Navigator.of(context)
@@ -1034,7 +1042,7 @@ class _HomePageState extends State<HomePage> {
   }
   Future<void> convertcode2(String code,String verifydate) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    List<String> listcode = code.split(".PNG");
+    List<String> listcode = code.split(".png");
     String durable_code = listcode[0].replaceAll(':', '/');
     String dateverify = verifydate;
 
@@ -1047,7 +1055,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> listroom(String code) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    List<String> listcode = code.split(".PNG");
+    List<String> listcode = code.split(".png");
     String durable_code = listcode[0].replaceAll(':', '/');
     preferences.setString('durable_code', durable_code);
     Navigator.of(context)

@@ -360,6 +360,14 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
               height: 0.6,
               color: Colors.black87,
             ),
+            ListTile(
+              // leading: const Icon(Icons.branding_watermark_sharp,color: Colors.indigo),
+              title: Text("ผู้ทำรายการ : เจ้าหน้าที่ส่วนกลาง " ),
+            ),
+            const Divider(
+              height: 0.6,
+              color: Colors.black87,
+            ),
           ],
         ),
       ),
