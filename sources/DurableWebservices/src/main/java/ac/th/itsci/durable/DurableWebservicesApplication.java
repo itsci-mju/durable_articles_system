@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableScheduling 
 @Configuration
 
-//@ComponentScan(basePackages = {"ac.th.itsci.durable.repo.*","ac.th.itsci.durable.controller.*"})
+//@ComponentScan(basePackages = {"ac.th.itsci.durable.repo.*"})
 //@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 
 public class DurableWebservicesApplication extends SpringBootServletInitializer {

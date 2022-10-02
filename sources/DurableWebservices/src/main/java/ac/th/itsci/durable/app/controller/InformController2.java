@@ -1,5 +1,12 @@
 package ac.th.itsci.durable.app.controller;
 
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Transparency;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -7,7 +14,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.MediaType;
@@ -16,7 +26,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import ac.th.itsci.durable.app.manager.DurableManager;
 import ac.th.itsci.durable.app.manager.InformManager;
@@ -40,7 +52,6 @@ public class InformController2 {
 	public @ResponseBody ResponseObj do_addinform(@RequestBody Map<String, String> map) {
 		int message = 0;
 		inform_repair ir = null;
-
 		try {
 			Calendar c = Calendar.getInstance();
 			String Informtype = map.get("Informtype");
@@ -88,11 +99,12 @@ public class InformController2 {
 
 			DateFormat formatter;
 			Date date;
-			formatter = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS");
+			formatter = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
 			date = (Date) formatter.parse(dateinform);
 			Calendar cal = Calendar.getInstance();
+			
 			cal.setTime(date);
-
+			cal.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 			InformManager im = new InformManager();
 
 			ir = new inform_repair(Informid, Informtype, cal, details, picture_inform);
@@ -114,7 +126,119 @@ public class InformController2 {
 			return new ResponseObj(500, message);
 		}
 	}
+	@PostMapping(path = "/inform/uploadimageinform", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public @ResponseBody ResponseObj douploadimageinform(@RequestParam("file") MultipartFile file,@RequestParam("duralbe_code") String code,ServletRequest request) {
+		int message = 0;
+		VerifyDurable vd = null;
 
+		try {
+			String durable_image = code;
+			
+			String durablecode = "test";
+		
+			if (code.equals("")) {
+				code=("-");
+			} else {
+			}
+
+			if (!file.isEmpty()) {
+				String original_file_name = file.getOriginalFilename();
+				String type_image = original_file_name.substring(original_file_name.lastIndexOf("."));
+				durable_image = code.replaceAll("/", "_") + "" + ".jpg";
+				System.out.println(durable_image);
+
+				String path = request.getServletContext().getRealPath("/") + "file/inform_repair";
+				//String path = request.getServletContext().getContextPath("/")+ "file/durable_image";
+				//String path = "D:\\JAVA\\DurableWebservices\\src\\main\\webapp\\file\\durable_image";
+				
+				File uploadPic = convert(file, path + "/" + durable_image);
+
+				BufferedImage image = ImageIO.read(uploadPic);
+				int width = 0;
+				int height = 0;
+
+				if (image.getWidth() > image.getHeight()) {
+					width = 400;
+					height = 400;
+				} else {
+					width = 400;
+					height = 400;
+				}
+
+				BufferedImage imageWrite = getScaledInstance(image, width, height,
+						RenderingHints.VALUE_RENDER_QUALITY, true);
+
+				if (type_image.equalsIgnoreCase(".png")) {
+					ImageIO.write(imageWrite, "jpg", new File(path + "/" + durable_image));
+				} else if (type_image.equalsIgnoreCase(".jpeg")) {
+					ImageIO.write(imageWrite, "jpg", new File(path + "/" + durable_image));
+				} else {
+					ImageIO.write(imageWrite, "jpg", new File(path + "/" + durable_image));
+				}
+			} else {
+				durable_image = "-";
+			}
+			
+			
+			if (message == 1) {
+				return new ResponseObj(200, "1");
+			} else {
+				return new ResponseObj(200, "0");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			message = 0;
+			return new ResponseObj(500, "0");
+		}
+	}
+	
+
+	public static BufferedImage getScaledInstance(BufferedImage img, int targetWidth, int targetHeight, Object hint,
+			boolean higherQuality) {
+		int type = (img.getTransparency() == Transparency.OPAQUE) ? BufferedImage.TYPE_INT_RGB
+				: BufferedImage.TYPE_INT_ARGB;
+		BufferedImage ret = (BufferedImage) img;
+		int w, h;
+		if (higherQuality) {
+			w = img.getWidth();
+			h = img.getHeight();
+		} else {
+			w = targetWidth;
+			h = targetHeight;
+		}
+		do {
+			if (higherQuality && w > targetWidth) {
+				w /= 2;
+				if (w < targetWidth) {
+					w = targetWidth;
+				}
+			}
+			if (higherQuality && h > targetHeight) {
+				h /= 2;
+				if (h < targetHeight) {
+					h = targetHeight;
+				}
+			}
+			BufferedImage tmp = new BufferedImage(w, h, type);
+			Graphics2D g2 = tmp.createGraphics();
+			g2.setRenderingHint(RenderingHints.KEY_RENDERING, hint);
+			g2.drawImage(ret, 0, 0, w, h, null);
+			g2.dispose();
+			ret = tmp;
+		} while (w != targetWidth || h != targetHeight);
+		return ret;
+	}
+	public static File convert(MultipartFile file, String path) throws IOException {
+		System.out.println(path);
+		File convFile = new File(path);
+		System.out.println(path + file.getOriginalFilename());
+		convFile.createNewFile();
+		FileOutputStream fos = new FileOutputStream(convFile);
+		fos.write(file.getBytes());
+		fos.close();
+		return convFile;
+	}
 	@RequestMapping(value = "/inform_repair/getinform_repair", method = RequestMethod.POST)
 	public @ResponseBody ResponseObj getinform_repair(@RequestBody Map<String, String> map,
 			HttpServletRequest request) {

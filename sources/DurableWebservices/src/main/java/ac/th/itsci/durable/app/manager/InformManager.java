@@ -59,11 +59,18 @@ public class InformManager {
 		}
 	}public int insertinformsql(inform_repair ir) {
 		ConnectionDB condb = new ConnectionDB();
+
 		Connection con = condb.getConnection();
 		String pattern = "YYYY-MM-dd HH:mm:ss";
+		
 		Calendar c = Calendar.getInstance();
+		c.setTimeZone(null);
 		Date DD = c.getTime();
+		
+	
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+		System.out.println(sdf.format(DD));
 		try {
 			//String dateif = sdf.format(ir.getDateinform());
 		
@@ -89,6 +96,7 @@ public class InformManager {
 		Calendar c = Calendar.getInstance();
 		Date DD = c.getTime();
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		try {		
 
 			Statement stmt = con.createStatement();
@@ -318,7 +326,7 @@ public class InformManager {
 		int id = 0;
 		try {
 			Statement stmt = con.createStatement();
-			String sql = "SELECT Max(Informid) from inform_repair;";
+			String sql = "SELECT Count(Informid) from inform_repair;";
 			ResultSet rs = stmt.executeQuery(sql);
 
 			while (rs.next()) {
@@ -421,7 +429,7 @@ public class InformManager {
 					+ "	,d.durable_statusnow,d.responsible_person,d.durable_image,d.durable_borrow_status,d.durable_entrancedate\n"
 					+ "	,d.note,d.room_number,r.build,r.room_name,r.floor\n"
 					+ " from inform_repair ir inner join staff s on ir.id_staff = s.id_staff inner join durable d on ir.durable_code = d.durable_code inner join major m on s.id_major = m.id_major inner join login l on s.username = l.username\n"
-					+ " left join room r on r.room_number = d.room_number where s.id_major = '" + majorid + "'and  ir.Informid NOT IN (SELECT vi.informid FROM verifyinform vi);";
+					+ " left join room r on r.room_number = d.room_number where s.id_major = '" + majorid + "'and  ir.Informid NOT IN (SELECT vi.informid FROM verifyinform vi)  order by ir.dateinform  desc;";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				String Informid = rs.getString(1);
@@ -504,7 +512,7 @@ public class InformManager {
 					+ ",s.phone_number,s.image_staff,s.id_major,m.major_name,s.username,l.status,l.password,ir.durable_code,d.durable_name,d.durable_number,d.durable_brandname,d.durable_model,d.durable_price\n"
 					+ ",d.durable_statusnow,d.responsible_person,d.durable_image,d.durable_borrow_status,d.durable_entrancedate\n"
 					+ ",d.note,d.room_number,r.build,r.room_name,r.floor FROM verifyinform vi left join inform_repair ir on  vi.informid =ir.Informid inner join staff s on ir.id_staff = s.id_staff inner join durable d on ir.durable_code = d.durable_code inner join major m on s.id_major = m.id_major inner join login l on s.username = l.username\n"
-					+ "left join room r on r.room_number = d.room_number where s.id_major =  '" + majorid + "'and (vi.verify_status ='ส่งซ่อม' or vi.verify_status = 'ซ่อมเอง') AND vi.verify_id Not IN (SELECT rd.verify_id FROM repair_durable rd  where vi.verify_id = rd.verify_id);";
+					+ "left join room r on r.room_number = d.room_number where s.id_major =  '" + majorid + "'and (vi.verify_status ='ส่งซ่อม' or vi.verify_status = 'ซ่อมเอง') AND vi.verify_id Not IN (SELECT rd.verify_id FROM repair_durable rd  where vi.verify_id = rd.verify_id)  order by ir.dateinform   desc;";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				int verifyid = rs.getInt(1);
@@ -603,7 +611,7 @@ public class InformManager {
 					+ ",s.phone_number,s.image_staff,s.id_major,m.major_name,s.username,l.status,l.password,ir.durable_code,d.durable_name,d.durable_number,d.durable_brandname,d.durable_model,d.durable_price\n"
 					+ ",d.durable_statusnow,d.responsible_person,d.durable_image,d.durable_borrow_status,d.durable_entrancedate\n"
 					+ ",d.note,d.room_number,r.build,r.room_name,r.floor FROM verifyinform vi left join inform_repair ir on  vi.informid =ir.Informid inner join staff s on ir.id_staff = s.id_staff inner join durable d on ir.durable_code = d.durable_code inner join major m on s.id_major = m.id_major inner join login l on s.username = l.username\n"
-					+ "left join room r on r.room_number = d.room_number where s.id_major =  '" + majorid + "'and (vi.verify_status ='ดี' or vi.verify_status = 'แทงจำหน่าย' or vi.verify_status = 'ชำรุด') ;";
+					+ "left join room r on r.room_number = d.room_number where s.id_major =  '" + majorid + "'and (vi.verify_status ='ดี' or vi.verify_status = 'แทงจำหน่าย' or vi.verify_status = 'ชำรุด') order by ir.dateinform desc ;";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				int verifyid = rs.getInt(1);
@@ -740,7 +748,7 @@ public class InformManager {
 					+ "	,d.durable_statusnow,d.responsible_person,d.durable_image,d.durable_borrow_status,d.durable_entrancedate\n"
 					+ "	,d.note,d.room_number,r.build,r.room_name,r.floor\n"
 					+ " from inform_repair ir inner join staff s on ir.id_staff = s.id_staff inner join durable d on ir.durable_code = d.durable_code inner join major m on s.id_major = m.id_major inner join login l on s.username = l.username\n"
-					+ " left join room r on r.room_number = d.room_number where m.major_name = '" + major_name + "'and  ir.Informid NOT IN (SELECT vi.informid FROM verifyinform vi);";
+					+ " left join room r on r.room_number = d.room_number where m.major_name = '" + major_name + "'and  ir.Informid NOT IN (SELECT vi.informid FROM verifyinform vi) order by ir.dateinform desc;";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				String Informid = rs.getString(1);
@@ -843,7 +851,7 @@ public class InformManager {
 					+ ",s.phone_number,s.image_staff,s.id_major,m.major_name,s.username,l.status,l.password,ir.durable_code,d.durable_name,d.durable_number,d.durable_brandname,d.durable_model,d.durable_price\n"
 					+ ",d.durable_statusnow,d.responsible_person,d.durable_image,d.durable_borrow_status,d.durable_entrancedate\n"
 					+ ",d.note,d.room_number,r.build,r.room_name,r.floor FROM verifyinform vi left join inform_repair ir on  vi.informid =ir.Informid inner join staff s on ir.id_staff = s.id_staff inner join durable d on ir.durable_code = d.durable_code inner join major m on s.id_major = m.id_major inner join login l on s.username = l.username\n"
-					+ "left join room r on r.room_number = d.room_number where m.major_name = '" + major_name + "'and (vi.verify_status ='ส่งซ่อม' or vi.verify_status = 'ซ่อมเอง') AND vi.verify_id Not IN (SELECT rd.verify_id FROM repair_durable rd  where vi.verify_id = rd.verify_id) ;";
+					+ "left join room r on r.room_number = d.room_number where m.major_name = '" + major_name + "'and (vi.verify_status ='ส่งซ่อม' or vi.verify_status = 'ซ่อมเอง') AND vi.verify_id Not IN (SELECT rd.verify_id FROM repair_durable rd  where vi.verify_id = rd.verify_id);";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				int verifyid = rs.getInt(1);
