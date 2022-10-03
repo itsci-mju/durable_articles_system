@@ -34,6 +34,7 @@ import ac.th.itsci.durable.app.manager.DurableManager;
 import ac.th.itsci.durable.app.manager.InformManager;
 import ac.th.itsci.durable.app.manager.VerifyManager;
 import ac.th.itsci.durable.entity.Durable;
+import ac.th.itsci.durable.entity.RepairDurable;
 import ac.th.itsci.durable.entity.Staff;
 import ac.th.itsci.durable.entity.Verify;
 import ac.th.itsci.durable.entity.VerifyDurable;
@@ -62,7 +63,7 @@ public class InformController2 {
 
 			InformManager im = new InformManager();
 			String id = String.valueOf(im.getMaxinformID());
-
+			System.out.println(id);
 			
 
 			Staff s = new Staff();
@@ -239,6 +240,25 @@ public class InformController2 {
 		fos.close();
 		return convFile;
 	}
+	@RequestMapping(value = "/inform_repair/deleteinform_repair", method = RequestMethod.POST)
+	public @ResponseBody ResponseObj do_deleteinform_repair(@RequestBody Map<String, String> map) {
+		int message = 0;
+		inform_repair inform = null;
+		try {
+			String id = map.get("Informid");
+
+			InformManager im = new InformManager();
+			inform = im.getinformidbycode(id);
+			message = im.deleteinform_repairsql(id);
+			
+			return new ResponseObj(200, message);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseObj(500, -1);
+		}
+	}
+	
 	@RequestMapping(value = "/inform_repair/getinform_repair", method = RequestMethod.POST)
 	public @ResponseBody ResponseObj getinform_repair(@RequestBody Map<String, String> map,
 			HttpServletRequest request) {
@@ -386,7 +406,7 @@ public class InformController2 {
 		}
 		@RequestMapping(value = "/informrepair/listformrepairINnotinmaintenance", method = RequestMethod.POST)
 		public @ResponseBody ResponseObj list_informrepairINnotinmaintenance(@RequestBody Map<String, String> map,HttpServletRequest request) {
-			List<verifyinform> durable = null;
+			List<RepairDurable> durable = null;
 			try {
 				InformManager im = new InformManager();
 				String major_name = map.get("major_name");
@@ -466,13 +486,11 @@ public class InformController2 {
 		@RequestMapping(value = "/informrepair/getlistverifynotinmaintenance", method = RequestMethod.POST)
 		public @ResponseBody ResponseObj getverifynotinmaintenance(@RequestBody Map<String, String> map,
 				HttpServletRequest request) {
-			List<verifyinform> verifyinform = null;
+			List<RepairDurable> verifyinform = null;
 			try {
 				String idmajor = map.get("major_id");
 				InformManager im = new InformManager();
-
-				// durable = im.listAll_informrepair("1");
-				verifyinform = im.list_verifyinformnotinmaintenance(idmajor);
+				verifyinform = im.listinformrepairINnotmaintenanceID(idmajor);
 				System.out.println(verifyinform.toString());
 				return new ResponseObj(200, verifyinform);
 			} catch (Exception e) {

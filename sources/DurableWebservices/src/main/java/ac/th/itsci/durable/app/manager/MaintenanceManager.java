@@ -95,7 +95,7 @@ public class MaintenanceManager {
 					+ " left join room r on r.room_number = d.room_number"
 					+ " left join verifyinform vi on rd.verify_id = vi.verify_id left join inform_repair ir on  vi.informid =ir.Informid "
 					+ " inner join staff s on ir.id_staff = s.id_staff inner join login l on s.username = l.username inner join major m on s.id_major = m.id_major"
-					+ " where m.major_name = '"+major_name+"';";
+					+ " where m.major_name = '"+major_name+"' and rd.repair_status = 'ดี';";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				int repairid  = rs.getInt(1);
@@ -360,7 +360,7 @@ public class MaintenanceManager {
 					+ " left join room r on r.room_number = d.room_number"
 					+ " left join verifyinform vi on rd.verify_id = vi.verify_id left join inform_repair ir on  vi.informid =ir.Informid "
 					+ " inner join staff s on ir.id_staff = s.id_staff inner join login l on s.username = l.username inner join major m on s.id_major = m.id_major"
-					+ " where m.id_major = '"+id_major+"';";
+					+ " where m.id_major = '"+id_major+"' and rd.repair_status = 'ดี' ;";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				int repairid  = rs.getInt(1);
