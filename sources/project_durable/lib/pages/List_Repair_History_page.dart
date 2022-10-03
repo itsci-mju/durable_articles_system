@@ -228,7 +228,7 @@ class ListRepairHistory_PageState extends State<ListRepairHistory_Page> {
       ),
       bottomNavigationBar: CurvedNavigationBar(
         key: navigationKey,
-        color: Colors.indigo,
+        color: Colors.orange.shade900,
         backgroundColor: Colors.transparent,
         height: 50,
         animationCurve: Curves.easeInOut,

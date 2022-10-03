@@ -729,12 +729,37 @@ class _Verify_PageState extends State<Verify_Page> {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(width: 5),
+                                  const SizedBox(height: 10),
                                   _files != null
-                                      ?  _image!=null? Image.file(_image!,
-                                      width: 160,
-                                      height: 160,
-                                      fit: BoxFit.cover):Text(""):
+                                      ?  _image!=null? Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Text("คำเตือน : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text("**รูปจะไปแทนที่รูปเดิมที่อยู่ในระบบ**", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Image.file(_image!,
+                                              width: 160,
+                                              height: 160,
+                                              fit: BoxFit.cover),
+                                        ],
+                                      ),
+                                    ],
+                                  ):Text(""):
                                   _image!=null? Image.file(_image!,
                                       width: 160,
                                       height: 160,
@@ -769,9 +794,13 @@ class _Verify_PageState extends State<Verify_Page> {
                                 height: 20,
                               ),
                               ElevatedButton(
+
                                   onPressed: () async {
                                     AlertConfirm("ท่านยืนยันที่จะเพิ่มข้อมูลนี้ ?");
                                   },
+                                  style: ButtonStyle(
+                                    backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
+                                  ),
                                   child: const Text("บันทึกข้อมูล")),
                             ],
                           ),
@@ -786,7 +815,7 @@ class _Verify_PageState extends State<Verify_Page> {
         ),
         bottomNavigationBar: CurvedNavigationBar(
           key: navigationKey,
-          color: Colors.indigo,
+          color: Colors.orange.shade900,
           backgroundColor: Colors.transparent,
           height: 50,
           animationCurve: Curves.easeInOut,
@@ -820,9 +849,9 @@ class _Verify_PageState extends State<Verify_Page> {
      if (selectedValuestatus.toString() == "null") {
     editinform_error('กรุณาเลือกสถานะ !');
     }
-    if (selectedValueyears.toString() == "null") {
-      editinform_error('กรุณาเลือกปีงบประมาณ !');
-    }
+     else if((selectedValuestatus.toString() == "ชำรุด" || selectedValuestatus.toString() == "แทงจำหน่าย")  && _image == null){
+       editinform_error("กรุณาอัปโหลดรูปภาพ");
+     }
     else if (result.toString() != "") {
      if (noteController.text== ""){
       setState(() {

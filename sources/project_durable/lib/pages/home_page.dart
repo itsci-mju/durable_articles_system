@@ -546,7 +546,7 @@ class _HomePageState extends State<HomePage> {
 
           bottomNavigationBar: CurvedNavigationBar(
             key: navigationKey,
-            color: Colors.indigo,
+            color: Color(0xdfe65100),
             backgroundColor: Colors.transparent,
             height: 50,
             animationCurve: Curves.easeInOut,
@@ -1065,37 +1065,7 @@ class _HomePageState extends State<HomePage> {
   void checkdropdown() {
     login_manager lm = login_manager();
     if ( Majorlogin == "IT") {
-     /* if (  statusswitch == false ) {
-        setState(() {
-          lm
-              .listdurablenotverify(s!.major.ID_Major.toString(),
-              selectedValue.toString(), selectedValueyears.toString())
-              .then((value) => {
-            listnotverify = value,
-            setState(() {
-              isLoading = false;
-            }),
-          });
-          isVisiblenotverify = true;
-          isVisibleverify = false;
-          isVisibldurableadmin = false;
-        });
-      } else if (statusswitch == true) {
-        setState(() {
-          lm
-              .listdurable(s!.major.ID_Major.toString(), selectedValue.toString(),
-              selectedValueyears.toString())
-              .then((value) => {
-            listverify = value,
-            setState(() {
-              isLoading = false;
-            }),
-          });
-          isVisibleverify = true;
-          isVisiblenotverify = false;
-          isVisibldurableadmin = false;
-        });
-      }*/
+
       if (  _value2 == 1 ) {
         setState(() {
           lm
@@ -1131,40 +1101,6 @@ class _HomePageState extends State<HomePage> {
 
     }
     else if ( Majorlogin == "SCI") {
-      /*if (  statusswitch == false ) {
-        setState(() {
-          lm.listalldurableadmin(selectedValue.toString(),
-              selectedValueyears.toString())
-              .then((value) =>
-          {
-            listdurableadmin = value,
-            setState(() {
-              isLoading = false;
-            }),
-          });
-          isVisibleverify = false;
-          isVisiblenotverify = false;
-          isVisibldurableadmin = true;
-          isVisibldurableadmin2 = false;
-        });
-      }else if (statusswitch == true) {
-        setState(() {
-          lm.listdurableverifyed_admin(selectedValue.toString(),
-              selectedValueyears.toString())
-              .then((value) =>
-          {
-            listdurableverifyed_admin = value,
-            setState(() {
-              isLoading = false;
-            }),
-          });
-          isVisibleverify = false;
-          isVisiblenotverify = false;
-          isVisibldurableadmin = false;
-          isVisibldurableadmin2 = true;
-        });
-
-      }*/
       if (  _value2 == 1 ) {
         setState(() {
           setState(() {

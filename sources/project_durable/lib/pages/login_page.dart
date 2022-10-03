@@ -41,7 +41,7 @@ class _Login_PageState extends State<Login_Page> {
      onTap: () => FocusScope.of(context).unfocus(),
      child: Scaffold(
        resizeToAvoidBottomInset: false,
-       backgroundColor: Colors.indigo,
+       backgroundColor: Colors.orange.shade900,
        body: Stack(
          children: [
            Container(
@@ -198,7 +198,7 @@ class _Login_PageState extends State<Login_Page> {
              ),
                  Padding(
                    padding: EdgeInsets.only(left: 10),
-                   child: Text("คณะวิทยาศาสตร์มหาวิทยาลัยแม่โจ้",style:
+                   child: Text("คณะวิทยาศาสตร์  มหาวิทยาลัยแม่โจ้",style:
                      TextStyle(color: Colors.white,fontWeight: FontWeight.w300,fontSize: 17),),
                  )
            ],))

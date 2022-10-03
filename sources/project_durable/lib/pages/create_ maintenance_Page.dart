@@ -594,7 +594,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                                 label:  Text("บริษัทที่เข้ารับการซ่อม",
                                                     style: TextStyle(
                                                         fontSize: 22, fontWeight: FontWeight.bold)),
-                                                hintText: "กรุณากรอกบริษัทที่เข้ารับการซ่อม",
+                                                hintText: "หากไม่มีบริษัทให้พิมว่า ไม่มี",
                                               ),
                                               controller: companyController,
                                               keyboardType:
@@ -731,16 +731,47 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(width: 5),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+
+
+                                  const SizedBox(height: 10),
                                   _files != null
-                                      ?  _image!=null? Image.file(_image!,
-                                      width: 160,
-                                      height: 160,
-                                      fit: BoxFit.cover):Text(""):
+                                      ?  _image!=null? Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Text("คำเตือน : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  Text("**รูปจะไปแทนที่รูปเดิมที่อยู่ในระบบ**", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 10),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: [
+                                              Image.file(_image!,
+                                              width: 160,
+                                              height: 160,
+                                              fit: BoxFit.cover),
+                                            ],
+                                          ),
+                                        ],
+                                      ):Text(""):
                                   _image!=null? Image.file(_image!,
                                       width: 160,
                                       height: 160,
                                       fit: BoxFit.cover):Text(""),
+                                  const SizedBox(height: 10),
 
                                   Row(
                                     children: [
@@ -757,6 +788,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                   ),
                                 ],
                               ),
+
                               const SizedBox(
                                 height: 20,
                               ),
@@ -764,6 +796,9 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                   onPressed: ()  {
                                     AlertConfirm("ท่านยืนยันที่จะบันทึกข้อมูลนี้หรือไม่ ?");
                                   },
+                                  style: ButtonStyle(
+                                    backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
+                                  ),
                                   child: const Text("บันทึกข้อมูล")),
                             ],
                           ),
@@ -778,7 +813,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
         ),
         bottomNavigationBar: CurvedNavigationBar(
           key: navigationKey,
-          color: Colors.indigo,
+          color: Colors.orange.shade900,
           backgroundColor: Colors.transparent,
           height: 50,
           animationCurve: Curves.easeInOut,
@@ -817,7 +852,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
     else if(companyController.text =="") {
       Alert_error("กรุณากรอก บริษัทที่เข้ารับการซ่อม!");
     }
-    else if(_image == null){
+    else if(selectedValuestatus! == "ดี" &&_image == null){
       Alert_error("กรุณาอัปโหลดรูปภาพ!");
     }
     else if (result.toString() != "") {

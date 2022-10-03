@@ -397,13 +397,27 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
             const SizedBox(
               height: 2,
             ),
+            const SizedBox(
+              height: 2,
+            ),
+
+            verify !=null||verify2 !=null||verify3!=null?
+            _heading("สถานะการตรวจสอบแต่ละปี"):Container(),
+            const SizedBox(
+              height: 2,
+            ),
+            verify != null||verify2 != null||verify3!=null? _detailsStatusCard2():Container(),
+            const SizedBox(
+              height: 2,
+            ),
+
             d == null ? Container() : _button(),
           ],
         ),
       ),
       bottomNavigationBar: CurvedNavigationBar(
         key: navigationKey,
-        color: Colors.indigo,
+        color: Colors.orange.shade900,
         backgroundColor: Colors.transparent,
         height: 50,
         animationCurve: Curves.easeInOut,
@@ -719,15 +733,31 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
               height: 0.6,
               color: Colors.black87,
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget _detailsStatusCard2() {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Card(
+
+        elevation: 4,
+        child: Column(
+          children: [
             verify == null
                 ? Container()
                 : ListTile(
-                    // leading: const Icon(Icons.report_problem,color: Colors.indigo),
-                    title: Text("การตรวจสอบปี " +
-                        verify!.pk.verify.Years.toString() +
-                        " : " +
-                        verify!.Durable_status.toString()),
-                  ),
+              tileColor:    verify!.Durable_status.toString()== "ดี"?  Colors.green.shade300 : verify!.Durable_status.toString()== "ชำรุด"? Colors.red.shade300:Colors.amberAccent,
+              // leading: const Icon(Icons.report_problem,color: Colors.indigo),
+              title: Text("การตรวจสอบปี " +
+                  verify!.pk.verify.Years.toString() +
+                  " : " +
+                  verify!.Durable_status.toString()),
+            ),
             const Divider(
               height: 0.6,
               color: Colors.black87,
@@ -735,12 +765,13 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
             verify2 == null
                 ? Container()
                 : ListTile(
-                    // leading: const Icon(Icons.report_problem,color: Colors.indigo),
-                    title: Text("การตรวจสอบปี " +
-                        verify2!.pk.verify.Years.toString() +
-                        " : " +
-                        verify2!.Durable_status.toString()),
-                  ),
+              tileColor:    verify2!.Durable_status.toString()== "ดี"?  Colors.green.shade300 : verify2!.Durable_status.toString()== "ชำรุด"? Colors.red.shade300:Colors.amberAccent,
+              // leading: const Icon(Icons.report_problem,color: Colors.indigo),
+              title: Text("การตรวจสอบปี " +
+                  verify2!.pk.verify.Years.toString() +
+                  " : " +
+                  verify2!.Durable_status.toString()),
+            ),
             const Divider(
               height: 0.6,
               color: Colors.black87,
@@ -748,12 +779,13 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
             verify3 == null
                 ? Container()
                 : ListTile(
-                    // leading: const Icon(Icons.report_problem,color: Colors.indigo),
-                    title: Text("การตรวจสอบปี " +
-                        verify3!.pk.verify.Years.toString() +
-                        " : " +
-                        verify3!.Durable_status.toString()),
-                  ),
+              tileColor:    verify3!.Durable_status.toString()== "ดี"?  Colors.green.shade300 : verify3!.Durable_status.toString()== "ชำรุด"? Colors.red.shade300:Colors.amberAccent,
+              // leading: const Icon(Icons.report_problem,color: Colors.indigo),
+              title: Text("การตรวจสอบปี " +
+                  verify3!.pk.verify.Years.toString() +
+                  " : " +
+                  verify3!.Durable_status.toString()),
+            ),
             const Divider(
               height: 0.6,
               color: Colors.black87,

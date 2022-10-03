@@ -641,6 +641,9 @@ class _Inform_PageState extends State<Inform_Page> {
                                   onPressed: () async {
                                     AlertConfirm("ท่านยืนยันที่จะเพิ่มข้อมูลนี้ ?");
                                   },
+                                  style: ButtonStyle(
+                                    backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
+                                  ),
                                   child: const Text("บันทึกข้อมูล")),
                             ],
                           ),
@@ -655,7 +658,7 @@ class _Inform_PageState extends State<Inform_Page> {
         ),
         bottomNavigationBar: CurvedNavigationBar(
           key: navigationKey,
-          color: Colors.indigo,
+          color: Colors.orange.shade900,
           backgroundColor: Colors.transparent,
           height: 50,
           animationCurve: Curves.easeInOut,

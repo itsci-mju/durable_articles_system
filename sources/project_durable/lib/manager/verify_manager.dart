@@ -430,7 +430,7 @@ class verify_manager {
       throw Exception('Failed to get Listverifyinform');
     }
   }
-  Future<List<verifyinform>> listverifynotmaintenance(String major_id) async {
+  Future<List<RepairDurable>> listverifynotmaintenance(String major_id) async {
     var log = Logger();
     final response = await http.post(
       Uri.parse(Strings.url + Strings.url_listverifynotinmaintenance),
@@ -445,7 +445,7 @@ class verify_manager {
     log.e(response.body.toString());
     if (response.statusCode == 200) {
       ResponseModel responseModel = ResponseModel.fromJson(jsonDecode(response.body));
-      List<verifyinform> listdurable = (responseModel.result as List).map((item) => verifyinform.fromJson(item)).toList();
+      List<RepairDurable> listdurable = (responseModel.result as List).map((item) => RepairDurable.fromJson(item)).toList();
       log.e(listdurable.toString());
 
       return listdurable;

@@ -13,6 +13,10 @@ import 'package:logger/logger.dart';
 import 'package:project_durable/model/major_model.dart';
 import 'package:project_durable/model/veify_model.dart';
 import 'package:project_durable/model/verifyInform_model.dart';
+import 'package:project_durable/pages/pagesstatus/statusWaitrepair.dart';
+import 'package:project_durable/pages/pagesstatus/statusdefective.dart';
+import 'package:project_durable/pages/pagesstatus/statusgood.dart';
+import 'package:project_durable/pages/pagesstatus/statussell.dart';
 import 'package:project_durable/pages/scan_page.dart';
 import 'package:project_durable/pages/viewdurable.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -594,7 +598,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
       ),
       bottomNavigationBar: CurvedNavigationBar(
         key: navigationKey,
-        color: Colors.indigo,
+        color: Colors.orange.shade900,
         backgroundColor: Colors.transparent,
         height: 50,
         animationCurve: Curves.easeInOut,
@@ -685,7 +689,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
               //leading: const Icon(Icons.door_back_door,color: Colors.indigo),
               title: verifystatus1 == null ? Text("ดี : ") : Text(
                   "ดี : " + verifystatus1!),
-               onTap: () =>alertDialog1(context),
+               onTap: () =>go_statusgood(selectedValue.toString(), selectedValueyears.toString()),
             ),
             const Divider(
               height: 0.6,
@@ -695,7 +699,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
               //leading: const Icon(Icons.person,color: Colors.indigo),
               title: verifystatus2 == null ? Text("ชำรุด : ") : Text(
                   "ชำรุด : " + verifystatus2!),
-              onTap: () =>alertDialog2(context),
+              onTap: () =>go_statusdefective(selectedValue.toString(), selectedValueyears.toString()),
             ),
             const Divider(
               height: 0.6,
@@ -703,9 +707,9 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
             ),
             ListTile(
               //leading: const Icon(Icons.signal_wifi_statusbar_4_bar,color: Colors.indigo),
-              title: verifystatus4 == null ? Text("แทงจำหน่าย : ") : Text(
+              title: verifystatus4 == null ? Text("รอซ่อม : ") : Text(
                   "รอซ่อม : " + verifystatus4!),
-              onTap: () =>alertDialog4(context),
+              onTap: () =>go_statuswaitrepair(selectedValue.toString(), selectedValueyears.toString()),
 
             ),
             const Divider(
@@ -716,7 +720,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
               // leading: const Icon(Icons.report_problem,color: Colors.indigo),
               title: verifystatus3 == null ? Text("แทงจำหน่าย : ") : Text(
                   "แทงจำหน่าย : " + verifystatus3!),
-              onTap: () =>alertDialog3(context),
+              onTap: () =>go_statusSell(selectedValue.toString(), selectedValueyears.toString()),
             ),
             const Divider(
               height: 0.6,
@@ -813,7 +817,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
                   child: Text(listverifystatus4![index].informrepair.durable.Durable_name +" "+ listverifystatus4![index].informrepair.durable.Durable_code),
                 );
               },
-              itemCount: listverifystatus3!.length,
+              itemCount: listverifystatus4!.length,
             ),
           ),
         )
@@ -830,6 +834,39 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
       );
     },
   );
+
+  Future<void> go_statusgood(String major,String year) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    preferences.setString('selectid_majorstatus', major);
+    preferences.setString('selectyearstatus', year);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => StatusGoodPage()));
+  }
+  Future<void> go_statusdefective(String major,String year) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    preferences.setString('selectid_majorstatus', major);
+    preferences.setString('selectyearstatus', year);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => StatusdefectivePage()));
+  }
+  Future<void> go_statusSell(String major,String year) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    preferences.setString('selectid_majorstatus', major);
+    preferences.setString('selectyearstatus', year);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => StatusSellPage()));
+  }
+  Future<void> go_statuswaitrepair(String major,String year) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    preferences.setString('selectid_majorstatus', major);
+    preferences.setString('selectyearstatus', year);
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => StatusWaitrepairPage()));
+  }
 
 
   Future<void> convertcode(String code) async {

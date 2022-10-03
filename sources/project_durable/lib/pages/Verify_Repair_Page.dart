@@ -61,9 +61,6 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
   final List<String> statusdurable = [
     'ส่งซ่อม',
     'ซ่อมเอง',
-    'ดี',
-    'ชำรุด',
-    'แทงจำหน่าย',
   ];
   String? selectedValuestatus ;
   String? selectedValueyears;
@@ -181,6 +178,31 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
                 style: TextStyle(color: Colors.white, fontSize: 20)),
             onPressed: () {
               checkInsertverifyform();
+            },
+            width: 130,
+          ),
+          DialogButton(
+            child: const Text("ยกเลิก",
+                style: TextStyle(color: Colors.white, fontSize: 20)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            width: 130,
+          ),
+        ]).show();
+  }
+  AlertDelete(String title) async {
+    Alert(
+        context: context,
+        type: AlertType.info,
+        title: "แจ้งเตือน",
+        desc: title,
+        buttons: [
+          DialogButton(
+            child: const Text("ยืนยัน",
+                style: TextStyle(color: Colors.white, fontSize: 20)),
+            onPressed: () {
+              checkdelete();
             },
             width: 130,
           ),
@@ -604,13 +626,50 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
                               ],
                             ),
                             const SizedBox(
-                              height: 20,
+                              height: 10,
                             ),
-                            ElevatedButton(
-                                onPressed: ()  {
-                                  AlertConfirm("ท่านยืนยันที่จะบันทึกข้อมูลนี้ ?");
-                                },
-                                child: const Text("บันทึกข้อมูล")),
+                            Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    Text("คำเตือน : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Text("**รูปจะไปแทนที่รูปเดิมที่อยู่ในระบบ**", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                    onPressed: ()  {
+                                      AlertConfirm("ท่านยืนยันที่จะบันทึกข้อมูลนี้ ?");
+                                    },
+                                    style: ButtonStyle(
+                                      backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
+                                    ),
+                                    child: const Text("บันทึกข้อมูล")),
+                                SizedBox(width: 10),
+                                ElevatedButton(
+                                    onPressed: ()  {
+                                      AlertDelete("ท่านลบการแจ้งซ่อมนี ้?");
+                                    },
+                                    style: ButtonStyle(
+                                      backgroundColor:  MaterialStateProperty.all(Colors.red),
+                                    ),
+                                    child: const Text("ลบการแจ้งซ่อม")),
+
+
+                              ],
+                            ),
+
                           ],
                         ),
                       ),
@@ -624,7 +683,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
       ),
       bottomNavigationBar: CurvedNavigationBar(
         key: navigationKey,
-        color: Colors.indigo,
+        color: Colors.orange.shade900,
         backgroundColor: Colors.transparent,
         height: 50,
         animationCurve: Curves.easeInOut,
@@ -668,6 +727,13 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
       alertverify_error('เกิดข้อผิดพลาดลองใหม่อีกครั้ง !');
     }
   }
+  Future<void> checkdelete()  async {
+    inform_manager vrm = inform_manager();
+    String result = await vrm.deleteinformrepair(ir!.Informid.toString());
+    log.e(result.toString());
+    alertverify_suc('ลบข้อมูลสำเร็จ !');
+  }
+
   Widget MyDrawerList() {
     return Positioned(
       bottom: 0.0,

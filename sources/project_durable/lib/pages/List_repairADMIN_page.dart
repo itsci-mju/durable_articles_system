@@ -60,7 +60,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
   List<Verify>? v;
   List<inform_repair>? listinformrepairnotin;
   List<verifyinform>? listinformrepairin;
-  List<verifyinform>? listinformrepairinnotmaintenance;
+  List<RepairDurable>? listinformrepairinnotmaintenance;
   List<RepairDurable>? listRepairComplete;
   bool isVisiblenotverify = false;
   bool isVisibleverify = true;
@@ -327,10 +327,10 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                           labelColor: Colors.white,
                           unselectedLabelColor: Colors.black,
                           tabs: [
-                            Tab(text: 'ยังไม่ได้\nตรวจสอบ'),
-                            Tab(text: 'ตรวจสอบ\nแล้ว'),
-                            Tab(text: 'ส่งซ่อม\nสำเร็จ'),
-                            Tab(text: 'ส่งซ่อม\nไม่สำเร็จ'),
+                            Tab(text: 'รอตรวจสอบ'),
+                            Tab(text: 'รอส่งซ่อม'),
+                            Tab(text: 'ซ่อมสำเร็จ'),
+                            Tab(text: 'ซ่อมไม่สำเร็จ'),
                           ],
                         ),
                       ),
@@ -401,7 +401,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
         ),
         bottomNavigationBar: CurvedNavigationBar(
           key: navigationKey,
-          color: Colors.indigo,
+          color: Colors.orange.shade900,
           backgroundColor: Colors.transparent,
           height: 50,
           animationCurve: Curves.easeInOut,
@@ -433,8 +433,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
             listinformrepairnotin == null ? 0 : listinformrepairnotin!.length,
         itemBuilder: (context, index) {
           final durable = durables[index];
-          var showDate =
-              formatter.formatInBuddhistCalendarThai(durable.dateinform);
+          var showDate =       formatter.formatInBuddhistCalendarThai(durable.dateinform);
           String? img;
           if (durable.durable.Durable_image.toString() != "-") {
             img =   Strings.url+"/file/inform_repair/" + durable.durable.Durable_image.toString();
@@ -613,14 +612,14 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
       );
     },
   );
-  Widget buildDurableverifynotmaintenance(List<verifyinform> durables) => ListView.builder(
+  Widget buildDurableverifynotmaintenance(List<RepairDurable> durables) => ListView.builder(
     itemCount: listinformrepairinnotmaintenance == null ? 0 : listinformrepairinnotmaintenance!.length,
     itemBuilder: (context, index) {
       final durable = durables[index];
       String? img;
-      if (durable.informrepair.durable.Durable_image.toString() != "-") {
-        img =  Strings.url+"/file/durable_image/" + durable.informrepair.durable.Durable_image.toString();
-      //  img =       "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" + durable.informrepair.durable.Durable_image.toString();
+      if (durable.durable.Durable_image.toString() != "-") {
+        img =  Strings.url+"/file/durable_image/" + durable.durable.Durable_image.toString();
+        // img =       "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +durable.durable.Durable_image.toString();
       } else {
         img =
         "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -630,7 +629,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
       log.e(splitted[0].toString() +" "+  time[0].toString());
 
 */
-      var showDate = formatter.formatInBuddhistCalendarThai(durable.verify_date);
+      var showDate = formatter.formatInBuddhistCalendarThai(durable.verifyinform_.verify_date);
 
 
       return Card(
@@ -643,42 +642,48 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                 backgroundImage: NetworkImage(img),
               ),
               title:
-              Text("ชื่อครุภัณฑ์ : " + durable.informrepair.durable.Durable_name),
+              Text("ชื่อครุภัณฑ์ : " + durable.durable.Durable_name),
               subtitle: SizedBox(
                 child: Column(
                   children: [
                     Row(
                       children: [
                         const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.informrepair.durable.Durable_code),
+                        Text(durable.durable.Durable_code),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("วันที่ตรวจสอบ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(showDate),
+                        const Text("วันที่ซ่อม : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(durable.Date_of_repair.toString()),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("รายละเอียด : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.verify_detail.toString()),
+                        const Text("รายละเอียดการซ่อม : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(durable.repair_detail),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text("จำนวนเงิน : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(durable.repair_charges),
                       ],
                     ),
                     Row(
                       children: [
                         const Text("สถานะ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        durable.verify_status== "ส่งซ่อม"
-                            ? Text(durable.verify_status,
+                        durable.Repair_status == "ดี"
+                            ? Text(durable.Repair_status,
                             style: TextStyle(
                                 color: Colors.blueAccent,
                                 fontWeight: FontWeight.bold))
-                            : durable.verify_status == "ซ่อมเอง"
-                            ? Text(durable.verify_status,
+                            : durable.Repair_status == "ชำรุด"
+                            ? Text(durable.Repair_status,
                             style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold))
-                            : Text(durable.verify_status,
+                            : Text(durable.Repair_status,
                             style: TextStyle(
                                 color: Colors.orange,
                                 fontWeight: FontWeight.bold)),
@@ -688,12 +693,12 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                 ),
               ),
               isThreeLine: true,
-              /*trailing: Icon(
+              trailing: Icon(
                 Icons.create,
                 // color: Colors.green.shade700
-              ),*/
+              ),
               onTap: () {
-                //  convertcode(durable.informrepair.durable.Durable_code.toString());
+                convertcodetoedit(durable.durable.Durable_code.toString(),durable.verifyinform_.verify_id.toString());
               },
             ),
           ),
@@ -795,6 +800,8 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
       );
     },
   );
+
+
   Future<void> convertcode(String code) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     List<String> listcode = code.split(".PNG");

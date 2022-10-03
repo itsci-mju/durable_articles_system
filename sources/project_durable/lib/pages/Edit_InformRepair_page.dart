@@ -635,6 +635,9 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                                   onPressed: ()  {
                                     AlertConfirm("ท่านยืนยันจะแก้ไขข้อมูลนี้ ?");
                                   },
+                                  style: ButtonStyle(
+                                    backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
+                                  ),
                                   child: const Text("แก้ไขข้อมูล")),
                             ],
                           ),
@@ -649,7 +652,7 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
         ),
         bottomNavigationBar: CurvedNavigationBar(
           key: navigationKey,
-          color: Colors.indigo,
+          color: Colors.orange.shade900,
           backgroundColor: Colors.transparent,
           height: 50,
           animationCurve: Curves.easeInOut,

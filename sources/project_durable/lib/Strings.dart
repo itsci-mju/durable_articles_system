@@ -39,6 +39,8 @@ class Strings {
   static const String url_getdurableininformrepair = "/appinfromrepair/informrepair/getdurableininformrepair";
   static const String url_getdurableininformrepair2 = "/appinfromrepair/informrepair/getdurableininformrepair2";
   static const String url_getdurableininformrepairnotrepair = "/appinfromrepair/informrepair/getdurableininformrepairnotrepair";
+  static const String url_deleteinform_repair = "/appinfromrepair/inform_repair/deleteinform_repair";
+
 
   //Major
   static const String url_listAllmajor = "/appmajor/major/listmajor";

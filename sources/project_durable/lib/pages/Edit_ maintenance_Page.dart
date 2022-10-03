@@ -725,12 +725,37 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(width: 5),
+                                  const SizedBox(height: 10),
                                   _files != null
-                                      ?  _image!=null? Image.file(_image!,
-                                      width: 160,
-                                      height: 160,
-                                      fit: BoxFit.cover):Text(""):
+                                      ?  _image!=null? Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Text("คำเตือน : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
+                                            ],
+                                          ),
+                                          Column(
+                                            children: [
+                                              Text("**รูปจะไปแทนที่รูปเดิมที่อยู่ในระบบ**", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Image.file(_image!,
+                                              width: 160,
+                                              height: 160,
+                                              fit: BoxFit.cover),
+                                        ],
+                                      ),
+                                    ],
+                                  ):Text(""):
                                   _image!=null? Image.file(_image!,
                                       width: 160,
                                       height: 160,
@@ -762,6 +787,9 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
                                     AlertConfirm(
                                         "ท่านยืนยันที่จะแก้ไข้อมูลนี้หรือไม่ ?");
                                   },
+                                  style: ButtonStyle(
+                                    backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
+                                  ),
                                   child: const Text("แก้ไขข้อมูล")),
                             ],
                           ),
@@ -776,7 +804,7 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
         ),
         bottomNavigationBar: CurvedNavigationBar(
           key: navigationKey,
-          color: Colors.indigo,
+          color: Colors.orange.shade900,
           backgroundColor: Colors.transparent,
           height: 50,
           animationCurve: Curves.easeInOut,
