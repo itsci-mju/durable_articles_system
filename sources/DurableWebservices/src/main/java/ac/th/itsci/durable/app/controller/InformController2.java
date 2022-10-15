@@ -168,7 +168,7 @@ public class InformController2 {
 
 				BufferedImage imageWrite = getScaledInstance(image, width, height,
 						RenderingHints.VALUE_RENDER_QUALITY, true);
-
+				
 				if (type_image.equalsIgnoreCase(".png")) {
 					ImageIO.write(imageWrite, "jpg", new File(path + "/" + durable_image));
 				} else if (type_image.equalsIgnoreCase(".jpeg")) {
@@ -241,14 +241,20 @@ public class InformController2 {
 		return convFile;
 	}
 	@RequestMapping(value = "/inform_repair/deleteinform_repair", method = RequestMethod.POST)
-	public @ResponseBody ResponseObj do_deleteinform_repair(@RequestBody Map<String, String> map) {
+	public @ResponseBody ResponseObj do_deleteinform_repair(@RequestBody Map<String, String> map,ServletRequest request) {
 		int message = 0;
-		inform_repair inform = null;
 		try {
 			String id = map.get("Informid");
+			String code = map.get("durable_code");
+			String durable_image = code.replaceAll("/", "_") + "" + ".jpg";
+			String filePath = request.getServletContext().getRealPath("/") + "file/inform_repair/"+durable_image;
+			File delFile = new File(filePath);
 
+			if(delFile.isFile() && delFile.exists()) {
+			delFile.delete();
+			}
+			
 			InformManager im = new InformManager();
-			inform = im.getinformidbycode(id);
 			message = im.deleteinform_repairsql(id);
 			
 			return new ResponseObj(200, message);
@@ -267,7 +273,7 @@ public class InformController2 {
 			String durable_code = map.get("durable_code");
 			InformManager ir = new InformManager();
 
-			inform_repair = ir.getinform_repair2(durable_code);
+			inform_repair = ir.getinform_repair(durable_code);
 			System.out.println(inform_repair.toString());
 			return new ResponseObj(200, inform_repair);
 		} catch (Exception e) {
@@ -278,14 +284,15 @@ public class InformController2 {
 
 	// TEST
 	@RequestMapping(value = "/inform_repair/getinform_repair2", method = RequestMethod.POST)
-	public @ResponseBody ResponseObj getdurabletest(HttpServletRequest request) {
+	public @ResponseBody ResponseObj getdurabletest(@RequestBody Map<String, String> map,
+			HttpServletRequest request) {
 		inform_repair inform_repair = null;
 		try {
-			String durablecode = "วท.4140-003-0336/61";
+			String durable_code = map.get("durable_code");
+			String inform_id = map.get("inform_id");
 			InformManager ir = new InformManager();
 
-			inform_repair = ir.getinform_repair2(durablecode);
-
+			inform_repair = ir.getinform_repair2(durable_code,inform_id);
 			System.out.println(inform_repair.toString());
 			return new ResponseObj(200, inform_repair);
 		} catch (Exception e) {
@@ -293,6 +300,7 @@ public class InformController2 {
 		}
 		return new ResponseObj(500, inform_repair);
 	}
+	
 
 	@RequestMapping(value = "/informrepair/getlistformrepair", method = RequestMethod.POST)
 	public @ResponseBody ResponseObj getinformrepair(@RequestBody Map<String, String> map,
@@ -418,6 +426,20 @@ public class InformController2 {
 			}
 			return new ResponseObj(500, durable);
 		}
+		@RequestMapping(value = "/informrepair/listformrepairINnotinmaintenance2", method = RequestMethod.POST)
+		public @ResponseBody ResponseObj list_informrepairINnotinmaintenance2(@RequestBody Map<String, String> map,HttpServletRequest request) {
+			List<verifyinform> durable = null;
+			try {
+				InformManager im = new InformManager();
+				String major_name = map.get("major_name");
+				durable = im.listinformrepairINnotmaintenance2(major_name);
+				System.out.println(durable.toString());
+				return new ResponseObj(200, durable);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return new ResponseObj(500, durable);
+		}
 
 		@PostMapping(path = "/informrepair/getdurableininformrepair", consumes = MediaType.APPLICATION_JSON_VALUE)
 		public @ResponseBody ResponseObj do_getdurableininformrepair(@RequestBody Map<String, String> map,
@@ -491,6 +513,22 @@ public class InformController2 {
 				String idmajor = map.get("major_id");
 				InformManager im = new InformManager();
 				verifyinform = im.listinformrepairINnotmaintenanceID(idmajor);
+				System.out.println(verifyinform.toString());
+				return new ResponseObj(200, verifyinform);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return new ResponseObj(500, verifyinform);
+		}
+		
+		@RequestMapping(value = "/informrepair/getlistverifynotinmaintenance2", method = RequestMethod.POST)
+		public @ResponseBody ResponseObj getverifynotinmaintenance2(@RequestBody Map<String, String> map,
+				HttpServletRequest request) {
+			List<verifyinform> verifyinform = null;
+			try {
+				String idmajor = map.get("major_id");
+				InformManager im = new InformManager();
+				verifyinform = im.listinformrepairINnotmaintenanceID2(idmajor);
 				System.out.println(verifyinform.toString());
 				return new ResponseObj(200, verifyinform);
 			} catch (Exception e) {

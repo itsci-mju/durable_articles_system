@@ -30,22 +30,30 @@ import ac.th.itsci.durable.entity.verifyinform;
 import ac.th.itsci.durable.util.ConnectionDB;
 import ac.th.itsci.durable.util.HibernateConnection;
 
-
-
 public class MaintenanceManager {
 	private static String SALT = "123456";
 
 	public int insertRepairDurable(RepairDurable r) {
 		ConnectionDB condb = new ConnectionDB();
 		Connection con = condb.getConnection();
+		String pattern = "YYYY-MM-dd HH:mm:ss";
+
+		Calendar c = Calendar.getInstance();
+		c.setTimeZone(null);
+		Date DD = c.getTime();
+
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 		try {
 			Statement stmt = con.createStatement();
 			String sql = "INSERT INTO repair_durable(repair_id,date_of_repair,repair_status,picture_invoice,picture_quatation,picture_repair,picture_repairreport,repair_charges,repair_date,\n"
-					+ "repair_detail,repair_title,company_id,durable_code,verify_id)"
-					+ " VALUES ('" +r.getRepair_id() + "', '" + r.getDate_of_repair() + "', '" + r.getRepair_status() + "', '"
-					+r.getPicture_invoice()  + "', '" + r.getPicture_quatation() +"', '" + r.getPicture_repair() +"', '" + r.getPicture_repairreport() +
-					"', '" + r.getRepair_charges() + "', '" + r.getRepair_date() + "', '" + r.getRepair_detail() + "', '" + r.getRepair_title() +
-					"', '" + r.getCompany().getCompany_id() + "', '" + r.getDurable().getDurable_code() + "', '" + r.getVerifyinform().getVerify_id() +"');";
+					+ "repair_detail,repair_title,company_id,durable_code,verify_id)" + " VALUES ('" + r.getRepair_id()
+					+ "', '" + r.getDate_of_repair() + "', '" + r.getRepair_status() + "', '" + r.getPicture_invoice()
+					+ "', '" + r.getPicture_quatation() + "', '" + r.getPicture_repair() + "', '"
+					+ r.getPicture_repairreport() + "', '" + r.getRepair_charges() + "', '" + sdf.format(DD)
+					+ "', '" + r.getRepair_detail() + "', '" + r.getRepair_title() + "', '"
+					+ r.getCompany().getCompany_id() + "', '" + r.getDurable().getDurable_code() + "', '"
+					+ r.getVerifyinform().getVerify_id() + "');";
 			int result = stmt.executeUpdate(sql);
 
 			con.close();
@@ -75,7 +83,7 @@ public class MaintenanceManager {
 		}
 		return id + 1;
 	}
-	
+
 	public List<RepairDurable> listRepairComplete(String major_name) {
 		List<RepairDurable> list = new ArrayList<>();
 		ConnectionDB condb = new ConnectionDB();
@@ -95,10 +103,10 @@ public class MaintenanceManager {
 					+ " left join room r on r.room_number = d.room_number"
 					+ " left join verifyinform vi on rd.verify_id = vi.verify_id left join inform_repair ir on  vi.informid =ir.Informid "
 					+ " inner join staff s on ir.id_staff = s.id_staff inner join login l on s.username = l.username inner join major m on s.id_major = m.id_major"
-					+ " where m.major_name = '"+major_name+"' and rd.repair_status = 'ดี';";
+					+ " where m.major_name = '" + major_name + "' and rd.repair_status = 'ดี';";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				int repairid  = rs.getInt(1);
+				int repairid = rs.getInt(1);
 				String Date_of_repair = rs.getString(2);
 				String Repair_status = rs.getString(3);
 				String picture_invoice = rs.getString(4);
@@ -109,14 +117,14 @@ public class MaintenanceManager {
 				String repair_date = rs.getString(9);
 				String repair_detail = rs.getString(10);
 				String repair_title = rs.getString(11);
-				
+
 				int company_id = rs.getInt(12);
 				String companyname = rs.getString(13);
 				String address = rs.getString(14);
 				String tell = rs.getString(15);
-				
-				Company company = new Company(company_id,companyname,address,tell);
-				
+
+				Company company = new Company(company_id, companyname, address, tell);
+
 				/* เริ่ม durable */
 				String durable_code = rs.getString(16);
 				String Durable_name = rs.getString(17);
@@ -135,20 +143,20 @@ public class MaintenanceManager {
 				String Build = rs.getString(30);
 				String floor = rs.getString(31);
 
-			
 				/* ปิด durable */
-				
+
 				int verifyid = rs.getInt(32);
 				String verifydate = rs.getString(33);
 				String verifydetail = rs.getString(34);
 				String verifystatus = rs.getString(35);
-				
+
 				Calendar date_verify = Calendar.getInstance();
 				String vdate[] = verifydate.split(" ");
 				String vdate1[] = vdate[0].split("-");
 				String vTime[] = vdate[1].split(":");
-				date_verify.set(Integer.parseInt(vdate1[0]), Integer.parseInt(vdate1[1]) - 1, Integer.parseInt(vdate1[2]),
-						Integer.parseInt(vTime[0]), Integer.parseInt(vTime[1]), Integer.parseInt(vTime[2]));
+				date_verify.set(Integer.parseInt(vdate1[0]), Integer.parseInt(vdate1[1]) - 1,
+						Integer.parseInt(vdate1[2]), Integer.parseInt(vTime[0]), Integer.parseInt(vTime[1]),
+						Integer.parseInt(vTime[2]));
 
 				String Informid = rs.getString(36);
 				String Informtype = rs.getString(37);
@@ -159,9 +167,10 @@ public class MaintenanceManager {
 				String idate[] = dateinform.split(" ");
 				String idate1[] = idate[0].split("-");
 				String iTime[] = idate[1].split(":");
-				date_inform.set(Integer.parseInt(idate1[0]), Integer.parseInt(idate1[1]) - 1, Integer.parseInt(idate1[2]),
-						Integer.parseInt(iTime[0]), Integer.parseInt(iTime[1]), Integer.parseInt(iTime[2]));
-				
+				date_inform.set(Integer.parseInt(idate1[0]), Integer.parseInt(idate1[1]) - 1,
+						Integer.parseInt(idate1[2]), Integer.parseInt(iTime[0]), Integer.parseInt(iTime[1]),
+						Integer.parseInt(iTime[2]));
+
 				/* เริ่ม staff */
 				int staff_id_staff = rs.getInt(41);
 				String Id_card = rs.getString(42);
@@ -182,21 +191,20 @@ public class MaintenanceManager {
 				Staff s = new Staff(staff_id_staff, Id_card, Staff_name, Staff_lastname, Staff_status, Email, Brithday,
 						Phone_number, Image_staff, m, l);
 				/* ปิด staff */
-				
+
 				Room r = new Room(Room_number, Room_name, Build, floor, m);
 
 				Durable d = new Durable(durable_code, Durable_name, Durable_number, Durable_brandname, Durable_model,
 						Durable_price, Durable_statusnow, Responsible_person, Durable_image, Durable_Borrow_Status,
 						Durable_entrancedate, durablenote, m, r);
-			
-				inform_repair ir = new inform_repair(Informid,Informtype,date_inform,details,picture_inform,s,d);
-				
-				verifyinform vi = new verifyinform(verifyid,date_verify,verifystatus,verifydetail,ir);
 
-				
-				RepairDurable rd = new RepairDurable(repairid,repair_date,repair_title,repair_charges,repair_detail
-						,picture_invoice,picture_repairreport,picture_quatation,picture_repair
-						,Date_of_repair,Repair_status,d,company,vi);
+				inform_repair ir = new inform_repair(Informid, Informtype, date_inform, details, picture_inform, s, d);
+
+				verifyinform vi = new verifyinform(verifyid, date_verify, verifystatus, verifydetail, ir);
+
+				RepairDurable rd = new RepairDurable(repairid, repair_date, repair_title, repair_charges, repair_detail,
+						picture_invoice, picture_repairreport, picture_quatation, picture_repair, Date_of_repair,
+						Repair_status, d, company, vi);
 				list.add(rd);
 			}
 
@@ -207,8 +215,8 @@ public class MaintenanceManager {
 
 		return list;
 	}
-	
-	public RepairDurable getRepairdurable(String durablecode,String _verifyid) {
+
+	public RepairDurable getRepairdurable(String durablecode, String _verifyid) {
 		RepairDurable rd = null;
 		ConnectionDB condb = new ConnectionDB();
 		Connection con = condb.getConnection();
@@ -227,10 +235,10 @@ public class MaintenanceManager {
 					+ " left join room r on r.room_number = d.room_number"
 					+ " left join verifyinform vi on rd.verify_id = vi.verify_id left join inform_repair ir on  vi.informid =ir.Informid "
 					+ " inner join staff s on ir.id_staff = s.id_staff inner join login l on s.username = l.username inner join major m on s.id_major = m.id_major"
-					+ " where rd.durable_code = '"+durablecode+"' and rd.verify_id = '"+_verifyid+"' ;";
+					+ " where rd.durable_code = '" + durablecode + "' and rd.verify_id = '" + _verifyid + "' ;";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				int repairid  = rs.getInt(1);
+				int repairid = rs.getInt(1);
 				String Date_of_repair = rs.getString(2);
 				String Repair_status = rs.getString(3);
 				String picture_invoice = rs.getString(4);
@@ -241,14 +249,14 @@ public class MaintenanceManager {
 				String repair_date = rs.getString(9);
 				String repair_detail = rs.getString(10);
 				String repair_title = rs.getString(11);
-				
+
 				int company_id = rs.getInt(12);
 				String companyname = rs.getString(13);
 				String address = rs.getString(14);
 				String tell = rs.getString(15);
-				
-				Company company = new Company(company_id,companyname,address,tell);
-				
+
+				Company company = new Company(company_id, companyname, address, tell);
+
 				/* เริ่ม durable */
 				String durable_code = rs.getString(16);
 				String Durable_name = rs.getString(17);
@@ -267,20 +275,20 @@ public class MaintenanceManager {
 				String Build = rs.getString(30);
 				String floor = rs.getString(31);
 
-			
 				/* ปิด durable */
-				
+
 				int verifyid = rs.getInt(32);
 				String verifydate = rs.getString(33);
 				String verifydetail = rs.getString(34);
 				String verifystatus = rs.getString(35);
-				
+
 				Calendar date_verify = Calendar.getInstance();
 				String vdate[] = verifydate.split(" ");
 				String vdate1[] = vdate[0].split("-");
 				String vTime[] = vdate[1].split(":");
-				date_verify.set(Integer.parseInt(vdate1[0]), Integer.parseInt(vdate1[1]) - 1, Integer.parseInt(vdate1[2]),
-						Integer.parseInt(vTime[0]), Integer.parseInt(vTime[1]), Integer.parseInt(vTime[2]));
+				date_verify.set(Integer.parseInt(vdate1[0]), Integer.parseInt(vdate1[1]) - 1,
+						Integer.parseInt(vdate1[2]), Integer.parseInt(vTime[0]), Integer.parseInt(vTime[1]),
+						Integer.parseInt(vTime[2]));
 
 				String Informid = rs.getString(36);
 				String Informtype = rs.getString(37);
@@ -291,9 +299,10 @@ public class MaintenanceManager {
 				String idate[] = dateinform.split(" ");
 				String idate1[] = idate[0].split("-");
 				String iTime[] = idate[1].split(":");
-				date_inform.set(Integer.parseInt(idate1[0]), Integer.parseInt(idate1[1]) - 1, Integer.parseInt(idate1[2]),
-						Integer.parseInt(iTime[0]), Integer.parseInt(iTime[1]), Integer.parseInt(iTime[2]));
-				
+				date_inform.set(Integer.parseInt(idate1[0]), Integer.parseInt(idate1[1]) - 1,
+						Integer.parseInt(idate1[2]), Integer.parseInt(iTime[0]), Integer.parseInt(iTime[1]),
+						Integer.parseInt(iTime[2]));
+
 				/* เริ่ม staff */
 				int staff_id_staff = rs.getInt(41);
 				String Id_card = rs.getString(42);
@@ -314,22 +323,21 @@ public class MaintenanceManager {
 				Staff s = new Staff(staff_id_staff, Id_card, Staff_name, Staff_lastname, Staff_status, Email, Brithday,
 						Phone_number, Image_staff, m, l);
 				/* ปิด staff */
-				
+
 				Room r = new Room(Room_number, Room_name, Build, floor, m);
 
 				Durable d = new Durable(durable_code, Durable_name, Durable_number, Durable_brandname, Durable_model,
 						Durable_price, Durable_statusnow, Responsible_person, Durable_image, Durable_Borrow_Status,
 						Durable_entrancedate, durablenote, m, r);
-			
-				inform_repair ir = new inform_repair(Informid,Informtype,date_inform,details,picture_inform,s,d);
-				
-				verifyinform vi = new verifyinform(verifyid,date_verify,verifystatus,verifydetail,ir);
 
-				
-				 rd = new RepairDurable(repairid,repair_date,repair_title,repair_charges,repair_detail
-						,picture_invoice,picture_repairreport,picture_quatation,picture_repair
-						,Date_of_repair,Repair_status,d,company,vi);
-				
+				inform_repair ir = new inform_repair(Informid, Informtype, date_inform, details, picture_inform, s, d);
+
+				verifyinform vi = new verifyinform(verifyid, date_verify, verifystatus, verifydetail, ir);
+
+				rd = new RepairDurable(repairid, repair_date, repair_title, repair_charges, repair_detail,
+						picture_invoice, picture_repairreport, picture_quatation, picture_repair, Date_of_repair,
+						Repair_status, d, company, vi);
+
 			}
 
 			con.close();
@@ -339,8 +347,7 @@ public class MaintenanceManager {
 
 		return rd;
 	}
-	
-	
+
 	public List<RepairDurable> listRepairCompletebyidmajor(String id_major) {
 		List<RepairDurable> list = new ArrayList<>();
 		ConnectionDB condb = new ConnectionDB();
@@ -360,10 +367,10 @@ public class MaintenanceManager {
 					+ " left join room r on r.room_number = d.room_number"
 					+ " left join verifyinform vi on rd.verify_id = vi.verify_id left join inform_repair ir on  vi.informid =ir.Informid "
 					+ " inner join staff s on ir.id_staff = s.id_staff inner join login l on s.username = l.username inner join major m on s.id_major = m.id_major"
-					+ " where m.id_major = '"+id_major+"' and rd.repair_status = 'ดี' ;";
+					+ " where m.id_major = '" + id_major + "' and rd.repair_status = 'ดี' ;";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				int repairid  = rs.getInt(1);
+				int repairid = rs.getInt(1);
 				String Date_of_repair = rs.getString(2);
 				String Repair_status = rs.getString(3);
 				String picture_invoice = rs.getString(4);
@@ -374,14 +381,14 @@ public class MaintenanceManager {
 				String repair_date = rs.getString(9);
 				String repair_detail = rs.getString(10);
 				String repair_title = rs.getString(11);
-				
+
 				int company_id = rs.getInt(12);
 				String companyname = rs.getString(13);
 				String address = rs.getString(14);
 				String tell = rs.getString(15);
-				
-				Company company = new Company(company_id,companyname,address,tell);
-				
+
+				Company company = new Company(company_id, companyname, address, tell);
+
 				/* เริ่ม durable */
 				String durable_code = rs.getString(16);
 				String Durable_name = rs.getString(17);
@@ -400,20 +407,20 @@ public class MaintenanceManager {
 				String Build = rs.getString(30);
 				String floor = rs.getString(31);
 
-			
 				/* ปิด durable */
-				
+
 				int verifyid = rs.getInt(32);
 				String verifydate = rs.getString(33);
 				String verifydetail = rs.getString(34);
 				String verifystatus = rs.getString(35);
-				
+
 				Calendar date_verify = Calendar.getInstance();
 				String vdate[] = verifydate.split(" ");
 				String vdate1[] = vdate[0].split("-");
 				String vTime[] = vdate[1].split(":");
-				date_verify.set(Integer.parseInt(vdate1[0]), Integer.parseInt(vdate1[1]) - 1, Integer.parseInt(vdate1[2]),
-						Integer.parseInt(vTime[0]), Integer.parseInt(vTime[1]), Integer.parseInt(vTime[2]));
+				date_verify.set(Integer.parseInt(vdate1[0]), Integer.parseInt(vdate1[1]) - 1,
+						Integer.parseInt(vdate1[2]), Integer.parseInt(vTime[0]), Integer.parseInt(vTime[1]),
+						Integer.parseInt(vTime[2]));
 
 				String Informid = rs.getString(36);
 				String Informtype = rs.getString(37);
@@ -424,9 +431,10 @@ public class MaintenanceManager {
 				String idate[] = dateinform.split(" ");
 				String idate1[] = idate[0].split("-");
 				String iTime[] = idate[1].split(":");
-				date_inform.set(Integer.parseInt(idate1[0]), Integer.parseInt(idate1[1]) - 1, Integer.parseInt(idate1[2]),
-						Integer.parseInt(iTime[0]), Integer.parseInt(iTime[1]), Integer.parseInt(iTime[2]));
-				
+				date_inform.set(Integer.parseInt(idate1[0]), Integer.parseInt(idate1[1]) - 1,
+						Integer.parseInt(idate1[2]), Integer.parseInt(iTime[0]), Integer.parseInt(iTime[1]),
+						Integer.parseInt(iTime[2]));
+
 				/* เริ่ม staff */
 				int staff_id_staff = rs.getInt(41);
 				String Id_card = rs.getString(42);
@@ -447,21 +455,20 @@ public class MaintenanceManager {
 				Staff s = new Staff(staff_id_staff, Id_card, Staff_name, Staff_lastname, Staff_status, Email, Brithday,
 						Phone_number, Image_staff, m, l);
 				/* ปิด staff */
-				
+
 				Room r = new Room(Room_number, Room_name, Build, floor, m);
 
 				Durable d = new Durable(durable_code, Durable_name, Durable_number, Durable_brandname, Durable_model,
 						Durable_price, Durable_statusnow, Responsible_person, Durable_image, Durable_Borrow_Status,
 						Durable_entrancedate, durablenote, m, r);
-			
-				inform_repair ir = new inform_repair(Informid,Informtype,date_inform,details,picture_inform,s,d);
-				
-				verifyinform vi = new verifyinform(verifyid,date_verify,verifystatus,verifydetail,ir);
 
-				
-				RepairDurable rd = new RepairDurable(repairid,repair_date,repair_title,repair_charges,repair_detail
-						,picture_invoice,picture_repairreport,picture_quatation,picture_repair
-						,Date_of_repair,Repair_status,d,company,vi);
+				inform_repair ir = new inform_repair(Informid, Informtype, date_inform, details, picture_inform, s, d);
+
+				verifyinform vi = new verifyinform(verifyid, date_verify, verifystatus, verifydetail, ir);
+
+				RepairDurable rd = new RepairDurable(repairid, repair_date, repair_title, repair_charges, repair_detail,
+						picture_invoice, picture_repairreport, picture_quatation, picture_repair, Date_of_repair,
+						Repair_status, d, company, vi);
 				list.add(rd);
 			}
 
@@ -472,6 +479,7 @@ public class MaintenanceManager {
 
 		return list;
 	}
+
 	public List<RepairDurable> listRepairdurablehistory(String durablecode) {
 		List<RepairDurable> list = new ArrayList<>();
 		ConnectionDB condb = new ConnectionDB();
@@ -491,10 +499,10 @@ public class MaintenanceManager {
 					+ "				 right join room r on r.room_number = d.room_number\n"
 					+ "					 right join verifyinform vi on rd.verify_id = vi.verify_id right join inform_repair ir on  vi.informid =ir.Informid \n"
 					+ "				right join staff s on ir.id_staff = s.id_staff right join login l on s.username = l.username inner join major m on s.id_major = m.id_major\n"
-					+ "				 where rd.durable_code ='"+durablecode+"' ;";
+					+ "				 where rd.durable_code ='" + durablecode + "' ;";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				int repairid  = rs.getInt(1);
+				int repairid = rs.getInt(1);
 				String Date_of_repair = rs.getString(2);
 				String Repair_status = rs.getString(3);
 				String picture_invoice = rs.getString(4);
@@ -505,14 +513,14 @@ public class MaintenanceManager {
 				String repair_date = rs.getString(9);
 				String repair_detail = rs.getString(10);
 				String repair_title = rs.getString(11);
-				
+
 				int company_id = rs.getInt(12);
 				String companyname = rs.getString(13);
 				String address = rs.getString(14);
 				String tell = rs.getString(15);
-				
-				Company company = new Company(company_id,companyname,address,tell);
-				
+
+				Company company = new Company(company_id, companyname, address, tell);
+
 				/* เริ่ม durable */
 				String durable_code = rs.getString(16);
 				String Durable_name = rs.getString(17);
@@ -531,20 +539,20 @@ public class MaintenanceManager {
 				String Build = rs.getString(30);
 				String floor = rs.getString(31);
 
-			
 				/* ปิด durable */
-				
+
 				int verifyid = rs.getInt(32);
 				String verifydate = rs.getString(33);
 				String verifydetail = rs.getString(34);
 				String verifystatus = rs.getString(35);
-				
+
 				Calendar date_verify = Calendar.getInstance();
 				String vdate[] = verifydate.split(" ");
 				String vdate1[] = vdate[0].split("-");
 				String vTime[] = vdate[1].split(":");
-				date_verify.set(Integer.parseInt(vdate1[0]), Integer.parseInt(vdate1[1]) - 1, Integer.parseInt(vdate1[2]),
-						Integer.parseInt(vTime[0]), Integer.parseInt(vTime[1]), Integer.parseInt(vTime[2]));
+				date_verify.set(Integer.parseInt(vdate1[0]), Integer.parseInt(vdate1[1]) - 1,
+						Integer.parseInt(vdate1[2]), Integer.parseInt(vTime[0]), Integer.parseInt(vTime[1]),
+						Integer.parseInt(vTime[2]));
 
 				String Informid = rs.getString(36);
 				String Informtype = rs.getString(37);
@@ -555,9 +563,10 @@ public class MaintenanceManager {
 				String idate[] = dateinform.split(" ");
 				String idate1[] = idate[0].split("-");
 				String iTime[] = idate[1].split(":");
-				date_inform.set(Integer.parseInt(idate1[0]), Integer.parseInt(idate1[1]) - 1, Integer.parseInt(idate1[2]),
-						Integer.parseInt(iTime[0]), Integer.parseInt(iTime[1]), Integer.parseInt(iTime[2]));
-				
+				date_inform.set(Integer.parseInt(idate1[0]), Integer.parseInt(idate1[1]) - 1,
+						Integer.parseInt(idate1[2]), Integer.parseInt(iTime[0]), Integer.parseInt(iTime[1]),
+						Integer.parseInt(iTime[2]));
+
 				/* เริ่ม staff */
 				int staff_id_staff = rs.getInt(41);
 				String Id_card = rs.getString(42);
@@ -578,21 +587,20 @@ public class MaintenanceManager {
 				Staff s = new Staff(staff_id_staff, Id_card, Staff_name, Staff_lastname, Staff_status, Email, Brithday,
 						Phone_number, Image_staff, m, l);
 				/* ปิด staff */
-				
+
 				Room r = new Room(Room_number, Room_name, Build, floor, m);
 
 				Durable d = new Durable(durable_code, Durable_name, Durable_number, Durable_brandname, Durable_model,
 						Durable_price, Durable_statusnow, Responsible_person, Durable_image, Durable_Borrow_Status,
 						Durable_entrancedate, durablenote, m, r);
-			
-				inform_repair ir = new inform_repair(Informid,Informtype,date_inform,details,picture_inform,s,d);
-				
-				verifyinform vi = new verifyinform(verifyid,date_verify,verifystatus,verifydetail,ir);
 
-				
-				RepairDurable rd = new RepairDurable(repairid,repair_date,repair_title,repair_charges,repair_detail
-						,picture_invoice,picture_repairreport,picture_quatation,picture_repair
-						,Date_of_repair,Repair_status,d,company,vi);
+				inform_repair ir = new inform_repair(Informid, Informtype, date_inform, details, picture_inform, s, d);
+
+				verifyinform vi = new verifyinform(verifyid, date_verify, verifystatus, verifydetail, ir);
+
+				RepairDurable rd = new RepairDurable(repairid, repair_date, repair_title, repair_charges, repair_detail,
+						picture_invoice, picture_repairreport, picture_quatation, picture_repair, Date_of_repair,
+						Repair_status, d, company, vi);
 				list.add(rd);
 			}
 
@@ -603,7 +611,8 @@ public class MaintenanceManager {
 
 		return list;
 	}
-	public RepairDurable getRepairdurablehistory(String durablecode,String repair_id) {
+
+	public RepairDurable getRepairdurablehistory(String durablecode, String repair_id) {
 		RepairDurable rd = null;
 		ConnectionDB condb = new ConnectionDB();
 		Connection con = condb.getConnection();
@@ -622,10 +631,11 @@ public class MaintenanceManager {
 					+ "				 right join room r on r.room_number = d.room_number\n"
 					+ "					 right join verifyinform vi on rd.verify_id = vi.verify_id right join inform_repair ir on  vi.informid =ir.Informid \n"
 					+ "				right join staff s on ir.id_staff = s.id_staff right join login l on s.username = l.username inner join major m on s.id_major = m.id_major\n"
-					+ "				 where rd.durable_code ='"+durablecode+"' and  rd.repair_id= '"+repair_id+"';";
+					+ "				 where rd.durable_code ='" + durablecode + "' and  rd.repair_id= '" + repair_id
+					+ "';";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				int repairid  = rs.getInt(1);
+				int repairid = rs.getInt(1);
 				String Date_of_repair = rs.getString(2);
 				String Repair_status = rs.getString(3);
 				String picture_invoice = rs.getString(4);
@@ -636,14 +646,14 @@ public class MaintenanceManager {
 				String repair_date = rs.getString(9);
 				String repair_detail = rs.getString(10);
 				String repair_title = rs.getString(11);
-				
+
 				int company_id = rs.getInt(12);
 				String companyname = rs.getString(13);
 				String address = rs.getString(14);
 				String tell = rs.getString(15);
-				
-				Company company = new Company(company_id,companyname,address,tell);
-				
+
+				Company company = new Company(company_id, companyname, address, tell);
+
 				/* เริ่ม durable */
 				String durable_code = rs.getString(16);
 				String Durable_name = rs.getString(17);
@@ -662,20 +672,20 @@ public class MaintenanceManager {
 				String Build = rs.getString(30);
 				String floor = rs.getString(31);
 
-			
 				/* ปิด durable */
-				
+
 				int verifyid = rs.getInt(32);
 				String verifydate = rs.getString(33);
 				String verifydetail = rs.getString(34);
 				String verifystatus = rs.getString(35);
-				
+
 				Calendar date_verify = Calendar.getInstance();
 				String vdate[] = verifydate.split(" ");
 				String vdate1[] = vdate[0].split("-");
 				String vTime[] = vdate[1].split(":");
-				date_verify.set(Integer.parseInt(vdate1[0]), Integer.parseInt(vdate1[1]) - 1, Integer.parseInt(vdate1[2]),
-						Integer.parseInt(vTime[0]), Integer.parseInt(vTime[1]), Integer.parseInt(vTime[2]));
+				date_verify.set(Integer.parseInt(vdate1[0]), Integer.parseInt(vdate1[1]) - 1,
+						Integer.parseInt(vdate1[2]), Integer.parseInt(vTime[0]), Integer.parseInt(vTime[1]),
+						Integer.parseInt(vTime[2]));
 
 				String Informid = rs.getString(36);
 				String Informtype = rs.getString(37);
@@ -686,9 +696,10 @@ public class MaintenanceManager {
 				String idate[] = dateinform.split(" ");
 				String idate1[] = idate[0].split("-");
 				String iTime[] = idate[1].split(":");
-				date_inform.set(Integer.parseInt(idate1[0]), Integer.parseInt(idate1[1]) - 1, Integer.parseInt(idate1[2]),
-						Integer.parseInt(iTime[0]), Integer.parseInt(iTime[1]), Integer.parseInt(iTime[2]));
-				
+				date_inform.set(Integer.parseInt(idate1[0]), Integer.parseInt(idate1[1]) - 1,
+						Integer.parseInt(idate1[2]), Integer.parseInt(iTime[0]), Integer.parseInt(iTime[1]),
+						Integer.parseInt(iTime[2]));
+
 				/* เริ่ม staff */
 				int staff_id_staff = rs.getInt(41);
 				String Id_card = rs.getString(42);
@@ -709,22 +720,21 @@ public class MaintenanceManager {
 				Staff s = new Staff(staff_id_staff, Id_card, Staff_name, Staff_lastname, Staff_status, Email, Brithday,
 						Phone_number, Image_staff, m, l);
 				/* ปิด staff */
-				
+
 				Room r = new Room(Room_number, Room_name, Build, floor, m);
 
 				Durable d = new Durable(durable_code, Durable_name, Durable_number, Durable_brandname, Durable_model,
 						Durable_price, Durable_statusnow, Responsible_person, Durable_image, Durable_Borrow_Status,
 						Durable_entrancedate, durablenote, m, r);
-			
-				inform_repair ir = new inform_repair(Informid,Informtype,date_inform,details,picture_inform,s,d);
-				
-				verifyinform vi = new verifyinform(verifyid,date_verify,verifystatus,verifydetail,ir);
 
-				
-				 rd = new RepairDurable(repairid,repair_date,repair_title,repair_charges,repair_detail
-						,picture_invoice,picture_repairreport,picture_quatation,picture_repair
-						,Date_of_repair,Repair_status,d,company,vi);
-	
+				inform_repair ir = new inform_repair(Informid, Informtype, date_inform, details, picture_inform, s, d);
+
+				verifyinform vi = new verifyinform(verifyid, date_verify, verifystatus, verifydetail, ir);
+
+				rd = new RepairDurable(repairid, repair_date, repair_title, repair_charges, repair_detail,
+						picture_invoice, picture_repairreport, picture_quatation, picture_repair, Date_of_repair,
+						Repair_status, d, company, vi);
+
 			}
 
 			con.close();
@@ -734,21 +744,19 @@ public class MaintenanceManager {
 
 		return rd;
 	}
-	
+
 	public int updateRepairDurable(RepairDurable rd) {
 		ConnectionDB condb = new ConnectionDB();
 		Connection con = condb.getConnection();
 
 		try {
 			Statement stmt = con.createStatement();
-			String sql = "UPDATE repair_durable\n"
-					+ "SET\n"
-					+ "date_of_repair = '" + rd.getDate_of_repair() + "',\n"
-					+ "repair_status = '" + rd.getRepair_status() + "',\n"
-					+ "repair_charges = '" + rd.getRepair_charges() + "',\n"
-					+ "repair_detail = '" + rd.getRepair_detail() + "',\n"
-					+ "company_id = '" + rd.getCompany().getCompany_id() + "'\n"
-					+ "WHERE durable_code = '" + rd.getDurable().getDurable_code() + "' AND verify_id = '" + rd.getVerifyinform().getVerify_id() + "' ;";
+			String sql = "UPDATE repair_durable\n" + "SET\n" + "date_of_repair = '" + rd.getDate_of_repair() + "',\n"
+					+ "repair_status = '" + rd.getRepair_status() + "',\n" + "repair_charges = '"
+					+ rd.getRepair_charges() + "',\n" + "repair_detail = '" + rd.getRepair_detail() + "',\n"
+					+ "company_id = '" + rd.getCompany().getCompany_id() + "'\n" + "WHERE durable_code = '"
+					+ rd.getDurable().getDurable_code() + "' AND verify_id = '" + rd.getVerifyinform().getVerify_id()
+					+ "' ;";
 			int result = stmt.executeUpdate(sql);
 
 			con.close();
@@ -760,6 +768,4 @@ public class MaintenanceManager {
 		return -1;
 	}
 
-	
-	
 }

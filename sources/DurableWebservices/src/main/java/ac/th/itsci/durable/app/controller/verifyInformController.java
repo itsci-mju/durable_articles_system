@@ -71,5 +71,20 @@ public class verifyInformController {
 			return new ResponseObj(500, "0");
 		}
 	}
+	
+	@RequestMapping(path = "/verifyinform/getverifyinformbyid", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody ResponseObj do_getverifyinformbyidinform(@RequestBody Map<String, String> map) {
+		verifyinform verify = null;
+		try {
+			String informid = map.get("informid");
+			verifyInformManager vm = new verifyInformManager();
+			verify = vm.getverifyinformbyid2(informid);
+			System.out.println(verify.toString());
+			return new ResponseObj(200, verify);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseObj(500, verify);
+	}
 
 }

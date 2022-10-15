@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -60,7 +61,7 @@ public class MaintenanceController2 {
 			Date date_now = new Date();
 			String DATE_FORMAT = "dd MMMM yyyy";
 			SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT, new Locale("th", "TH"));
-			
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT+7"));
 			CompanyManager cm = new CompanyManager();
 			
 			Company company = new Company();
@@ -72,11 +73,15 @@ public class MaintenanceController2 {
 				System.out.println("COMPANY NOT NULL");
 			}
 					
+			verifyInformManager vim = new verifyInformManager();
+			if(repair_status.equals("ไม่สามารถซ่อมได้")) {
+				vim.updateverifyinform(repair_detail,repair_status,verify_id);
+			}
 			VerifyManager vm = new VerifyManager();
 			Durable d = new Durable();
 			d = vm.getDurable2(durable_code);
 			
-			verifyInformManager vim = new verifyInformManager();
+
 			
 			verifyinform vi = new verifyinform();
 			vi = vim.getverifyinformbyid(verify_id);
