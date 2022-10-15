@@ -53,6 +53,7 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
   var noteController = TextEditingController();
   var durablename_controller = TextEditingController();
   var durablecode_controller = TextEditingController();
+  var durableroom_controller = TextEditingController();
   DateTime now = DateTime.now();
 
   final List<String> statusdurable = [
@@ -147,6 +148,7 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
       selectedValuestatus = "ชำรุด",
       durablename_controller.text = ir!.durable.Durable_name.toString(),
       durablecode_controller.text = ir!.durable.Durable_code.toString(),
+      durableroom_controller.text = ir!.durable.room.Room_number.toString(),
       setState(() {
         isLoading = false;
       }),
@@ -372,6 +374,21 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                                       Column(
                                         children: [
                                           Text(durablecode_controller.text, style: TextStyle(fontSize: 16)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text("ห้องที่ใช้งาน : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text(durableroom_controller.text, style: TextStyle(fontSize: 16)),
                                         ],
                                       ),
                                     ],

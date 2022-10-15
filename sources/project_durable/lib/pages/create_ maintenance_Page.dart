@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:project_durable/manager/verifyinform_manager.dart';
 import 'package:project_durable/model/InformRepair_model.dart';
 import 'package:project_durable/model/veify_model.dart';
 import 'package:project_durable/pages/scan_page.dart';
@@ -25,6 +26,7 @@ import '../manager/login_manager.dart';
 import '../manager/verify_manager.dart';
 import '../model/durable_model.dart';
 import '../model/staff_model.dart';
+import '../model/verifyInform_model.dart';
 import '../splash.dart';
 import 'List_repairADMIN_page.dart';
 import 'List_repair_page.dart';
@@ -42,7 +44,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
   var log = Logger();
   bool isLoading = true;
   bool hide = true;
-
+  verifyinform? vi;
   String? codedurable;
   Durable? d;
   inform_repair? ir;
@@ -51,12 +53,14 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
   Staff? s;
   List<Verify>? v;
   String? verifyid;
+  String? idinform;
+
   var noteController = TextEditingController();
   var moneyController = TextEditingController();
   var companyController = TextEditingController();
   var namedurableController = TextEditingController();
   var durablecodeController = TextEditingController();
-
+  var durableroomController = TextEditingController();
   var detailrepairController = TextEditingController();
   String? dateinform ;
 
@@ -121,8 +125,10 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
     verify_manager vm = verify_manager();
     codedurable = preferences.getString('durable_code')!;
     verifyid = preferences.getString('verifyid')!;
-
+    idinform = preferences.getString('idinform')!;
+    verifyinform_manager vim = verifyinform_manager();
     log.e(verifyid!);
+    log.e(idinform!);
     staff = preferences.getString('Staff')!;
     Map<String, dynamic> map = jsonDecode(staff);
     s = Staff.fromJson(map);
@@ -151,6 +157,12 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
         isLoading = false;
       }),
     });
+    vim.getverifyinformbyid(idinform!).then((value) => {
+      vi = value,
+      setState(() {
+        isLoading = false;
+      }),
+    });
 
 
     irm.getinform_repairbyID(codedurable.toString()).then((value) => {
@@ -159,10 +171,12 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
       selectedValuestatus = 'ดี',
       namedurableController.text =  ir!.durable.Durable_name.toString(),
       durablecodeController.text = ir!.durable.Durable_code.toString(),
+      durableroomController.text = ir!.durable.room.Room_number.toString(),
       setState(() {
         isLoading = false;
       }),
     });
+
 
 
     setState(() {
@@ -275,15 +289,17 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
   @override
   void initState() {
     super.initState();
+    findUser();
     imageCache!.clear();
     imageCache!.clearLiveImages();
-    findUser();
+
   }
 
   final List<String> statusdurable = [
     'ดี',
-    'ชำรุด',
-    'แทงจำหน่าย',
+    'ไม่สามารถซ่อมได้',
+   /* 'ชำรุด',
+    'แทงจำหน่าย',*/
   ];
   String? selectedValuestatus ;
   String? selectedValueyears;
@@ -303,18 +319,22 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
     ];
 
     String? img;
+    String? img2;
    // String durableimg = d == null ? "" : d!.Durable_image.toString();
     if (d!.Durable_image.toString() != "-") {
       img =  Strings.url+"/file/durable_image/" + d!.Durable_image.toString();
+      img2 =  Strings.url+"/file/inform_repair/" + d!.Durable_image.toString();
      // img =  "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" + durableimg;
     } else {
       img =
       "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
     }
     var showDate;
-     ir==null? "":  showDate = formatter.formatInBuddhistCalendarThai(ir!.dateinform);;
-
-
+    var showDate2;
+     ir==null? "":  showDate = formatter.formatInBuddhistCalendarThai(ir!.dateinform);
+    var informtime = DateFormat('kk:mm').format(ir!.dateinform);
+    vi==null? "":  showDate2 = formatter.formatInBuddhistCalendarThai(vi!.verify_date);
+    var verifytime = DateFormat('kk:mm').format(vi!.verify_date);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -362,10 +382,30 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
+
+                              SizedBox(height: 10),
+                              Text("รูปครุภัณฑ์ :",
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.green)),
+                              SizedBox(height: 10),
+                              Column(
+                                children: [
+                                  Image.network(img!, width: 250, height: 200),
+                                ],
+                              ),
+
+                              SizedBox(height: 10),
+                              Text("รูปครุภัณฑ์ชำรุดที่แจ้ง :",
+                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.red)),
+                              SizedBox(height: 10),
+                              Column(
+                                children: [
+                                  Image.network(img2!, width: 250, height: 200),
+                                ],
+                              ),
+                              SizedBox(height: 10),
                               Text("บันทึกการซ่อมบำรุง",
                                   style: TextStyle(
                                       fontSize: 22, fontWeight: FontWeight.bold)),
-                              Image.network(img!, width: 300, height: 200),
                               SizedBox(height: 10),
                               Column(
                                 children: [
@@ -408,6 +448,21 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                     children: [
                                       Column(
                                         children: const [
+                                          Text("ห้องที่ใช้งาน :",
+                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text( durableroomController.text,
+                                          style: TextStyle(fontSize: 16)),
+                                    ],
+                                  ),
+
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: const [
                                           Text("รายละเอียดการส่งซ่อม :",
                                               style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
                                         ],
@@ -427,8 +482,37 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                         ],
                                       ),
                                       const SizedBox(width: 5),
-                                      Text(showDate,
+                                      Text(showDate+" "+informtime+" น.",
                                           style: TextStyle(fontSize: 16)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: const [
+                                          Text("วันที่ตรวจสอบ :",
+                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(showDate2+" "+verifytime+" น.",
+                                          style: TextStyle(fontSize: 16)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: const [
+                                          Text("สถานะตรวจสอบ :",
+                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 5),
+                                      vi!.verify_status.toString()=="ส่งซ่อม"?
+                                      Text(vi!.verify_status.toString(),style: TextStyle(fontSize: 16,color: Colors.blueAccent,fontWeight: FontWeight.bold))
+                                          :Text(vi!.verify_status.toString(),style: TextStyle(fontSize: 16,color: Colors.red,fontWeight: FontWeight.bold)),
                                     ],
                                   ),
                                   SizedBox(height: 20),
@@ -529,7 +613,31 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                     ],
                                   ),
                                   SizedBox(height: 20),
-                                  Row(
+                                  selectedValuestatus =="ไม่สามารถซ่อมได้"? Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          child: SizedBox(
+                                            width: 50,
+                                            height: 80,
+                                            child: TextFormField(
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                label:  Text("เหตุผลที่ไม่สามารถซ่อมได้",
+                                                    style: TextStyle(
+                                                        fontSize: 22, fontWeight: FontWeight.bold)),
+                                                hintText: "กรุณากรอกเหคุผล",
+                                              ),
+                                              controller: detailrepairController,
+                                              keyboardType:
+                                              TextInputType.text,
+                                              maxLines: null,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ):Row(
                                     children: [
                                       Expanded(
                                         child: Container(
@@ -583,6 +691,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                   SizedBox(height: 10),
                                   Row(
                                     children: [
+                                      vi!.verify_status.toString()=="ส่งซ่อม"?
                                       Expanded(
                                         child: Container(
                                           child: SizedBox(
@@ -594,7 +703,28 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                                 label:  Text("บริษัทที่เข้ารับการซ่อม",
                                                     style: TextStyle(
                                                         fontSize: 22, fontWeight: FontWeight.bold)),
-                                                hintText: "หากไม่มีบริษัทให้พิมว่า ไม่มี",
+                                                hintText: "กรุณากรอกบริษัทที่รับการซ่อม",
+                                              ),
+                                              controller: companyController,
+                                              keyboardType:
+                                              TextInputType.text,
+                                              maxLines: null,
+                                            ),
+                                          ),
+                                        ),
+                                      ):
+                                      Expanded(
+                                        child: Container(
+                                          child: SizedBox(
+                                            width: 50,
+                                            height: 80,
+                                            child: TextFormField(
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                label:  Text("ผู้รับผิดชอบการซ่อม",
+                                                    style: TextStyle(
+                                                        fontSize: 22, fontWeight: FontWeight.bold)),
+                                                hintText: "กรุณากรอก ชื่อผู้รับผิดชอบ",
                                               ),
                                               controller: companyController,
                                               keyboardType:
@@ -607,7 +737,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                     ],
                                   ),
 
-                                  Row(
+                                  /*   Row(
                                     children: [
                                       Column(
                                         children: const [
@@ -616,7 +746,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                         ],
                                       ),
                                       const SizedBox(width: 20),
-                                      Column(
+                                     Column(
                                         children: [
                                           Row(
                                             children: [
@@ -730,13 +860,13 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                         ],
                                       ),
                                     ],
-                                  ),
+                                  ),*/
                                   const SizedBox(
                                     height: 10,
                                   ),
 
 
-                                  const SizedBox(height: 10),
+                                /*  const SizedBox(height: 10),
                                   _files != null
                                       ?  _image!=null? Column(
                                         children: [
@@ -770,7 +900,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                   _image!=null? Image.file(_image!,
                                       width: 160,
                                       height: 160,
-                                      fit: BoxFit.cover):Text(""),
+                                      fit: BoxFit.cover):Text(""),*/
                                   const SizedBox(height: 10),
 
                                   Row(
@@ -852,16 +982,16 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
     else if(companyController.text =="") {
       Alert_error("กรุณากรอก บริษัทที่เข้ารับการซ่อม!");
     }
-    else if(selectedValuestatus! == "ดี" &&_image == null){
+    /*else if(selectedValuestatus! == "ดี" &&_image == null){
       Alert_error("กรุณาอัปโหลดรูปภาพ!");
-    }
+    }*/
     else if (result.toString() != "") {
       /* String date =  ir!.dateinform.year.toString()+"-"+ ir!.dateinform.month.toString()+"-"+ir!.dateinform.dayOfMonth.toString()+" "
           +ir!.dateinform.hourOfDay.toString()+":"+ir!.dateinform.minute.toString()+":"+ir!.dateinform.second.toString();
       log.e(date);*/
 
       result = await rdm.insertrepairdurable(companyController.text, moneyController.text, detailrepairController.text,  selectedValuestatus!,durablecodeController.text, verifyid!);
-      uploadfile();
+     // uploadfile();
       Alert_suc("บันทึกข้อมูลสำเร็จ");
       /* Scaffold.of(context).showSnackBar(const SnackBar(
         content: Text('บันทึกข้อมูลสำเร็จ !'),

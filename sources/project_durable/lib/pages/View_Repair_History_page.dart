@@ -285,6 +285,7 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
   Widget _detailsCard() {
     var informdate =    formatter.formatInBuddhistCalendarThai(getRepair!.verifyinform_.informrepair.dateinform) ;
     var informtime = DateFormat('kk:mm').format(getRepair!.verifyinform_.informrepair.dateinform);
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Card(
@@ -322,6 +323,10 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
   }
 
   Widget _detailsCard2() {
+    var timerepair1 = getRepair!.repair_date.split(' ') ;
+    var timerepair = timerepair1[1].substring(0,5);
+    log.e(timerepair);
+    log.e(timerepair1[1]);
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Card(
@@ -344,9 +349,12 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
               height: 0.6,
               color: Colors.black87,
             ),
-            ListTile(
+            getRepair!.verifyinform_.verify_status.toString()=="ส่งซ่อม"? ListTile(
               // leading: const Icon(Icons.branding_watermark_sharp,color: Colors.indigo),
-              title: Text("บริษัทที่เข้ารับการซ๋อม : " + getRepair!.company_.companyname.toString()),
+              title: Text("บริษัทที่เข้ารับการซ่อม : " + getRepair!.company_.companyname.toString()),
+            ):ListTile(
+              // leading: const Icon(Icons.branding_watermark_sharp,color: Colors.indigo),
+              title: Text("ผู้รับผิดชอบการซ่อม : " + getRepair!.company_.companyname.toString()),
             ),
             const Divider(
               height: 0.6,
@@ -354,7 +362,7 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
             ),
             ListTile(
               // leading: const Icon(Icons.branding_watermark_sharp,color: Colors.indigo),
-              title: Text("วันที่ซ่อมเสร็จ : " + getRepair!.Date_of_repair.toString()),
+              title: Text("วันที่ซ่อมเสร็จ : " + getRepair!.Date_of_repair.toString() + " "+timerepair+" น."),
             ),
             const Divider(
               height: 0.6,

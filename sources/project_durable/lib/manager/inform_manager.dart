@@ -45,7 +45,8 @@ class inform_manager {
     }
   }
   Future<String> deleteinformrepair(
-      String Informid) async {
+      String Informid,
+      String durable_code) async {
     final response = await http.post(
       Uri.parse(Strings.url + Strings.url_deleteinform_repair),
       headers: <String, String>{
@@ -53,6 +54,7 @@ class inform_manager {
       },
       body: jsonEncode(<String, String>{
         'Informid': Informid,
+        'durable_code': durable_code,
       }),
     );
     var log = Logger();
@@ -114,6 +116,32 @@ class inform_manager {
       },
       body: jsonEncode(<String, String>{
         'durable_code': durable_code,
+      }),
+    );
+    var log = Logger();
+    log.e(response.body);
+    if (response.statusCode == 200) {
+      ResponseModel responseModel = ResponseModel.fromJson(
+          jsonDecode(response.body));
+      Map<String, dynamic> staffMap = responseModel.toMap();
+      inform_repair d = inform_repair.fromJson(staffMap['result']);
+      var log = Logger();
+      log.e(d);
+      return d;
+    } else {
+      throw Exception('Failed to Load data');
+    }
+  }
+
+  Future<inform_repair> getinform_repairbyID2(String durable_code,String inform_id) async {
+    final response = await http.post(
+      Uri.parse(Strings.url + Strings.url_getInform_repairbyID2),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'durable_code': durable_code,
+        'inform_id': inform_id
       }),
     );
     var log = Logger();
@@ -213,6 +241,29 @@ class inform_manager {
     if (response.statusCode == 200) {
       ResponseModel responseModel = ResponseModel.fromJson(jsonDecode(response.body));
       List<RepairDurable> listdurable = (responseModel.result as List).map((item) => RepairDurable.fromJson(item)).toList();
+      log.e(listdurable.toString());
+
+      return listdurable;
+    } else {
+      throw Exception('Failed to get Listinform');
+    }
+  }
+  Future<List<verifyinform>> listinforminnotmaintenanadmin2(String major_name) async {
+    var log = Logger();
+    final response = await http.post(
+      Uri.parse(Strings.url + Strings.url_listinforminverifynotinmaintenance2),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'major_name': major_name,
+      }),
+    );
+
+    log.e(response.body);
+    if (response.statusCode == 200) {
+      ResponseModel responseModel = ResponseModel.fromJson(jsonDecode(response.body));
+      List<verifyinform> listdurable = (responseModel.result as List).map((item) => verifyinform.fromJson(item)).toList();
       log.e(listdurable.toString());
 
       return listdurable;

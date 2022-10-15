@@ -49,6 +49,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
   var emailController = TextEditingController();
   var passController = TextEditingController();
   String? codedurable;
+  String? informid;
   Durable? d;
   inform_repair? ir;
   String staff = "";
@@ -61,6 +62,8 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
   final List<String> statusdurable = [
     'ส่งซ่อม',
     'ซ่อมเอง',
+    'ไม่สามารถซ่อมได้',
+    'ยกเลิกการแจ้งซ่อม',
   ];
   String? selectedValuestatus ;
   String? selectedValueyears;
@@ -125,6 +128,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
     durable_manager dm = durable_manager();
     verify_manager vm = verify_manager();
     codedurable = preferences.getString('durable_code')!;
+    informid =  preferences.getString('id_informid')!;
     staff = preferences.getString('Staff')!;
     Map<String, dynamic> map = jsonDecode(staff);
     s = Staff.fromJson(map);
@@ -147,7 +151,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
     });
 
 
-    irm.getinform_repairbyID(codedurable.toString()).then((value) => {
+    irm.getinform_repairbyID2(codedurable.toString(),informid!).then((value) => {
       ir = value,
       noteController.text = ir!.details.toString(),
       selectedValuestatus = "ส่งซ่อม",
@@ -317,9 +321,11 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
     ];
 
     String? img;
+    String? img2;
     String durableimg = d == null ? "" : d!.Durable_image.toString();
     if (durableimg != "-") {
-      img = Strings.url+"/file/inform_repair/" + durableimg;
+      img = Strings.url+"/file/durable_image/" + durableimg;
+      img2 =  Strings.url+"/file/inform_repair/" + d!.Durable_image.toString();
       log.e(img);
       setState(() {
         urlimg = img;
@@ -395,14 +401,54 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
                                 return Container();
                               },
                             ),*/
-                            Image.network(img!, width: 300, height: 200),
-                            SizedBox(height: 10),
-                            Text("ตรวจสอบการแจ้งซ่อม",
-                                style: TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.bold)),
                             SizedBox(height: 10),
                             Column(
                               children: [
+                              /*  SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text("รหัสการแจ้งซ่อม :",
+                                            style: TextStyle(fontSize: 16)),
+                                      ],
+                                    ),
+                                    SizedBox(width: 10),
+                                    Column(
+                                      children: [
+                                        Text(
+                                            ir == null
+                                                ? ""
+                                                : ir!.Informid.toString(),
+                                            style: TextStyle(fontSize: 16)),
+                                      ],
+                                    )
+                                  ],
+                                ),*/
+                                SizedBox(height: 10),
+                                Text("รูปครุภัณฑ์ :",
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.green)),
+                                SizedBox(height: 10),
+                                Column(
+                                  children: [
+                                    Image.network(img!, width: 250, height: 200),
+                                  ],
+                                ),
+
+                                SizedBox(height: 10),
+                                Text("รูปครุภัณฑ์ชำรุดที่แจ้ง :",
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.red)),
+                                SizedBox(height: 10),
+                                Column(
+                                  children: [
+                                    Image.network(img2!, width: 250, height: 200),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Text("ตรวจสอบการแจ้งซ่อม",
+                                    style: TextStyle(
+                                        fontSize: 22, fontWeight: FontWeight.bold)),
+
                                 SizedBox(height: 10),
                                 Row(
                                   children: [
@@ -440,6 +486,27 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
                                             ir == null
                                                 ? ""
                                                 : ir!.durable.Durable_code.toString(),
+                                            style: TextStyle(fontSize: 16)),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text("ห้อง :",
+                                            style: TextStyle(fontSize: 16)),
+                                      ],
+                                    ),
+                                    SizedBox(width: 5),
+                                    Column(
+                                      children: [
+                                        Text(
+                                            ir == null
+                                                ? ""
+                                                : ir!.durable.room.Room_number.toString(),
                                             style: TextStyle(fontSize: 16)),
                                       ],
                                     )
@@ -499,7 +566,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
                                         Text(
                                             ir == null
                                                 ? ""
-                                                : ir!.staff.Staff_name.toString() +"  " +ir!.staff.Staff_lastname.toString(),
+                                                : ir!.staff.Staff_status.toString(),
                                             style: TextStyle(fontSize: 16)),
                                       ],
                                     )
@@ -558,7 +625,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
                                               });
                                             },
                                             buttonHeight: 40,
-                                            buttonWidth: 160,
+                                            buttonWidth: 180,
                                             buttonPadding:
                                             const EdgeInsets.only(
                                                 left: 14, right: 14),
@@ -598,8 +665,10 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
                                 Row(
                                   children: [
                                     Column(
-                                      children: const [
-                                        Text("รายละเอียด :",
+                                      children:  [
+                                        selectedValuestatus == "ไม่สามารถซ่อมได้"? Text("เหตุผล :",
+                                            style: TextStyle(fontSize: 16)): selectedValuestatus == "ยกเลิกการแจ้งซ่อม"?  Text("เหตุผล :",
+                                            style: TextStyle(fontSize: 16)):Text("รายละเอียด :",
                                             style: TextStyle(fontSize: 16)),
                                       ],
                                     ),
@@ -625,7 +694,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
                                 ),
                               ],
                             ),
-                            const SizedBox(
+                           /* const SizedBox(
                               height: 10,
                             ),
                             Row(
@@ -641,7 +710,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
                                   ],
                                 ),
                               ],
-                            ),
+                            ),*/
                             const SizedBox(
                               height: 10,
                             ),
@@ -656,15 +725,15 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
                                       backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
                                     ),
                                     child: const Text("บันทึกข้อมูล")),
-                                SizedBox(width: 10),
+                               /* SizedBox(width: 10),
                                 ElevatedButton(
                                     onPressed: ()  {
-                                      AlertDelete("ท่านลบการแจ้งซ่อมนี ้?");
+                                      AlertDelete("ท่านลบการแจ้งซ่อมนี้ ?");
                                     },
                                     style: ButtonStyle(
                                       backgroundColor:  MaterialStateProperty.all(Colors.red),
                                     ),
-                                    child: const Text("ลบการแจ้งซ่อม")),
+                                    child: const Text("ลบการแจ้งซ่อม")),*/
 
 
                               ],
@@ -721,7 +790,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
     }
     else if (selectedValuestatus.toString() == "ส่งซ่อม" || selectedValuestatus.toString() == "ซ่อมเอง" ) {
       result = await vrm.insertverifyinForm(ir!.Informid.toString(),selectedValuestatus!,detailController.text);
-      uploadfile();
+     // uploadfile();
       alertverify_suc('บันทึกข้อมูลสำเร็จ !');
     } else {
       alertverify_error('เกิดข้อผิดพลาดลองใหม่อีกครั้ง !');
@@ -729,7 +798,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
   }
   Future<void> checkdelete()  async {
     inform_manager vrm = inform_manager();
-    String result = await vrm.deleteinformrepair(ir!.Informid.toString());
+    String result = await vrm.deleteinformrepair(ir!.Informid.toString(),ir!.durable.Durable_code.toString());
     log.e(result.toString());
     alertverify_suc('ลบข้อมูลสำเร็จ !');
   }

@@ -132,7 +132,7 @@ class _EditVerify_PageState extends State<EditVerify_Page> {
       durablecode_controller.text = vd!.pk.durable.Durable_code.toString(),
       selectedValueyears = vd!.pk.verify.Years.toString(),
       selectedValuestatus= vd!.Durable_status.toString(),
-      person = vd!.pk.staff.Staff_name.toString() +" " +vd!.pk.staff.Staff_name.toString(),
+      person = vd!.pk.staff.Staff_status.toString(),
       noteController.text = vd!.note.toString(),
       setState(() {
         isLoading = false;

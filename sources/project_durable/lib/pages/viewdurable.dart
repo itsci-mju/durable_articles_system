@@ -148,6 +148,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
                 isLoading = false;
               }),
             });
+  log.e(checkinformrepairnotrepair);
 
     dm.getdurablebyCode(codedurable.toString()).then((value) => {
           d = value,
@@ -582,29 +583,29 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
                                 color: Colors.white,
                                 size: 30.0,
                               ),
-                              label: Text('เจ้าหน้าที่ทำการตรวจสอบแล้ว สถานะรอยืนยัน'),
+                              label: Text('เจ้าหน้าที่ทำการตรวจสอบแล้ว สถานะรอซ่อม'),
                               onPressed: () {
                                 getdurable2(d!.Durable_code.toString());
                               },
                             ),
                           )
                         : Align(
-                            alignment: Alignment.center,
-                            child: ElevatedButton.icon(
-                              style: TextButton.styleFrom(
-                                backgroundColor: Colors.green,
-                              ),
-                              icon: const Icon(
-                                Icons.build,
-                                color: Colors.white,
-                                size: 30.0,
-                              ),
-                              label: const Text('แจ้งซ่อมครุภัณฑ์'),
-                              onPressed: () {
-                                informdurable();
-                              },
-                            ),
-                          ),
+                  alignment: Alignment.center,
+                  child: ElevatedButton.icon(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
+                    icon: const Icon(
+                      Icons.build,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
+                    label: const Text('แจ้งซ่อมครุภัณฑ์'),
+                    onPressed: () {
+                      informdurable();
+                    },
+                  ),
+                ),
               ],
             ),
             Row(
@@ -719,7 +720,24 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
             ),
             ListTile(
               // leading: const Icon(Icons.signal_wifi_statusbar_4_bar,color: Colors.indigo),
-              title: Text("สถานะครุภัณฑ์ : " + d!.Durable_statusnow),
+              title: d!.Durable_statusnow=="ดี"?Row(
+                children: [
+                  Text("สถานะครุภัณฑ์ : "),
+                  Text(d!.Durable_statusnow,style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold)),
+                ],
+              )
+                  :d!.Durable_statusnow == "ชำรุด"
+                  ? Row(
+                children: [
+                  Text("สถานะครุภัณฑ์ : "),
+                  Text(d!.Durable_statusnow,style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold)),
+                ],
+              ):Row(
+                children: [
+                  Text("สถานะครุภัณฑ์ : "),
+                  Text(d!.Durable_statusnow,style: TextStyle(color: Colors.orange,fontWeight: FontWeight.bold)),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,

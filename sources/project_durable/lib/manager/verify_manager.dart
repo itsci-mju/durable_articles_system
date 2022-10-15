@@ -430,6 +430,29 @@ class verify_manager {
       throw Exception('Failed to get Listverifyinform');
     }
   }
+  Future<List<verifyinform>> listverifynotmaintenance2(String major_id) async {
+    var log = Logger();
+    final response = await http.post(
+      Uri.parse(Strings.url + Strings.url_listverifynotinmaintenance2),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'major_id': major_id,
+      }),
+    );
+
+    log.e(response.body.toString());
+    if (response.statusCode == 200) {
+      ResponseModel responseModel = ResponseModel.fromJson(jsonDecode(response.body));
+      List<verifyinform> listdurable = (responseModel.result as List).map((item) => verifyinform.fromJson(item)).toList();
+      log.e(listdurable.toString());
+
+      return listdurable;
+    } else {
+      throw Exception('Failed to get Listverifyinform');
+    }
+  }
   Future<List<RepairDurable>> listverifynotmaintenance(String major_id) async {
     var log = Logger();
     final response = await http.post(

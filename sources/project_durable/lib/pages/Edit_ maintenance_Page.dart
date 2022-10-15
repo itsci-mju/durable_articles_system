@@ -23,9 +23,11 @@ import '../manager/durable_manager.dart';
 import '../manager/inform_manager.dart';
 import '../manager/login_manager.dart';
 import '../manager/verify_manager.dart';
+import '../manager/verifyinform_manager.dart';
 import '../model/durable_model.dart';
 import '../model/repairdurable_model.dart';
 import '../model/staff_model.dart';
+import '../model/verifyInform_model.dart';
 import '../splash.dart';
 import 'List_repairADMIN_page.dart';
 import 'List_repair_page.dart';
@@ -41,7 +43,7 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
   var log = Logger();
   bool isLoading = true;
   bool hide = true;
-
+  verifyinform? vi;
   String? codedurable;
   Durable? d;
   inform_repair? ir;
@@ -56,10 +58,10 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
   var companyController = TextEditingController();
   var namedurableController = TextEditingController();
   var durablecodeController = TextEditingController();
-
+  var durableroomController = TextEditingController();
   var detailrepairController = TextEditingController();
   String? dateinform;
-
+  String? idinform;
   DateTime now = DateTime.now();
   var formatter = DateFormat.yMMMMd();
   List<PlatformFile>? _files;
@@ -119,10 +121,11 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     durable_manager dm = durable_manager();
     verify_manager vm = verify_manager();
+    verifyinform_manager vim = verifyinform_manager();
     Repairdurable_manager rdm = Repairdurable_manager();
     codedurable = preferences.getString('durable_code')!;
     verifyid = preferences.getString('verifyid')!;
-
+    idinform = preferences.getString('idinform')!;
     log.e(verifyid!);
     staff = preferences.getString('Staff')!;
     Map<String, dynamic> map = jsonDecode(staff);
@@ -141,7 +144,8 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
       selectedValuestatus = rd!.Repair_status.toString(),
          moneyController.text = rd!.repair_charges.toString(),
      companyController.text = rd!.company_.companyname.toString(),
-     detailrepairController.text = rd!.repair_detail.toString() ,
+     detailrepairController.text = rd!.repair_detail.toString()
+      ,
           setState(() {
             isLoading = false;
           }),
@@ -157,13 +161,19 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
     irm.getinform_repairbyID(codedurable.toString()).then((value) => {
           ir = value,
           noteController.text = ir!.details.toString(),
-
+      durableroomController.text = ir!.durable.room.Room_number.toString(),
           namedurableController.text = ir!.durable.Durable_name.toString(),
           durablecodeController.text = ir!.durable.Durable_code.toString(),
           setState(() {
             isLoading = false;
           }),
         });
+    vim.getverifyinformbyid(idinform!).then((value) => {
+      vi = value,
+      setState(() {
+        isLoading = false;
+      }),
+    });
 
     setState(() {
       if (s!.major.ID_Major.toString() == "1") {
@@ -267,8 +277,8 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
 
   final List<String> statusdurable = [
     'ดี',
-    'ชำรุด',
-    'แทงจำหน่าย',
+   /* 'ชำรุด',
+    'แทงจำหน่าย',*/
   ];
   String? selectedValuestatus;
 
@@ -298,8 +308,11 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
           "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
     }
     var showDate;
+    var showDate2;
     ir==null? "": showDate = formatter.formatInBuddhistCalendarThai(ir!.dateinform);
-
+    var informtime = DateFormat('kk:mm').format(ir!.dateinform);
+    vi==null? "":  showDate2 = formatter.formatInBuddhistCalendarThai(vi!.verify_date);
+    var verifytime = DateFormat('kk:mm').format(vi!.verify_date);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -388,6 +401,22 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
                                     children: [
                                       Column(
                                         children: const [
+                                          Text("ห้องที่ใช้งาน :",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(durableroomController.text,
+                                          style: TextStyle(fontSize: 16)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: const [
                                           Text("รายละเอียดการส่งซ่อม :",
                                               style: TextStyle(
                                                   fontSize: 16,
@@ -405,14 +434,41 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
                                       Column(
                                         children: const [
                                           Text("วันที่แจ้งซ่อม :",
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold)),
+                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                       const SizedBox(width: 5),
-                                      Text(showDate,
+                                      Text(showDate+" "+informtime+" น.",
                                           style: TextStyle(fontSize: 16)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: const [
+                                          Text("วันที่ตรวจสอบ :",
+                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(showDate2+" "+verifytime+" น.",
+                                          style: TextStyle(fontSize: 16)),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: const [
+                                          Text("สถานะตรวจสอบ :",
+                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 5),
+                                      vi!.verify_status.toString()=="ส่งซ่อม"?
+                                      Text(vi!.verify_status.toString(),style: TextStyle(fontSize: 16,color: Colors.blueAccent,fontWeight: FontWeight.bold))
+                                          :Text(vi!.verify_status.toString(),style: TextStyle(fontSize: 16,color: Colors.red,fontWeight: FontWeight.bold)),
                                     ],
                                   ),
                                   SizedBox(height: 20),
@@ -574,6 +630,7 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
                                   SizedBox(height: 10),
                                   Row(
                                     children: [
+                                      vi!.verify_status.toString()=="ส่งซ่อม"?
                                       Expanded(
                                         child: Container(
                                           child: SizedBox(
@@ -582,17 +639,35 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
                                             child: TextFormField(
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(),
-                                                label: Text(
-                                                    "บริษัทที่เข้ารับการซ่อม",
+                                                label:  Text("บริษัทที่เข้ารับการซ่อม",
                                                     style: TextStyle(
-                                                        fontSize: 22,
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                hintText:
-                                                    "กรุณากรอกบริษัทที่เข้ารับการซ่อม",
+                                                        fontSize: 22, fontWeight: FontWeight.bold)),
+                                                hintText: "หากไม่มีบริษัทให้พิมว่า ไม่มี",
                                               ),
                                               controller: companyController,
-                                              keyboardType: TextInputType.text,
+                                              keyboardType:
+                                              TextInputType.text,
+                                              maxLines: null,
+                                            ),
+                                          ),
+                                        ),
+                                      ):
+                                      Expanded(
+                                        child: Container(
+                                          child: SizedBox(
+                                            width: 50,
+                                            height: 80,
+                                            child: TextFormField(
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                label:  Text("ผู้รับผิดชอบการซ่อม",
+                                                    style: TextStyle(
+                                                        fontSize: 22, fontWeight: FontWeight.bold)),
+                                                hintText: "กรุณากรอก ชื่อผู้รับผิดชอบ",
+                                              ),
+                                              controller: companyController,
+                                              keyboardType:
+                                              TextInputType.text,
                                               maxLines: null,
                                             ),
                                           ),
@@ -851,7 +926,7 @@ class Edit_Maintenance_PageState extends State<Edit_Maintenance_Page> {
           selectedValuestatus!,
           durablecodeController.text,
           verifyid!);
-      uploadfile();
+     // uploadfile();
       Alert_suc("บันทึกข้อมูลสำเร็จ");
       /* Scaffold.of(context).showSnackBar(const SnackBar(
         content: Text('บันทึกข้อมูลสำเร็จ !'),

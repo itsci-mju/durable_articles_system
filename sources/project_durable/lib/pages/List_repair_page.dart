@@ -54,6 +54,7 @@ class _Listrepair_PageState extends State<List_repair_page> {
   List<inform_repair>? listinformrepair;
   List<verifyinform>? listverifyinform;
   List<RepairDurable>? listverifynotmaintenance;
+  List<verifyinform>? listverifynotmaintenance2;
   List<RepairDurable>? listRepairComplete;
   var noteController = TextEditingController();
 
@@ -87,6 +88,12 @@ class _Listrepair_PageState extends State<List_repair_page> {
     });
     vm.listverifynotmaintenance(s!.major.ID_Major.toString()).then((value) => {
       listverifynotmaintenance = value,
+      setState(() {
+        isLoading = false;
+      }),
+    });
+    vm.listverifynotmaintenance2(s!.major.ID_Major.toString()).then((value) => {
+      listverifynotmaintenance2 = value,
       setState(() {
         isLoading = false;
       }),
@@ -187,7 +194,7 @@ class _Listrepair_PageState extends State<List_repair_page> {
           bottom: TabBar(
             tabs: [
               Tab(text: 'รอตรวจสอบ'),
-              Tab(text: 'รอส่งซ่อม'),
+              Tab(text: 'รอซ่อม'),
               Tab(text: 'ซ่อมสำเร็จ'),
               Tab(text: 'ซ่อมไม่สำเร็จ'),
             ],
@@ -274,7 +281,7 @@ class _Listrepair_PageState extends State<List_repair_page> {
                   child: Column(
                     children: [
                       Expanded(
-                          child: listverifynotmaintenance==null? Center(child: Text("ทดสอบ")) : buildDurablenotmaintenance(listverifynotmaintenance!)),
+                          child: listverifynotmaintenance2==null? Center(child: Text("ทดสอบ")) : buildDurablenotmaintenance(listverifynotmaintenance2!)),
                     ],
                   ),
                 );
@@ -329,7 +336,7 @@ class _Listrepair_PageState extends State<List_repair_page> {
       var toShow = durable.dateinform.yearInBuddhistCalendar;
       
       var showDate = formatter.formatInBuddhistCalendarThai(durable.dateinform);
-
+      var informtime = DateFormat('kk:mm').format(durable.dateinform);
 
       return Card(
         child: Padding(
@@ -353,14 +360,20 @@ class _Listrepair_PageState extends State<List_repair_page> {
                     ),
                     Row(
                       children: [
+                        const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(durable.durable.room.Room_number),
+                      ],
+                    ),
+                    Row(
+                      children: [
                         const Text("วันที่แจ้ง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(showDate),
+                        Text(showDate+" "+informtime+" น."),
                       ],
                     ),
                     Row(
                       children: [
                         const Text("ผู้แจ้ง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.staff.Staff_name.toString()),
+                        Text(durable.staff.Staff_status.toString()),
                       ],
                     ),
                     Row(
@@ -378,7 +391,7 @@ class _Listrepair_PageState extends State<List_repair_page> {
                                 fontWeight: FontWeight.bold))
                             : Text(durable.Informtype,
                             style: TextStyle(
-                                color: Colors.orange,
+                                color: Colors.red,
                                 fontWeight: FontWeight.bold)),
                       ],
                     ),
@@ -417,7 +430,7 @@ class _Listrepair_PageState extends State<List_repair_page> {
 
 */
       var showDate = formatter.formatInBuddhistCalendarThai(durable.verify_date);
-
+      var verifytime = DateFormat('kk:mm').format(durable.verify_date);
 
       return Card(
         child: Padding(
@@ -441,8 +454,14 @@ class _Listrepair_PageState extends State<List_repair_page> {
                     ),
                     Row(
                       children: [
+                        const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(durable.informrepair.durable.room.Room_number),
+                      ],
+                    ),
+                    Row(
+                      children: [
                         const Text("วันที่ตรวจสอบ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(showDate),
+                        Text(showDate+" "+verifytime+" น."),
                       ],
                     ),
                     Row(
@@ -487,14 +506,14 @@ class _Listrepair_PageState extends State<List_repair_page> {
       );
     },
   );
-  Widget buildDurablenotmaintenance(List<RepairDurable> durables) => ListView.builder(
-    itemCount: listverifynotmaintenance == null ? 0 : listverifynotmaintenance!.length,
+  Widget buildDurablenotmaintenance(List<verifyinform> durables) => ListView.builder(
+    itemCount: listverifynotmaintenance2 == null ? 0 : listverifynotmaintenance2!.length,
     itemBuilder: (context, index) {
       final durable = durables[index];
       String? img;
-      if (durable.durable.Durable_image.toString() != "-") {
-        img = Strings.url+"/file/durable_image/" + durable.durable.Durable_image.toString();
-        //img =  "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" + durable.durable.Durable_image.toString();
+      if (durable.informrepair.durable.Durable_image.toString() != "-") {
+        img = Strings.url+"/file/durable_image/" + durable.informrepair.durable.Durable_image.toString();
+        // img =        "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +        durable.informrepair.durable.Durable_image.toString();
       } else {
         img =
         "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
@@ -504,8 +523,8 @@ class _Listrepair_PageState extends State<List_repair_page> {
       log.e(splitted[0].toString() +" "+  time[0].toString());
 
 */
-      var showDate = formatter.formatInBuddhistCalendarThai(durable.verifyinform_.verify_date);
-
+      var showDate = formatter.formatInBuddhistCalendarThai(durable.verify_date);
+      var verifytime = DateFormat('kk:mm').format(durable.verify_date);
 
       return Card(
         child: Padding(
@@ -517,50 +536,50 @@ class _Listrepair_PageState extends State<List_repair_page> {
                 backgroundImage: NetworkImage(img),
               ),
               title:
-              Text("ชื่อครุภัณฑ์ : " + durable.durable.Durable_name),
+              Text("ชื่อครุภัณฑ์ : " + durable.informrepair.durable.Durable_name),
               subtitle: SizedBox(
                 child: Column(
                   children: [
                     Row(
                       children: [
                         const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.durable.Durable_code),
+                        Text(durable.informrepair.durable.Durable_code),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("วันที่ซ่อม : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.Date_of_repair.toString()),
+                        const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(durable.informrepair.durable.room.Room_number),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("รายละเอียดการซ่อม : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.repair_detail),
+                        const Text("วันที่ตรวจสอบ : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(showDate+" "+verifytime+" น."),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("จำนวนเงิน : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.repair_charges),
+                        const Text("รายละเอียด : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(durable.verify_detail.toString()),
                       ],
                     ),
                     Row(
                       children: [
                         const Text("สถานะ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        durable.Repair_status == "ดี"
-                            ? Text(durable.Repair_status,
-                            style: TextStyle(
-                                color: Colors.blueAccent,
-                                fontWeight: FontWeight.bold))
-                            : durable.Repair_status == "ชำรุด"
-                            ? Text(durable.Repair_status,
+                        durable.verify_status== "ไม่สามารถซ่อมได้"
+                            ? Text(durable.verify_status,
                             style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold))
-                            : Text(durable.Repair_status,
+                            : durable.verify_status == "ยกเลิกการแจ้งซ่อม"
+                            ? Text(durable.verify_status,
                             style: TextStyle(
-                                color: Colors.orange,
+                                color: Colors.blueAccent,
+                                fontWeight: FontWeight.bold))
+                            : Text(durable.verify_status,
+                            style: TextStyle(
+                                color: Colors.red,
                                 fontWeight: FontWeight.bold)),
                       ],
                     ),
@@ -599,7 +618,8 @@ class _Listrepair_PageState extends State<List_repair_page> {
 
 */
       var showDate = formatter.formatInBuddhistCalendarThai(durable.verifyinform_.verify_date);
-
+      var timerepair1 = durable.repair_date.split(' ') ;
+      var timerepair = timerepair1[1].substring(0,5);
 
       return Card(
         child: Padding(
@@ -623,8 +643,14 @@ class _Listrepair_PageState extends State<List_repair_page> {
                     ),
                     Row(
                       children: [
+                        const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(durable.durable.room.Room_number),
+                      ],
+                    ),
+                    Row(
+                      children: [
                         const Text("วันที่ซ่อม : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.Date_of_repair.toString()),
+                        Text(durable.Date_of_repair.toString()+" "+timerepair+" น."),
                       ],
                     ),
                     Row(
@@ -645,7 +671,7 @@ class _Listrepair_PageState extends State<List_repair_page> {
                         durable.Repair_status == "ดี"
                             ? Text(durable.Repair_status,
                             style: TextStyle(
-                                color: Colors.blueAccent,
+                                color: Colors.green,
                                 fontWeight: FontWeight.bold))
                             : durable.Repair_status == "ชำรุด"
                             ? Text(durable.Repair_status,

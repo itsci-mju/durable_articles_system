@@ -61,6 +61,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
   List<inform_repair>? listinformrepairnotin;
   List<verifyinform>? listinformrepairin;
   List<RepairDurable>? listinformrepairinnotmaintenance;
+  List<verifyinform>? listinformrepairinnotmaintenance2;
   List<RepairDurable>? listRepairComplete;
   bool isVisiblenotverify = false;
   bool isVisibleverify = true;
@@ -131,6 +132,12 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
 
     im.listinforminnotmaintenanadmin(selectedValue.toString()).then((value) => {
       listinformrepairinnotmaintenance = value,
+      setState(() {
+        isLoading = false;
+      }),
+    });
+    im.listinforminnotmaintenanadmin2(selectedValue.toString()).then((value) => {
+      listinformrepairinnotmaintenance2 = value,
       setState(() {
         isLoading = false;
       }),
@@ -257,7 +264,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                         children: [
                           DropdownButtonHideUnderline(
                             child: DropdownButton2<String>(
-                              isExpanded: true,
+                            isExpanded: true,
                               value: selectedValue,
                               icon: const Icon(Icons.keyboard_arrow_down),
                               items: m == null
@@ -328,7 +335,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                           unselectedLabelColor: Colors.black,
                           tabs: [
                             Tab(text: 'รอตรวจสอบ'),
-                            Tab(text: 'รอส่งซ่อม'),
+                            Tab(text: 'รอซ่อม'),
                             Tab(text: 'ซ่อมสำเร็จ'),
                             Tab(text: 'ซ่อมไม่สำเร็จ'),
                           ],
@@ -362,9 +369,9 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                         ),
                         Center(
                           child: Expanded(
-                              child: buildDurableverifynotmaintenance(listinformrepairinnotmaintenance == null
+                              child: buildDurableverifynotmaintenance(listinformrepairinnotmaintenance2 == null
                                   ? []
-                                  : listinformrepairinnotmaintenance!)),
+                                  : listinformrepairinnotmaintenance2!)),
                         ),
                       ],
                     ),
@@ -434,9 +441,11 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
         itemBuilder: (context, index) {
           final durable = durables[index];
           var showDate =       formatter.formatInBuddhistCalendarThai(durable.dateinform);
+          var informtime = DateFormat('kk:mm').format(durable.dateinform);
           String? img;
           if (durable.durable.Durable_image.toString() != "-") {
-            img =   Strings.url+"/file/inform_repair/" + durable.durable.Durable_image.toString();
+            img =   Strings.url+"/file/durable_image/" + durable.durable.Durable_image.toString();
+            //img =   Strings.url+"/file/inform_repair/" + durable.durable.Durable_image.toString();
             log.e(img);
           // img =         "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +  durable.durable.Durable_image.toString();
           } else {
@@ -472,30 +481,35 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                         ),
                         Row(
                           children: [
+                            const Text("ห้องที่ใช้งาน : ",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text(durable.durable.room.Room_number),
+                          ],
+                        ),
+                        Row(
+                          children: [
                             const Text("วันที่แจ้ง : ",
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(showDate),
+                            Text(showDate+" "+informtime+" น."),
                           ],
                         ),
                         Row(
                           children: [
                             const Text("ผู้แจ้ง : ",
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.staff.Staff_name +
-                                "  " +
-                                durable.staff.Staff_lastname),
+                            Text(durable.staff.Staff_status),
                           ],
                         ),
                         Row(
                           children: [
                             const Text("สถานะ : ",
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            durable.Informtype == "ส่งซ่อม"
+                            durable.Informtype == "เสีย"
                                 ? Text(durable.Informtype,
                                     style: TextStyle(
                                         color: Colors.blueAccent,
                                         fontWeight: FontWeight.bold))
-                                : durable.Informtype == "ซ่อมเอง"
+                                : durable.Informtype == "ชำรุด"
                                     ? Text(durable.Informtype,
                                         style: TextStyle(
                                             color: Colors.red,
@@ -515,7 +529,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                     // color: Colors.green.shade700
                   ),
                   onTap: () {
-                    convertcode(durable.durable.Durable_code.toString());
+                    convertcode(durable.durable.Durable_code.toString(),durable.Informid.toString());
                   },
                 ),
               ),
@@ -542,7 +556,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
 
 */
       var showDate = formatter.formatInBuddhistCalendarThai(durable.verify_date);
-
+      var verifytime = DateFormat('kk:mm').format(durable.verify_date);
 
       return Card(
         child: Padding(
@@ -566,8 +580,21 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                     ),
                     Row(
                       children: [
+                        const Text("ห้องที่ใช้งาน : ",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(durable.informrepair.durable.room.Room_number),
+                      ],
+                    ),
+                    Row(
+                      children: [
                         const Text("วันที่ตรวจสอบ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(showDate),
+                        Text(showDate+" "),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text("วันที่ตรวจสอบ : ",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white)),
+                        Text("เวลา "+verifytime+" น."),
                       ],
                     ),
                     Row(
@@ -604,7 +631,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                 // color: Colors.green.shade700
               ),
               onTap: ()  {
-                 convertcode2(durable.informrepair.durable.Durable_code.toString(),durable.verify_id.toString());
+                 convertcode2(durable.informrepair.durable.Durable_code.toString(),durable.verify_id.toString(),durable.informrepair.Informid.toString());
               },
             ),
           ),
@@ -612,13 +639,13 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
       );
     },
   );
-  Widget buildDurableverifynotmaintenance(List<RepairDurable> durables) => ListView.builder(
-    itemCount: listinformrepairinnotmaintenance == null ? 0 : listinformrepairinnotmaintenance!.length,
+  Widget buildDurableverifynotmaintenance(List<verifyinform> durables) => ListView.builder(
+    itemCount: listinformrepairinnotmaintenance2 == null ? 0 : listinformrepairinnotmaintenance2!.length,
     itemBuilder: (context, index) {
       final durable = durables[index];
       String? img;
-      if (durable.durable.Durable_image.toString() != "-") {
-        img =  Strings.url+"/file/durable_image/" + durable.durable.Durable_image.toString();
+      if (durable.informrepair.durable.Durable_image.toString() != "-") {
+        img =  Strings.url+"/file/durable_image/" + durable.informrepair.durable.Durable_image.toString();
         // img =       "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +durable.durable.Durable_image.toString();
       } else {
         img =
@@ -629,8 +656,9 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
       log.e(splitted[0].toString() +" "+  time[0].toString());
 
 */
-      var showDate = formatter.formatInBuddhistCalendarThai(durable.verifyinform_.verify_date);
 
+      var showDate = formatter.formatInBuddhistCalendarThai(durable.verify_date);
+      var verifytime = DateFormat('kk:mm').format(durable.verify_date);
 
       return Card(
         child: Padding(
@@ -642,48 +670,49 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                 backgroundImage: NetworkImage(img),
               ),
               title:
-              Text("ชื่อครุภัณฑ์ : " + durable.durable.Durable_name),
+              Text("ชื่อครุภัณฑ์ : " + durable.informrepair.durable.Durable_name),
               subtitle: SizedBox(
                 child: Column(
                   children: [
                     Row(
                       children: [
                         const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.durable.Durable_code),
+                        Text(durable.informrepair.durable.Durable_code),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("วันที่ซ่อม : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.Date_of_repair.toString()),
+                        const Text("ห้องที่ใช้งาน : ",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(durable.informrepair.durable.room.Room_number),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("รายละเอียดการซ่อม : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.repair_detail),
+                        const Text("วันที่ตรวจสอบ : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(showDate+" "+verifytime+" น."),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("จำนวนเงิน : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.repair_charges),
+                        const Text("รายละเอียด : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(durable.verify_detail.toString()),
                       ],
                     ),
                     Row(
                       children: [
                         const Text("สถานะ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        durable.Repair_status == "ดี"
-                            ? Text(durable.Repair_status,
+                        durable.verify_status== "ยกเลิกการแจ้งซ่อม"
+                            ? Text(durable.verify_status,
                             style: TextStyle(
                                 color: Colors.blueAccent,
                                 fontWeight: FontWeight.bold))
-                            : durable.Repair_status == "ชำรุด"
-                            ? Text(durable.Repair_status,
+                            : durable.verify_status == "ไม่สามารถซ่อมได้"
+                            ? Text(durable.verify_status,
                             style: TextStyle(
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold))
-                            : Text(durable.Repair_status,
+                            : Text(durable.verify_status,
                             style: TextStyle(
                                 color: Colors.orange,
                                 fontWeight: FontWeight.bold)),
@@ -693,12 +722,12 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                 ),
               ),
               isThreeLine: true,
-              trailing: Icon(
-                Icons.create,
+              /*trailing: Icon(
+                Icons.build,
                 // color: Colors.green.shade700
-              ),
-              onTap: () {
-                convertcodetoedit(durable.durable.Durable_code.toString(),durable.verifyinform_.verify_id.toString());
+              ),*/
+              onTap: ()  {
+              //  convertcode2(durable.informrepair.durable.Durable_code.toString(),durable.verify_id.toString(),durable.informrepair.Informid.toString());
               },
             ),
           ),
@@ -724,7 +753,10 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
 
 */
       var showDate = formatter.formatInBuddhistCalendarThai(durable.verifyinform_.verify_date);
-
+      var timerepair1 = durable.repair_date.split(' ') ;
+      var timerepair = timerepair1[1].substring(0,5);
+      log.e(timerepair);
+      log.e(timerepair1[1]);
 
       return Card(
         child: Padding(
@@ -748,8 +780,15 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                     ),
                     Row(
                       children: [
+                        const Text("ห้องที่ใช้งาน : ",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(durable.durable.room.Room_number),
+                      ],
+                    ),
+                    Row(
+                      children: [
                         const Text("วันที่ซ่อม : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.Date_of_repair.toString()),
+                        Text(durable.Date_of_repair.toString() + " "+timerepair+" น."),
                       ],
                     ),
                     Row(
@@ -770,7 +809,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                         durable.Repair_status == "ดี"
                             ? Text(durable.Repair_status,
                             style: TextStyle(
-                                color: Colors.blueAccent,
+                                color: Colors.green,
                                 fontWeight: FontWeight.bold))
                             : durable.Repair_status == "ชำรุด"
                             ? Text(durable.Repair_status,
@@ -792,7 +831,7 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
                 // color: Colors.green.shade700
               ),
               onTap: () {
-                convertcodetoedit(durable.durable.Durable_code.toString(),durable.verifyinform_.verify_id.toString());
+                convertcodetoedit(durable.durable.Durable_code.toString(),durable.verifyinform_.verify_id.toString(),durable.verifyinform_.informrepair.Informid.toString());
               },
             ),
           ),
@@ -802,56 +841,78 @@ class _Listrepairaddmin_PageState extends State<List_repairadmin_page> {
   );
 
 
-  Future<void> convertcode(String code) async {
+  Future<void> convertcode(String code,String idinform) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     List<String> listcode = code.split(".PNG");
     String durable_code = listcode[0].replaceAll(':', '/');
+    preferences.setString('id_informid', idinform);
     preferences.setString('durable_code', durable_code);
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => Verify_Repair_Page()));
   }
 
-  Future<void> convertcode2(String code,String verifyid) async {
+  Future<void> convertcode2(String code,String verifyid,String idinform) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     List<String> listcode = code.split(".PNG");
     String durable_code = listcode[0].replaceAll(':', '/');
     preferences.setString('durable_code', durable_code);
     preferences.setString('verifyid', verifyid);
+    preferences.setString('idinform', idinform);
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => Create_Maintenance_Page()));
   }
-  Future<void> convertcodetoedit(String code,String verifyid) async {
+  Future<void> convertcodetoedit(String code,String verifyid,String idinform) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     List<String> listcode = code.split(".PNG");
     String durable_code = listcode[0].replaceAll(':', '/');
     preferences.setString('durable_code', durable_code);
     preferences.setString('verifyid', verifyid);
+    preferences.setString('idinform', idinform);
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => Edit_Maintenance_Page()));
   }
 
   void checkdropdown() {
     inform_manager im = inform_manager();
-
+    Repairdurable_manager mdm = Repairdurable_manager();
       setState(() {
         im.listinformnotin(selectedValue.toString()).then((value) => {
-              listinformrepairnotin = value,
-              setState(() {
-                isLoading = false;
-              }),
-            });
-      });
+          listinformrepairnotin = value,
+          setState(() {
+            isLoading = false;
+          }),
+        });
 
-      setState(() {
         im.listinformin(selectedValue.toString()).then((value) => {
               listinformrepairin = value,
               setState(() {
                 isLoading = false;
               }),
             });
-      });
 
+
+        im.listinforminnotmaintenanadmin(selectedValue.toString()).then((value) => {
+          listinformrepairinnotmaintenance = value,
+          setState(() {
+            isLoading = false;
+          }),
+        });
+        im.listinforminnotmaintenanadmin2(selectedValue.toString()).then((value) => {
+          listinformrepairinnotmaintenance2 = value,
+          setState(() {
+            isLoading = false;
+          }),
+        });
+        mdm.listRepairComplete(selectedValue.toString()).then((value) => {
+          listRepairComplete = value,
+          setState(() {
+            isLoading = false;
+          }),
+        });
+
+      });
   }
+
   Widget MyDrawerList() {
     return Positioned(
       bottom: 0.0,

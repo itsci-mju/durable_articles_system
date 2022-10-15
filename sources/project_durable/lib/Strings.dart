@@ -1,7 +1,9 @@
 class Strings {
   //URL CONNECTION
   static const String url = "http://192.168.43.166:8080/DurableWebservices";
- //static const String url = "http://192.168.42.144:8080/DurableWebservices";
+ // static const String url = "http://192.168.42.198:8080/DurableWebservices";
+
+
   //USER
   static const String url_login = "/applogin/user/login";
   static const String list_staff = "applogin/user/list";
@@ -30,12 +32,15 @@ class Strings {
   static const String url_listrepairform = "/appinfromrepair/informrepair/getlistformrepair";
   static const String url_listrepairformverifyed = "/appinfromrepair/informrepair/getlistformrepairverifyed";
   static const String url_listverifynotinmaintenance = "/appinfromrepair/informrepair/getlistverifynotinmaintenance";
+  static const String url_listverifynotinmaintenance2 = "/appinfromrepair/informrepair/getlistverifynotinmaintenance2";
   static const String url_lisAlltrepairform = "/appinfromrepair/informrepair/getAlllistformrepair";
   static const String url_getInform_repairbyID = "/appinfromrepair/inform_repair/getinform_repair";
+  static const String url_getInform_repairbyID2 = "/appinfromrepair/inform_repair/getinform_repair2";
   static const String url_editinformrepair = "/appinfromrepair/inform/update";
   static const String url_listinformnotinverify = "/appinfromrepair/informrepair/listformrepairNOTIN";
   static const String url_listinforminverify = "/appinfromrepair/informrepair/listformrepairIN";
   static const String url_listinforminverifynotinmaintenance = "/appinfromrepair/informrepair/listformrepairINnotinmaintenance";
+  static const String url_listinforminverifynotinmaintenance2 = "/appinfromrepair/informrepair/listformrepairINnotinmaintenance2";
   static const String url_getdurableininformrepair = "/appinfromrepair/informrepair/getdurableininformrepair";
   static const String url_getdurableininformrepair2 = "/appinfromrepair/informrepair/getdurableininformrepair2";
   static const String url_getdurableininformrepairnotrepair = "/appinfromrepair/informrepair/getdurableininformrepairnotrepair";
@@ -46,6 +51,7 @@ class Strings {
   static const String url_listAllmajor = "/appmajor/major/listmajor";
   //VERIFY INFORM
   static const String url_addverifyinform = "/appverifyinform/verifyinform/addform";
+  static const String url_getverifyinformbyid = "/appverifyinform/verifyinform/getverifyinformbyid";
   //VERIFY BY MAJOR
   static const String url_countalldurable = "/appverify/verifybymajor/countalldurable";
   static const String url_countdurabled = "/appverify/verifybymajor/countdurabled";

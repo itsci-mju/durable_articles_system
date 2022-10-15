@@ -779,7 +779,7 @@ class _Verify_PageState extends State<Verify_Page> {
                                   ),
                                   Column(
                                     children: [
-                                      s == null? Text(""):Text(s!.Staff_name.toString() +"  "+ s!.Staff_lastname.toString(), style: TextStyle(fontSize: 16)),
+                                      s == null? Text(""):Text(s!.Staff_status.toString(), style: TextStyle(fontSize: 16)),
                                     ],
                                   ),
                                 ],

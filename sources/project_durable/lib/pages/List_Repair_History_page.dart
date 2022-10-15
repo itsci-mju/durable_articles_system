@@ -274,6 +274,8 @@ class ListRepairHistory_PageState extends State<ListRepairHistory_Page> {
       log.e(splitted[0].toString() +" "+  time[0].toString());
 
 */
+          var timerepair1 = durable.repair_date.split(' ') ;
+          var timerepair = timerepair1[1].substring(0,5);
           var showDate = formatter
               .formatInBuddhistCalendarThai(durable.verifyinform_.verify_date);
 
@@ -290,7 +292,7 @@ class ListRepairHistory_PageState extends State<ListRepairHistory_Page> {
                           children: [
                             const Text("วันที่ซ่อม : ",
                                 style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.Date_of_repair.toString()),
+                            Text(durable.Date_of_repair.toString()+" "+timerepair+" น."),
                           ],
                         ),
                         Row(
