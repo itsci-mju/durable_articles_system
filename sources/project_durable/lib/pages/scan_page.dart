@@ -4,16 +4,20 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:project_durable/manager/durable_manager.dart';
 import 'package:project_durable/pages/viewdurable.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/durable_model.dart';
 import 'home_page.dart';
 
 void main() => runApp(const MaterialApp(home: MyHome()));
 
 class MyHome extends StatelessWidget {
   const MyHome({Key? key}) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +56,9 @@ class _QRViewExampleState extends State<QRViewExample> {
     super.reassemble();
     if (Platform.isAndroid) {
       controller!.pauseCamera();
+    } else if (Platform.isIOS) {
+      controller!.resumeCamera();
     }
-    controller!.resumeCamera();
   }
   @override
   Widget build(BuildContext context) {
@@ -61,7 +66,7 @@ class _QRViewExampleState extends State<QRViewExample> {
       body: Column(
         children: <Widget>[
           Expanded(flex: 4, child: _buildQrView(context)),
-          Expanded(
+          /*Expanded(
             flex: 1,
             child: FittedBox(
               fit: BoxFit.contain,
@@ -72,11 +77,11 @@ class _QRViewExampleState extends State<QRViewExample> {
                     Text('รหัสครุภัณฑ์: ${convertcodeString(result!.code.toString())}'),
                   ]
                   else
-                    const Text('Scan a code',style: TextStyle(fontSize: 16)),
+                    const Text('สแกนQR CODEของครุภัณฑ์',style: TextStyle(fontSize: 16)),
                 ],
               ),
             ),
-          )
+          )*/
         ],
       ),
     );
@@ -85,11 +90,22 @@ class _QRViewExampleState extends State<QRViewExample> {
   Future<void> convertcode(String code) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     List<String> listcode = code.split(".PNG");
+    DateTime datenow = DateTime.now();
+    String? selectedValueyears;
     var log = Logger();
+    if(datenow.month >= 10 && datenow.month <= 12){
+      selectedValueyears = (datenow.year + 544).toString();
+    }else {
+      selectedValueyears = (datenow.year + 543).toString();
+    }
+    preferences.setString("selectyear", selectedValueyears.toString());
     log.e(listcode);
     String durable_code = listcode[0].replaceAll('_','/');
     log.e(durable_code);
     preferences.setString('durable_code', durable_code);
+
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => Viewdurablepage() ));
   }
 
   String convertcodeString(String code)  {
@@ -125,17 +141,31 @@ class _QRViewExampleState extends State<QRViewExample> {
     });
     controller.scannedDataStream.listen((scanData) {
       setState(() {
-       controller.pauseCamera();
+
         result = scanData;
         if(result!= null){
           convertcode(result!.code.toString());
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => Viewdurablepage() ));
+          controller.pauseCamera();
+
         }
+
+      });
+
+    });
+    controller.pauseCamera();
+    controller.resumeCamera();
+  }
+
+  /*void _onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.scannedDataStream.listen((scanData) {
+      setState(() {
+        result = scanData;
       });
     });
-
-  }
+    controller.pauseCamera();
+    controller.resumeCamera();
+  }*/
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');

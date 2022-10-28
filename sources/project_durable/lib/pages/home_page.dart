@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
   List<VerifyDurable>? listverify;
   List<Durable>? listnotverify;
   List<Durable>? listdurableadmin;
-  List<VerifyDurable>?  listdurableverifyed_admin;
+  List<VerifyDurable>? listdurableverifyed_admin;
   List<Room>? r;
   var log = Logger();
   String? selectedValue;
@@ -64,7 +64,8 @@ class _HomePageState extends State<HomePage> {
   bool isVisibleverify = false;
   bool isVisibldurableadmin = false;
   bool isVisibldurableadmin2 = false;
-  String? Majorlogin ;
+  String? Majorlogin;
+
   bool statusswitch = true;
   String _value = "2";
   int _value2 = 1;
@@ -86,29 +87,38 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       if (s!.major.ID_Major.toString() == "1") {
         selectedValue = '1101';
-        selectedValueyears = (datenow.year+543).toString();
+        if(datenow.month >= 10 && datenow.month <= 12){
+          selectedValueyears = (datenow.year + 544).toString();
+        }else {
+          selectedValueyears = (datenow.year + 543).toString();
+        }
+
         Majorlogin = "IT";
         room_manager rm = room_manager();
         rm.listroombymajor(s!.major.ID_Major.toString()).then((value) => {
-          r = value,
-          setState(() {
-            isLoading = false;
-          }),
-          log.e(r.toString()),
-        });
+              r = value,
+              setState(() {
+                isLoading = false;
+              }),
+              log.e(r.toString()),
+            });
       }
       if (s!.major.ID_Major.toString() == "999") {
         selectedValue = '-';
-        selectedValueyears = (datenow.year+543).toString();
+        if(datenow.month >= 10 && datenow.month <= 12){
+          selectedValueyears = (datenow.year + 544).toString();
+        }else {
+          selectedValueyears = (datenow.year + 543).toString();
+        }
         Majorlogin = "SCI";
         room_manager rm = room_manager();
         rm.listallroom().then((value) => {
-          r = value,
-          setState(() {
-            isLoading = false;
-          }),
-          log.e(r.toString()),
-        });
+              r = value,
+              setState(() {
+                isLoading = false;
+              }),
+              log.e(r.toString()),
+            });
       }
     });
   }
@@ -123,15 +133,12 @@ class _HomePageState extends State<HomePage> {
     Map<String, dynamic> map = jsonDecode(staff);
     s = Staff.fromJson(map);
 
-
-
-
     vm.listyears().then((value) => {
           v = value,
           setState(() {
             isLoading = false;
           }),
-      log.e("ลิสปี"+v.toString()),
+          log.e("ลิสปี" + v.toString()),
         });
 
     lm
@@ -155,13 +162,15 @@ class _HomePageState extends State<HomePage> {
             });
 
     lm
-        .listalldurableadmin(selectedValue.toString(), selectedValueyears.toString())
+        .listalldurableadmin(
+            selectedValue.toString(), selectedValueyears.toString())
         .then((value) => {
-      listdurableadmin = value,
-      setState(() {
-        isLoading = false;
-      }),
-    });
+              listdurableadmin = value,
+              setState(() {
+                isLoading = false;
+              }),
+            });
+  print(datenow.month);
   }
 
   final navigationKey = GlobalKey<CurvedNavigationBarState>();
@@ -178,10 +187,11 @@ class _HomePageState extends State<HomePage> {
         type: AlertType.info,
         title: "แจ้งเตือน",
         desc: "ท่านต้องการออกจากระบบหรือไม่ ?",
+        style : AlertStyle(titleStyle: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),descStyle: TextStyle(fontWeight: FontWeight.bold,fontSize: 25,color: Colors.indigoAccent) ),
         buttons: [
           DialogButton(
             child: const Text("ยืนยัน",
-                style: TextStyle(color: Colors.white, fontSize: 20)),
+                style: TextStyle(color: Colors.white, fontSize: 25,fontWeight: FontWeight.bold)),
             onPressed: () {
               logout();
             },
@@ -189,7 +199,7 @@ class _HomePageState extends State<HomePage> {
           ),
           DialogButton(
             child: const Text("ยกเลิก",
-                style: TextStyle(color: Colors.white, fontSize: 20)),
+                style: TextStyle(color: Colors.white, fontSize: 25,fontWeight: FontWeight.bold)),
             onPressed: () {
               setState(() {
                 index = 0;
@@ -222,14 +232,14 @@ class _HomePageState extends State<HomePage> {
         false;
   }
 
-
-  
   @override
   void initState() {
     super.initState();
-    setState(){
+    setState() {
       print('refreshing');
-    }imageCache!.clear();
+    }
+
+    imageCache!.clear();
     imageCache!.clearLiveImages();
     getFirstRoom();
     findUser();
@@ -237,7 +247,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     if (isLoading) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -249,328 +258,333 @@ class _HomePageState extends State<HomePage> {
       const Icon(Icons.camera_alt, size: 30, color: Colors.white),
       const Icon(Icons.logout, size: 30, color: Colors.white),
     ];
-    // return d==null?CircularProgressIndicator(): Scaffold(
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          appBar: AppBar(
-            title: const Text('รายงานการตรวจสอบครุภัณฑ์ประจำปี'),
-            /*leading: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.inbox),
-            ),*/
-            //  title: Text(s == null ? 'ระบบจัดการครุภัณฑ์' : 'ผู้ใช้งาน'+ s!.staff_name),
-            elevation: 0,
-          ),
-          endDrawer: Drawer(
-            child: SingleChildScrollView(
-              child: Container(
-                child: Column(
-                  children: [
-                    MyHeaderDrawer(),
-                    MyDrawerList(),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: Column(
-                    children: [
-                     /* Row(
-                        children: [
-                          const Text("รายงานการตรวจสอบครุภัณฑ์ประจำปี",
-                              style:
-                                  TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                isVisible = !isVisible;
-                              });
-                            },
-                            icon: Icon(Icons.sort),
-                          ),
-                        ],
-                      ),*/
-                      SizedBox(height: 8),
-                      Visibility(
-                        visible: isVisible,
-                        child: Container(
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: const [
-                                        Text("หมายเลขห้อง", style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        DropdownButtonHideUnderline(
-                                          child: DropdownButton2<String>(
-                                            isExpanded: true,
-                                            value: selectedValue,
-                                            icon: const Icon(Icons.keyboard_arrow_down),
-                                            items: r == null
-                                                ? []
-                                                : r!
-                                                .map((item) => DropdownMenuItem<String>(
-                                              value: item.Room_number,
-                                              child: Text(
-                                                item.Room_number,
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ))
-                                                .toList(),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                selectedValue = newValue!;
-                                              });
-                                              checkdropdown();
-                                            },
-                                            buttonHeight: 40,
-                                            buttonWidth: 160,
-                                            buttonPadding:
-                                            const EdgeInsets.only(left: 14, right: 14),
-                                            buttonDecoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(14),
-                                              border: Border.all(
-                                                color: Colors.black26,
-                                              ),
-                                              color: Colors.white,
-                                            ),
-                                            buttonElevation: 2,
-                                            itemHeight: 40,
-                                            itemPadding:
-                                            const EdgeInsets.only(left: 14, right: 14),
-                                            dropdownMaxHeight: 200,
-                                            dropdownWidth: 200,
-                                            dropdownPadding: null,
-                                            dropdownDecoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(14),
-                                              color: Colors.white,
-                                            ),
-                                            dropdownElevation: 8,
-                                            scrollbarRadius: const Radius.circular(40),
-                                            scrollbarThickness: 6,
-                                            scrollbarAlwaysShow: true,
-                                            offset: const Offset(-20, 0),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: const [
-                                        Text("ปีงบประมาณ :",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        DropdownButtonHideUnderline(
-                                          child: DropdownButton2<String>(
-                                            isExpanded: true,
-                                            hint: Row(
-                                              children:  [
-                                                Expanded(
-                                                  child: Text(
-                                                    (datenow.year+543).toString(),
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black,
-                                                    ),
-                                                    overflow: TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            value: selectedValueyears,
-                                            icon: const Icon(Icons.keyboard_arrow_down),
-                                            items: v == null
-                                                ? []
-                                                : v!
-                                                .map((item) => DropdownMenuItem<String>(
-                                              value: item.Years,
-                                              child: Text(
-                                                item.Years,
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ))
-                                                .toList(),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                selectedValueyears = newValue!;
-                                              });
-                                              checkdropdown();
-                                            },
-                                            buttonHeight: 40,
-                                            buttonWidth: 160,
-                                            buttonPadding:
-                                            const EdgeInsets.only(left: 14, right: 14),
-                                            buttonDecoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(14),
-                                              border: Border.all(
-                                                color: Colors.black26,
-                                              ),
-                                              color: Colors.white,
-                                            ),
-                                            buttonElevation: 2,
-                                            itemHeight: 40,
-                                            itemPadding:
-                                            const EdgeInsets.only(left: 14, right: 14),
-                                            dropdownMaxHeight: 200,
-                                            dropdownWidth: 200,
-                                            dropdownPadding: null,
-                                            dropdownDecoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(14),
-                                              color: Colors.white,
-                                            ),
-                                            dropdownElevation: 8,
-                                            scrollbarRadius: const Radius.circular(40),
-                                            scrollbarThickness: 6,
-                                            scrollbarAlwaysShow: true,
-                                            offset: const Offset(-20, 0),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5),
-                                Row(
-                                  children: [
-                                   /* Column(
-                                      children: const [
-                                        Text("สถานะการตรวจ :",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),*/
-                                    const SizedBox(width: 5),
-                                    Row(
-                                      children: [
-                                        Radio(
-                                          value: 1,
-                                          groupValue: _value2,
-                                          onChanged: (value){
-                                            setState(() {
-                                              _value2 = 1;
-                                            });
-                                            checkdropdown();
-                                          },
-                                        ),
-                                        Text("ยังไม่ได้ตรวจสอบ"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Radio(
-                                          value: 2,
-                                          groupValue: _value2,
-                                          onChanged: (value){
-                                            setState(() {
-                                              _value2 = 2;
-                                            });
-                                            checkdropdown();
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                    Text("ตรวจสอบแล้ว"),
-                                   /* CupertinoSwitch(
-                                      value: statusswitch,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          statusswitch = value;
-                                        });
-                                        checkdropdown();
-                                      },
-                                      activeColor: CupertinoColors.activeGreen,
-                                      trackColor: CupertinoColors.systemRed,
-                                    ),*/
-                                  ],
-                                ),
-                              ],
-                            )),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 5.0),
-                Visibility(
-                  visible: isVisibleverify,
-                  child: Expanded(
-                      child: buildDurable(listverify == null ? [] : listverify!)),
-                ),
-                Visibility(
-                  visible: isVisiblenotverify,
-                  child: Expanded(
-                      child: buildDurable2(
-                          listnotverify == null ? [] : listnotverify!)),
-                ),
-                Visibility(
-                  visible: isVisibldurableadmin,
-                  child: Expanded(
-                      child: buildDurableadmin(
-                          listdurableadmin == null ? [] : listdurableadmin!)),
-                ),
-                Visibility(
-                  visible: isVisibldurableadmin2,
-                  child: Expanded(
-                      child: buildDurableadmin2(
-                          listdurableverifyed_admin == null ? [] : listdurableverifyed_admin!)),
-                )
-              ],
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('รายงานการตรวจสอบครุภัณฑ์ประจำปี',
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+        leading: IconButton(
+          onPressed: () {
 
-          bottomNavigationBar: CurvedNavigationBar(
-            key: navigationKey,
-            color: Color(0xdfe65100),
-            backgroundColor: Colors.transparent,
-            height: 50,
-            animationCurve: Curves.easeInOut,
-            animationDuration: const Duration(milliseconds: 300),
-            index: index,
-            items: itemslink,
-            onTap: (index) => setState(() {
-              this.index = index;
-              /* if (index.toString() == "0") {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => screens[index]));
-              }*/
-              if (index.toString() == "1") {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => screens[index]));
-              }
-              if (index.toString() == "2") {
-                showAlert();
-              }
-            }),
-          ),
-          backgroundColor: Colors.grey[100],
+          },
+          icon: const Icon(Icons.inbox),
         ),
       ),
+      endDrawer: Drawer(
+        child: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: [
+                MyHeaderDrawer(),
+                MyDrawerList(),
+              ],
+            ),
+          ),
+        ),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Column(
+              children: [
+                SizedBox(height: 8),
+                Visibility(
+                  visible: isVisible,
+                  child: Container(
+                      child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Column(
+                            children: const [
+                              Text("หมายเลขห้อง",
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w200)),
+                            ],
+                          ),
+                          const SizedBox(width: 5),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton2<String>(
+                                  isExpanded: true,
+                                  value: selectedValue,
+                                  icon:
+                                      const Icon(Icons.keyboard_arrow_down),
+                                  items: r == null
+                                      ? []
+                                      : r!
+                                          .map((item) =>
+                                              DropdownMenuItem<String>(
+                                                value: item.Room_number,
+                                                child: Text(
+                                                    item.Room_number,
+                                                    style: TextStyle(
+                                                        fontSize: 25,
+                                                        fontWeight:
+                                                            FontWeight
+                                                                .w200)),
+                                              ))
+                                          .toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      selectedValue = newValue!;
+                                    });
+                                    checkdropdown();
+                                  },
+                                  buttonHeight: 40,
+                                  buttonWidth: 230,
+                                  buttonPadding: const EdgeInsets.only(
+                                      left: 14, right: 14),
+                                  buttonDecoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(
+                                      color: Colors.black26,
+                                    ),
+                                    color: Colors.white,
+                                  ),
+                                  buttonElevation: 2,
+                                  itemHeight: 50,
+                                  itemPadding: const EdgeInsets.only(
+                                      left: 14, right: 14),
+                                  dropdownMaxHeight: 200,
+                                  dropdownWidth: 250,
+                                  dropdownPadding: null,
+                                  dropdownDecoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    color: Colors.white,
+                                  ),
+                                  dropdownElevation: 8,
+                                  scrollbarRadius:
+                                      const Radius.circular(40),
+                                  scrollbarThickness: 6,
+                                  scrollbarAlwaysShow: true,
+                                  offset: const Offset(-20, 0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: [
+                          Column(
+                            children: const [
+                              Text("ปีงบประมาณ :",
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w200)),
+                            ],
+                          ),
+                          const SizedBox(width: 5),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton2<String>(
+                                  isExpanded: true,
+                                  hint: Row(
+                                    children: [
+                                     /* Expanded(
+                                        child: Text(
+                                          (datenow.year).toString(),
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),*/
+                                    ],
+                                  ),
+                                  value: selectedValueyears,
+                                  icon:
+                                      const Icon(Icons.keyboard_arrow_down),
+                                  items: v == null
+                                      ? []
+                                      : v!
+                                          .map((item) =>
+                                              DropdownMenuItem<String>(
+                                                value: item.Years,
+                                                child: Text(
+                                                  item.Years,
+                                                  style: TextStyle(
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                          FontWeight.w200),
+                                                ),
+                                              ))
+                                          .toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      selectedValueyears = newValue!;
+                                    });
+                                    checkdropdown();
+                                  },
+                                  buttonHeight: 40,
+                                  buttonWidth: 160,
+                                  buttonPadding: const EdgeInsets.only(
+                                      left: 14, right: 14),
+                                  buttonDecoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(
+                                      color: Colors.black26,
+                                    ),
+                                    color: Colors.white,
+                                  ),
+                                  buttonElevation: 2,
+                                  itemHeight: 40,
+                                  itemPadding: const EdgeInsets.only(
+                                      left: 14, right: 14),
+                                  dropdownMaxHeight: 200,
+                                  dropdownWidth: 200,
+                                  dropdownPadding: null,
+                                  dropdownDecoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    color: Colors.white,
+                                  ),
+                                  dropdownElevation: 8,
+                                  scrollbarRadius:
+                                      const Radius.circular(40),
+                                  scrollbarThickness: 6,
+                                  scrollbarAlwaysShow: true,
+                                  offset: const Offset(-20, 0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: [
+                          /* Column(
+                                  children: const [
+                                    Text("สถานะการตรวจ :",
+                                        style: TextStyle(fontSize: 16)),
+                                  ],
+                                ),*/
+                          const SizedBox(width: 5),
+                          Row(
+                            children: [
+                              Radio(
+                                value: 1,
+                                groupValue: _value2,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _value2 = 1;
+                                  });
+                                  checkdropdown();
+                                },
+                              ),
+                              Text("ยังไม่ได้ตรวจสอบ",
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w200)),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Radio(
+                                value: 2,
+                                groupValue: _value2,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _value2 = 2;
+                                  });
+                                  checkdropdown();
+                                },
+                              ),
+                            ],
+                          ),
+                          Text("ตรวจสอบแล้ว",
+                              style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w200)),
+                          /* CupertinoSwitch(
+                                  value: statusswitch,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      statusswitch = value;
+                                    });
+                                    checkdropdown();
+                                  },
+                                  activeColor: CupertinoColors.activeGreen,
+                                  trackColor: CupertinoColors.systemRed,
+                                ),*/
+                        ],
+                      ),
+                    ],
+                  )),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 5.0),
+          listverify == null? Container() :
+          Visibility(
+            visible: isVisibleverify,
+            child: Expanded(
+                child: listverify!.length == 0?
+                Center(child: Text("ไม่พบข้อมูลที่ตรวจสอบแล้ว",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)))
+                    : buildDurable( listverify!)),
+          ),
+          listnotverify == null? Container() :
+          Visibility(
+            visible: isVisiblenotverify,
+            child: Expanded(
+                child: listnotverify!.length == 0 ?
+                Center(child: Text("ไม่พบข้อมูลที่ยังไม่ตรวจสอบ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)))
+                    : buildDurable2(listnotverify!)),
+          ),
+          listdurableadmin == null? Container() :
+          Visibility(
+            visible: isVisibldurableadmin,
+            child: Expanded(
+                child:  listdurableadmin!.length == 0 ?
+                Center(child: Text("ไม่พบข้อมูลที่ยังไม่ตรวจสอบ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)))
+                    : buildDurableadmin(listdurableadmin!)),
+          ),
+          listdurableverifyed_admin == null? Container() :
+          Visibility(
+            visible: isVisibldurableadmin2,
+            child: Expanded(
+                child: listdurableverifyed_admin!.length == 0 ?
+                Center(child: Text("ไม่พบข้อมูลที่ตรวจสอบแล้ว",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)))
+                    :   buildDurableadmin2(listdurableverifyed_admin!)),
+          )
+        ],
+      ),
+      bottomNavigationBar: CurvedNavigationBar(
+        key: navigationKey,
+        color: Color(0xdfe65100),
+        backgroundColor: Colors.transparent,
+        height: 50,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 300),
+        index: index,
+        items: itemslink,
+        onTap: (index) => setState(() {
+          this.index = index;
+          /* if (index.toString() == "0") {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => screens[index]));
+          }*/
+          if (index.toString() == "1") {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => screens[index]));
+          }
+          if (index.toString() == "2") {
+            showAlert();
+          }
+        }),
+      ),
+      backgroundColor: Colors.grey[100],
     );
   }
 
@@ -584,25 +598,25 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             menuItem(),
-            Majorlogin =="SCI"? menuItem2():Container(),
+            Majorlogin == "SCI" ? menuItem2() : Container(),
           ],
         ),
       ),
     );
   }
-  Widget menuItem(){
+
+  Widget menuItem() {
     return Material(
       child: InkWell(
         onTap: () {
-          if (Majorlogin =="IT") {
+          if (Majorlogin == "IT") {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => List_repair_page() ));
+                MaterialPageRoute(builder: (context) => List_repair_page()));
           }
           if (Majorlogin == "SCI") {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => List_repairadmin_page() ));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => List_repairadmin_page()));
           }
-
         },
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -610,14 +624,14 @@ class _HomePageState extends State<HomePage> {
             children: const [
               Expanded(
                   child: Icon(
-                    Icons.build,
-                    size: 20,
-                    color: Colors.black,
-                  )
-              ),
+                Icons.build,
+                size: 20,
+                color: Colors.black,
+              )),
               Expanded(
                 flex: 3,
-                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("รายการแจ้งซ่อมครุภัณฑ์",
+                    style: TextStyle(color: Colors.black, fontSize: 25)),
               ),
             ],
           ),
@@ -625,12 +639,13 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  Widget menuItem2(){
+
+  Widget menuItem2() {
     return Material(
       child: InkWell(
         onTap: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => View_verifybymajor_page() ));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => View_verifybymajor_page()));
         },
         child: Padding(
           padding: EdgeInsets.all(10),
@@ -638,14 +653,14 @@ class _HomePageState extends State<HomePage> {
             children: const [
               Expanded(
                   child: Icon(
-                    Icons.inbox,
-                    size: 20,
-                    color: Colors.black,
-                  )
-              ),
+                Icons.inbox,
+                size: 20,
+                color: Colors.black,
+              )),
               Expanded(
                 flex: 3,
-                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("ข้อมูลครุภัณฑ์",
+                    style: TextStyle(color: Colors.black, fontSize: 25)),
               ),
             ],
           ),
@@ -653,7 +668,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 
   void logout() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -670,8 +684,10 @@ class _HomePageState extends State<HomePage> {
           final durable = durables[index];
           String? img;
           if (durable.pk.durable.Durable_image.toString() != "-") {
-            img = Strings.url+"/file/durable_image/" +  durable.pk.durable.Durable_image.toString();
-          /*  img =
+            img = Strings.url +
+                "/file/durable_image/" +
+                durable.pk.durable.Durable_image.toString();
+            /*  img =
                 "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
                     durable.pk.durable.Durable_image.toString();*/
           } else {
@@ -688,72 +704,112 @@ class _HomePageState extends State<HomePage> {
                 child: ListTile(
                   leading: CircleAvatar(
                     radius: 24,
-                    backgroundImage: NetworkImage(img+"?v=1"),
+                    backgroundImage: NetworkImage(img + "?v=1"),
                   ),
-                  title:
-                      Text("ชื่อครุภัณฑ์ : " + durable.pk.durable.Durable_name),
                   subtitle: SizedBox(
                     child: Column(
                       children: [
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.pk.durable.Durable_code),
+                            Text("ชื่อครุภัณฑ์ : ",
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold)),
+                            Flexible(
+                              child: Text(durable.pk.durable.Durable_name,
+                                  style: TextStyle(
+                                      fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("รหัสครุภัณฑ์ : ",
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold)),
+                            Flexible(
+                              child: Text(durable.pk.durable.Durable_code,
+                                  style: TextStyle(
+                                      fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                            ),
                           ],
                         ),
                         Row(
                           children: [
-                            const Text("วันที่ตรวจสอบ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.Save_date.toString()),
+                            const Text("วันที่ตรวจสอบ : ",
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold)),
+                            Text(durable.Save_date.toString(),
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
                           ],
                         ),
                         Row(
                           children: [
-                            const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.pk.durable.room.Room_number),
+                            const Text("ห้อง : ",
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold)),
+                            Text(durable.pk.durable.room.Room_number,
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
                           ],
                         ),
                         Row(
                           children: [
-                            const Text("ผู้ใช้: ",style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.pk.durable.Responsible_person),
+                            const Text("ผู้ใช้: ",
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold)),
+                            Text(durable.pk.durable.Responsible_person,
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
                           ],
                         ),
                         Row(
                           children: [
-                            const Text("สถานะ : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                            const Text("สถานะ : ",
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold)),
                             durable.Durable_status == "ดี"
                                 ? Text(durable.Durable_status,
                                     style: TextStyle(
+                                        fontSize: 22,
                                         color: Colors.green,
                                         fontWeight: FontWeight.bold))
                                 : durable.Durable_status == "ชำรุด"
                                     ? Text(durable.Durable_status,
                                         style: TextStyle(
+                                            fontSize: 22,
                                             color: Colors.red,
                                             fontWeight: FontWeight.bold))
                                     : Text(durable.Durable_status,
                                         style: TextStyle(
+                                            fontSize: 22,
                                             color: Colors.orange,
                                             fontWeight: FontWeight.bold)),
                           ],
                         ),
                         Row(
                           children: [
-                            const Text("รายละเอียด : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.note),
+                            const Text("รายละเอียด : ",
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold)),
+                            Text(durable.note,
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
                           ],
                         ),
                       ],
                     ),
                   ),
                   isThreeLine: true,
-                /*  trailing: Icon(
+                  /*  trailing: Icon(
                     Icons.remove_red_eye,
                     // color: Colors.green.shade700
                   ),*/
                   onTap: () {
-                    convertcode2(durable.pk.durable.Durable_code.toString(),durable.Save_date.toString());
+                    convertcode2(durable.pk.durable.Durable_code.toString(),
+                        durable.Save_date.toString());
                   },
                 ),
               ),
@@ -768,8 +824,10 @@ class _HomePageState extends State<HomePage> {
           final durable = durables[index];
           String? img;
           if (durable.Durable_image.toString() != "-") {
-            img = Strings.url+"/file/durable_image/" + durable.Durable_image.toString();
-           /* img =
+            img = Strings.url +
+                "/file/durable_image/" +
+                durable.Durable_image.toString();
+            /* img =
                 "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
                     durable.Durable_image.toString();*/
           } else {
@@ -782,58 +840,94 @@ class _HomePageState extends State<HomePage> {
               child: ListTile(
                 leading: CircleAvatar(
                   radius: 24,
-                  backgroundImage: NetworkImage(img+"?v=1"),
+                  backgroundImage: NetworkImage(img + "?v=1"),
                 ),
-                title: Text("ชื่อครุภัณฑ์ : " + durable.Durable_name),
-                subtitle: Column(
-                  children: [
-                    Row(
-                      children: [
-                        const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.Durable_code),
-                      ],
-                    ),
 
-                    Row(
-                      children: [
-                        const Text("วันที่ได้รับ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.Durable_entrancedate),
+                subtitle: Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
 
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.room.Room_number),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("ผู้ใช้ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.Responsible_person),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("สถานะ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        durable.Durable_statusnow == "ดี"
-                            ? Text(durable.Durable_statusnow,
-                            style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold))
-                            : durable.Durable_statusnow == "ชำรุด"
-                            ? Text(durable.Durable_statusnow,
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold))
-                            : Text(durable.Durable_statusnow,
-                            style: TextStyle(
-                                color: Colors.orange,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("ชื่อครุภัณฑ์ : ",
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold)),
+                          Flexible(
+                            child: Text(durable.Durable_name,maxLines: 20,
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                          ),
+                        ],
+                      ),
 
-                  ],
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("รหัสครุภัณฑ์ : ",
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold)),
+                          Flexible(
+                            child: Text(durable.Durable_code,
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("วันที่ได้รับ : ",
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+                          Text(durable.Durable_entrancedate,
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Text("ห้อง : ",
+                              style: TextStyle(fontWeight: FontWeight.bold , fontSize: 22)),
+                          Text(durable.room.Room_number,
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Text("ผู้ใช้ : ",
+                              style: TextStyle(fontWeight: FontWeight.bold , fontSize: 22)),
+                          Text(durable.Responsible_person,
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Text("สถานะ : ",
+                              style: TextStyle(fontWeight: FontWeight.bold , fontSize: 22)),
+                          durable.Durable_statusnow == "ดี"
+                              ? Text(durable.Durable_statusnow,
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.bold))
+                              : durable.Durable_statusnow == "ชำรุด"
+                                  ? Text(durable.Durable_statusnow,
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold))
+                                  : Text(durable.Durable_statusnow,
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          color: Colors.orange,
+                                          fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 isThreeLine: true,
                 /*trailing: Icon(
@@ -841,7 +935,7 @@ class _HomePageState extends State<HomePage> {
                   // color: Colors.green.shade700
                 ),*/
                 onTap: () {
-                  convertcode2(durable.Durable_code.toString(),"");
+                  convertcode2(durable.Durable_code.toString(), "");
                 },
               ),
             ),
@@ -850,188 +944,271 @@ class _HomePageState extends State<HomePage> {
       );
 
   Widget buildDurableadmin(List<Durable> durables) => ListView.builder(
-    itemCount: listdurableadmin == null ? 0 : listdurableadmin!.length,
-    itemBuilder: (context, index) {
-      final durable = durables[index];
-      String? img;
-      if (durable.Durable_image.toString() != "-") {
-        img = Strings.url+"/file/durable_image/" + durable.Durable_image.toString();
-       /* img =
+        itemCount: listdurableadmin == null ? 0 : listdurableadmin!.length,
+        itemBuilder: (context, index) {
+          final durable = durables[index];
+          String? img;
+          if (durable.Durable_image.toString() != "-") {
+            img = Strings.url +
+                "/file/durable_image/" +
+                durable.Durable_image.toString();
+            /* img =
             "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
                 durable.Durable_image.toString();*/
-      } else {
-        img =
-        "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
-      }
-      return Card(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 5, bottom: 5),
-          child: ListTile(
-            leading: CircleAvatar(
-              radius: 24,
-              backgroundImage: NetworkImage(img+"?v=1"),
-            ),
-            title: Text("ชื่อครุภัณฑ์ : " + durable.Durable_name),
-            subtitle: Column(
-              children: [
-                Row(
-                  children: [
-                    const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(durable.Durable_code),
-                  ],
+          } else {
+            img =
+                "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
+          }
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5, bottom: 5),
+              child: ListTile(
+                leading: CircleAvatar(
+                  radius: 24,
+                  backgroundImage: NetworkImage(img + "?v=1"),
                 ),
 
-                Row(
+                subtitle: Column(
                   children: [
-                    const Text("วันที่ได้รับ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(durable.Durable_entrancedate),
-
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("ชื่อครุภัณฑ์ : ",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+                        Flexible(
+                          child: Text(durable.Durable_name,
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                         Flexible(
+                           child: Text("รหัสครุภัณฑ์ : ",
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+                         ),
+                        Flexible(
+                          child: Text(durable.Durable_code,
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("วันที่ได้รับ : ",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+                        Flexible(
+                          child: Text(durable.Durable_entrancedate,
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text("ห้อง : ",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+                        Text(durable.room.Room_number,
+                            style: TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("ผู้ใช้ : ",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+                        Flexible(
+                          child: Text(durable.Responsible_person,
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text("สถานะ : ",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+                        durable.Durable_statusnow == "ดี"
+                            ? Text(durable.Durable_statusnow,
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold))
+                            : durable.Durable_statusnow == "ชำรุด"
+                                ? Text(durable.Durable_statusnow,
+                                    style: TextStyle(
+                                     fontSize: 22,
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold))
+                                : Text(durable.Durable_statusnow,
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        color: Colors.orange,
+                                        fontWeight: FontWeight.bold)),
+                      ],
+                    ),
                   ],
                 ),
-                Row(
-                  children: [
-                    const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(durable.room.Room_number),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text("ผู้ใช้ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(durable.Responsible_person),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Text("สถานะ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                    durable.Durable_statusnow == "ดี"
-                        ? Text(durable.Durable_statusnow,
-                        style: TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold))
-                        : durable.Durable_statusnow == "ชำรุด"
-                        ? Text(durable.Durable_statusnow,
-                        style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold))
-                        : Text(durable.Durable_statusnow,
-                        style: TextStyle(
-                            color: Colors.orange,
-                            fontWeight: FontWeight.bold)),
-                  ],
-                ),
-
-              ],
-            ),
-            isThreeLine: true,
-            /*trailing: Icon(
+                isThreeLine: true,
+                /*trailing: Icon(
               Icons.remove_red_eye,
               // color: Colors.green.shade700
             ),*/
-            onTap: () {
-              convertcode2(durable.Durable_code.toString(),"");
-            },
-          ),
-        ),
+                onTap: () {
+                  convertcode2(durable.Durable_code.toString(), "");
+                },
+              ),
+            ),
+          );
+        },
       );
-    },
-  );
+
   Widget buildDurableadmin2(List<VerifyDurable> durables) => ListView.builder(
-    itemCount: listdurableverifyed_admin == null ? 0 : listdurableverifyed_admin!.length,
-    itemBuilder: (context, index) {
-      final durable = durables[index];
-      String? img;
-      if (durable.pk.durable.Durable_image.toString() != "-") {
-        img = Strings.url+"/file/durable_image/" + durable.pk.durable.Durable_image.toString();
-       /* img =
+        itemCount: listdurableverifyed_admin == null
+            ? 0
+            : listdurableverifyed_admin!.length,
+        itemBuilder: (context, index) {
+          final durable = durables[index];
+          String? img;
+          if (durable.pk.durable.Durable_image.toString() != "-") {
+            img = Strings.url +
+                "/file/durable_image/" +
+                durable.pk.durable.Durable_image.toString();
+            /* img =
             "http://www.itsci.mju.ac.th/DurableWebservices/file/durable_image/" +
                 durable.pk.durable.Durable_image.toString();*/
-      } else {
-        img =
-        "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
-      }
-      final splitted = durable.Save_date.toString().split(' ');
-      log.e(splitted[0].toString());
-      log.e(durable.Save_date.toString());
-      return Card(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 5, bottom: 5),
-          child: Expanded(
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 24,
-                backgroundImage: NetworkImage(img+"?v=1"),
-              ),
-              title:
-              Text("ชื่อครุภัณฑ์ : " + durable.pk.durable.Durable_name),
-              subtitle: SizedBox(
-                child: Column(
-                  children: [
-                    Row(
+          } else {
+            img =
+                "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
+          }
+          final splitted = durable.Save_date.toString().split(' ');
+          log.e(splitted[0].toString());
+          log.e(durable.Save_date.toString());
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5, bottom: 5),
+              child: Expanded(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 24,
+                    backgroundImage: NetworkImage(img + "?v=1"),
+                  ),
+                  subtitle: SizedBox(
+                    child: Column(
                       children: [
-                        const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.pk.durable.Durable_code),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("ชื่อครุภัณฑ์ : ",
+                                style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
+                            Flexible(
+                              child: Text(durable.pk.durable.Durable_name,
+                                  style: TextStyle(
+                                      fontSize: 25, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                             Text("รหัสครุภัณฑ์ : ",
+                                style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
+                            Flexible(
+                              child: Text(durable.pk.durable.Durable_code,
+                                  style: TextStyle(
+                                      fontSize: 25, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("วันที่ตรวจสอบ : ",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                            Flexible(
+                              child: Text(durable.Save_date.toString(),
+                                  style: TextStyle(
+                                      fontSize: 25, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text("ห้อง : ",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                            Text(durable.pk.durable.room.Room_number,
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("ผู้ใช้: ",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                            Flexible(
+                              child: Text(durable.pk.durable.Responsible_person,
+                                  style: TextStyle(
+                                      fontSize: 25, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text("สถานะ : ",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                            durable.Durable_status == "ดี"
+                                ? Text(durable.Durable_status,
+                                    style: TextStyle(
+                                        fontSize: 25,
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold))
+                                : durable.Durable_status == "ชำรุด"
+                                    ? Text(durable.Durable_status,
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold))
+                                    : Text(durable.Durable_status,
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            color: Colors.orange,
+                                            fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text("รายละเอียด : ",
+                                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                            Text(durable.note,
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold,color: Colors.indigo)),
+                          ],
+                        ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        const Text("วันที่ตรวจสอบ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.Save_date.toString()),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.pk.durable.room.Room_number),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("ผู้ใช้: ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.pk.durable.Responsible_person),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("สถานะ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        durable.Durable_status == "ดี"
-                            ? Text(durable.Durable_status,
-                            style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold))
-                            : durable.Durable_status == "ชำรุด"
-                            ? Text(durable.Durable_status,
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold))
-                            : Text(durable.Durable_status,
-                            style: TextStyle(
-                                color: Colors.orange,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("รายละเอียด : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.note),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              isThreeLine: true,
-             /* trailing: Icon(
+                  ),
+                  isThreeLine: true,
+                  /* trailing: Icon(
                 Icons.remove_red_eye,
                 // color: Colors.green.shade700
               ),*/
-              onTap: () {
-                convertcode2(durable.pk.durable.Durable_code.toString(),durable.Save_date.toString());
-              },
+                  onTap: () {
+                    convertcode2(durable.pk.durable.Durable_code.toString(),
+                        durable.Save_date.toString());
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
-    },
-  );
+
   Future<void> convertcode(String code) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     List<String> listcode = code.split(".png");
@@ -1040,110 +1217,93 @@ class _HomePageState extends State<HomePage> {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => Viewdurablepage()));
   }
-  Future<void> convertcode2(String code,String verifydate) async {
+
+  Future<void> convertcode2(String code, String verifydate) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     List<String> listcode = code.split(".png");
     String durable_code = listcode[0].replaceAll(':', '/');
     String dateverify = verifydate;
 
-    preferences.setString("selectyear",  selectedValueyears.toString());
- //   preferences.setString('verifydurabledate', dateverify);
+    preferences.setString("selectroom", selectedValue.toString());
+    preferences.setString("selectyear", selectedValueyears.toString());
+    //   preferences.setString('verifydurabledate', dateverify);
     preferences.setString('durable_code', durable_code);
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => Viewdurablepage()));
   }
 
-  Future<void> listroom(String code) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    List<String> listcode = code.split(".png");
-    String durable_code = listcode[0].replaceAll(':', '/');
-    preferences.setString('durable_code', durable_code);
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => Viewdurablepage()));
-  }
+
 
   void checkdropdown() {
     login_manager lm = login_manager();
-    if ( Majorlogin == "IT") {
-
-      if (  _value2 == 1 ) {
+    if (Majorlogin == "IT") {
+      if (_value2 == 1) {
         setState(() {
           lm
               .listdurablenotverify(s!.major.ID_Major.toString(),
-              selectedValue.toString(), selectedValueyears.toString())
+                  selectedValue.toString(), selectedValueyears.toString())
               .then((value) => {
-            listnotverify = value,
-            setState(() {
-              isLoading = false;
-            }),
-          });
+                    listnotverify = value,
+                    setState(() {
+                      isLoading = false;
+                    }),
+                  });
           isVisiblenotverify = true;
           isVisibleverify = false;
           isVisibldurableadmin = false;
         });
-      }
-      else if (  _value2 == 2 ) {
+      } else if (_value2 == 2) {
         setState(() {
           lm
-              .listdurable(s!.major.ID_Major.toString(), selectedValue.toString(),
-              selectedValueyears.toString())
+              .listdurable(s!.major.ID_Major.toString(),
+                  selectedValue.toString(), selectedValueyears.toString())
               .then((value) => {
-            listverify = value,
-            setState(() {
-              isLoading = false;
-            }),
-          });
+                    listverify = value,
+                    setState(() {
+                      isLoading = false;
+                    }),
+                  });
           isVisibleverify = true;
           isVisiblenotverify = false;
           isVisibldurableadmin = false;
         });
       }
-
-    }
-    else if ( Majorlogin == "SCI") {
-      if (  _value2 == 1 ) {
+    } else if (Majorlogin == "SCI") {
+      if (_value2 == 1) {
         setState(() {
           setState(() {
-            lm.listalldurableadmin(selectedValue.toString(),
-                selectedValueyears.toString())
-                .then((value) =>
-            {
-              listdurableadmin = value,
-              setState(() {
-                isLoading = false;
-              }),
-            });
+            lm
+                .listalldurableadmin(
+                    selectedValue.toString(), selectedValueyears.toString())
+                .then((value) => {
+                      listdurableadmin = value,
+                      setState(() {
+                        isLoading = false;
+                      }),
+                    });
             isVisibleverify = false;
             isVisiblenotverify = false;
             isVisibldurableadmin = true;
             isVisibldurableadmin2 = false;
           });
         });
-      }
-      else if (  _value2 == 2 ) {
+      } else if (_value2 == 2) {
         setState(() {
-          lm.listdurableverifyed_admin(selectedValue.toString(),
-              selectedValueyears.toString())
-              .then((value) =>
-          {
-            listdurableverifyed_admin = value,
-            setState(() {
-              isLoading = false;
-            }),
-          });
+          lm
+              .listdurableverifyed_admin(
+                  selectedValue.toString(), selectedValueyears.toString())
+              .then((value) => {
+                    listdurableverifyed_admin = value,
+                    setState(() {
+                      isLoading = false;
+                    }),
+                  });
           isVisibleverify = false;
           isVisiblenotverify = false;
           isVisibldurableadmin = false;
           isVisibldurableadmin2 = true;
         });
-
       }
     }
-
-
-
-
   }
-
-
 }

@@ -300,11 +300,10 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('ระบบจัดการครุภัณฑ์'),
+          title: const Text('ระบบจัดการครุภัณฑ์',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
           leading: IconButton(
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => List_repair_page()));
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.keyboard_backspace),
           ),
@@ -341,26 +340,28 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                               Image.network(img!+"?v=1", width: 300, height: 300),
                               Column(
                                 children: [
+                                  SizedBox(height: 20),
                                   Row(
                                     children: [
                                       Text("แก้ไขการแจ้งซ่อมครุภัณฑ์",
                                           style: TextStyle(
-                                              fontSize: 22, fontWeight: FontWeight.bold)),
+                                              fontSize: 25, fontWeight: FontWeight.bold)),
                                     ],
                                   ),
                                   SizedBox(height: 20),
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        children: [
-                                          Text("ชื่อครุภัณฑ์ : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(durablename_controller.text, style: TextStyle(fontSize: 16)),
-                                        ],
-                                      ),
+                                      Text("ชื่อครุภัณฑ์ : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                                      Flexible(child: Text(durablename_controller.text, style: TextStyle(fontSize: 25))),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("รหัสครุภัณฑ์ : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                                      Flexible(child: Text(durablecode_controller.text, style: TextStyle(fontSize: 25))),
                                     ],
                                   ),
                                   SizedBox(height: 10),
@@ -368,117 +369,22 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                                     children: [
                                       Column(
                                         children: [
-                                          Text("รหัสครุภัณฑ์ : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                          Text("ห้องที่ใช้งาน : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                       Column(
                                         children: [
-                                          Text(durablecode_controller.text, style: TextStyle(fontSize: 16)),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Text("ห้องที่ใช้งาน : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(durableroom_controller.text, style: TextStyle(fontSize: 16)),
+                                          Text(durableroom_controller.text, style: TextStyle(fontSize: 25)),
                                         ],
                                       ),
                                     ],
                                   ),
                                   SizedBox(height: 10),
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text("สถานะ :",
-                                          style: TextStyle(fontSize: 16)),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          DropdownButtonHideUnderline(
-                                            child: DropdownButton2<String>(
-                                              isExpanded: true,
-                                              hint: Row(
-                                                children: const [
-                                                  Expanded(
-                                                    child: Text(
-                                                      'ชำรุด',
-                                                      style: TextStyle(
-                                                        fontSize: 14,
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                      overflow:
-                                                      TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              value: selectedValuestatus,
-                                              icon: const Icon(
-                                                  Icons.keyboard_arrow_down),
-                                              items: statusdurable
-                                                  .map((item) =>
-                                                  DropdownMenuItem<String>(
-                                                    value: item,
-                                                    child: Text(
-                                                      item,
-                                                      style: const TextStyle(
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ))
-                                                  .toList(),
-                                              onChanged: (String? newValue) {
-                                                setState(() {
-                                                  selectedValuestatus = newValue!;
-                                                });
-                                              },
-                                              buttonHeight: 40,
-                                              buttonWidth: 160,
-                                              buttonPadding:
-                                              const EdgeInsets.only(
-                                                  left: 14, right: 14),
-                                              buttonDecoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.circular(14),
-                                                border: Border.all(
-                                                  color: Colors.black26,
-                                                ),
-                                                color: Colors.white,
-                                              ),
-                                              buttonElevation: 2,
-                                              itemHeight: 40,
-                                              itemPadding: const EdgeInsets.only(
-                                                  left: 14, right: 14),
-                                              dropdownMaxHeight: 200,
-                                              dropdownWidth: 200,
-                                              dropdownPadding: null,
-                                              dropdownDecoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.circular(14),
-                                                color: Colors.white,
-                                              ),
-                                              dropdownElevation: 8,
-                                              scrollbarRadius:
-                                              const Radius.circular(40),
-                                              scrollbarThickness: 6,
-                                              scrollbarAlwaysShow: true,
-                                              offset: const Offset(-20, 0),
-                                            ),
-                                          ),
-                                        ],
-                                      )
+                                      Text("สถานะ : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                                      Flexible(child: Text(selectedValuestatus.toString(), style: TextStyle(fontSize: 25))),
                                     ],
                                   ),
                                   SizedBox(height: 20),
@@ -490,10 +396,11 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                                             width: 50,
                                             height: 80,
                                             child: TextFormField(
+                                              style: TextStyle(fontSize: 25),
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(),
                                                 label:  Text("อาการเสีย",
-                                                    style: TextStyle(fontWeight: FontWeight.bold)),
+                                                    style: TextStyle(fontSize:20,fontWeight: FontWeight.bold)),
                                                 hintText: "กรุณากรอกอาการเสีย",
                                               ),
                                               controller: noteController,
@@ -514,7 +421,7 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                                       Column(
                                         children: const [
                                           Text("สภาพครุภัณฑ์ :",
-                                              style: TextStyle(fontSize: 16)),
+                                              style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                       const SizedBox(width: 20),
@@ -533,6 +440,7 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                                                           title: Text(
                                                               "เลือกรายการอัปโหลด",
                                                               style: TextStyle(
+                                                                fontSize: 25,
                                                                   fontWeight:
                                                                   FontWeight
                                                                       .bold,
@@ -574,7 +482,7 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                                                                               width:
                                                                               10),
                                                                           Text(
-                                                                              "กล้อง")
+                                                                              "กล้อง", style: TextStyle(fontSize: 25))
                                                                         ],
                                                                       ),
                                                                     ),
@@ -610,7 +518,7 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                                                                               width:
                                                                               10),
                                                                           Text(
-                                                                              "แกลลอรี่")
+                                                                              "แกลลอรี่", style: TextStyle(fontSize: 25))
                                                                         ],
                                                                       ),
                                                                     ),
@@ -624,7 +532,7 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                                                 },
                                                 child: Text("อัปโหลด",
                                                     style: TextStyle(
-                                                        color: Colors.white)),
+                                                        color: Colors.white,fontSize: 25)),
                                                 color: Colors.blueAccent,
                                               )
                                             ],
@@ -655,7 +563,7 @@ class Edit_Inform_PageState extends State<Edit_Inform_Page> {
                                   style: ButtonStyle(
                                     backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
                                   ),
-                                  child: const Text("แก้ไขข้อมูล")),
+                                  child: const Text("แก้ไขข้อมูล",style: TextStyle(fontSize: 25))),
                             ],
                           ),
                         ),

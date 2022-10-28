@@ -46,7 +46,7 @@ class _MyHeaderState extends State<MyHeaderDrawer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.indigo,
+      color: Colors.orange.shade900,
       width: double.infinity,
       height: 200,
       padding: EdgeInsets.only(top: 25.0),
@@ -63,9 +63,9 @@ class _MyHeaderState extends State<MyHeaderDrawer> {
                         "https://i.pinimg.com/originals/76/80/4f/76804f67ba38f85e4802d250e5b15504.jpg"))),
           ),
 
-           Text(s==null? "":s!.Staff_name+"  "+s!.Staff_lastname,style: TextStyle(color: Colors.white, fontSize: 20) ),
-          Text(s==null? "":s!.Email,style: TextStyle(color: Colors.white60, fontSize: 14) ),
-           Text(s==null? "":"สถานะ : "+s!.Staff_status,style: TextStyle(color: Colors.white60, fontSize: 14)),
+           Text(s==null? "":s!.Staff_name+"  "+s!.Staff_lastname,style: TextStyle(color: Colors.white, fontSize: 25,fontWeight: FontWeight.bold) ),
+          Text(s==null? "":s!.Email,style: TextStyle(color: Colors.white, fontSize: 24,fontWeight: FontWeight.w300) ),
+           Text(s==null? "":"สถานะ : "+s!.Staff_status,style: TextStyle(color: Colors.white, fontSize: 24,fontWeight: FontWeight.w300)),
         ],
       ),
 

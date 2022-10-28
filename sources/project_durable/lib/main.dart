@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
        primarySwatch :  Palette.kToDark,
         primaryColor: Colors.green,
-        fontFamily: 'Georgia',
+       fontFamily: 'THNiramit',
       ),
       //home: const MyHomePage(title: 'ระบบจัดการครุภัณฑ์'),
       //home: Login_Page(),
@@ -102,20 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('หน้าหลัก'),
       ),
-      body: Center(
-        child: FutureBuilder<ResponseModel>(
-          future: futureRespone,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Text(snapshot.data!.result.toString(),
-                  style: TextStyle(fontSize: 15));
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            }
-            return const CircularProgressIndicator();
-          },
-        ),
-      ),
+
     );
   }
 

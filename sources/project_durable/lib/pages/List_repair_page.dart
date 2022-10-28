@@ -157,8 +157,8 @@ class _Listrepair_PageState extends State<List_repair_page> {
   @override
   void initState() {
     super.initState();
-    imageCache!.clear();
-    imageCache!.clearLiveImages();
+    imageCache.clear();
+    imageCache.clearLiveImages();
     findUser();
   }
 
@@ -190,19 +190,26 @@ class _Listrepair_PageState extends State<List_repair_page> {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('รายการแจ้งซ่อมครุภัณฑ์'),
-          bottom: TabBar(
+          title: const Text('รายการแจ้งซ่อมครุภัณฑ์', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+          bottom: const TabBar(
             tabs: [
-              Tab(text: 'รอตรวจสอบ'),
-              Tab(text: 'รอซ่อม'),
-              Tab(text: 'ซ่อมสำเร็จ'),
-              Tab(text: 'ซ่อมไม่สำเร็จ'),
+              Tab(
+                child: Text("รอตรวจสอบ",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
+                ),
+              Tab(
+                child: Text("รอซ่อม",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
+              ),
+              Tab(
+                child: Text("ซ่อมสำเร็จ",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
+              ),
+              Tab(
+                child: Text("ซ่อมไม่สำเร็จ",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w600)),
+              ),
             ],
           ),
           leading: IconButton(
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => HomePage()));
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.keyboard_backspace),
           ),
@@ -218,25 +225,7 @@ class _Listrepair_PageState extends State<List_repair_page> {
           ),
         ),
         resizeToAvoidBottomInset: false,
-        /*body: Builder(
-          builder: (BuildContext context) {
-            return Center(
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
-                    ),
-                  ),
-                  Expanded(
-                    child: buildDurable(listinformrepair == null ? [] : listinformrepair!)),
-                ],
-              ),
-            );
-          },
-        ),*/
+
         body: TabBarView(
           children: [
             Builder(
@@ -244,8 +233,12 @@ class _Listrepair_PageState extends State<List_repair_page> {
                 return Center(
                   child: Column(
                     children: [
+                      listinformrepair == null? Container() :
                       Expanded(
-                          child: listinformrepair==null? Center(child: Text("ทดสอบ")) : buildDurable(listinformrepair!)),
+                          child: listinformrepair!.length == 0 ?
+                  Center(child: Text("ยังไม่มีครุภัณฑ์ที่ รอตรวจสอบ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)))
+                        : buildDurable(listinformrepair!),
+                      ),
                     ],
                   ),
                 );
@@ -256,8 +249,11 @@ class _Listrepair_PageState extends State<List_repair_page> {
                 return Center(
                   child: Column(
                     children: [
+                      listverifyinform == null? Container() :
                       Expanded(
-                          child: listverifyinform==null? Center(child: Text("ทดสอบ")) : buildDurableverifyedd(listverifyinform!)),
+                          child: listverifyinform!.length == 0 ? Center(child: Text("ยังไม่มีครุภัณฑ์ที่ รอซ่อม",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)))
+                    : buildDurableverifyedd(listverifyinform!),
+                      ),
                     ],
                   ),
                 );
@@ -268,8 +264,11 @@ class _Listrepair_PageState extends State<List_repair_page> {
                 return Center(
                   child: Column(
                     children: [
+                      listRepairComplete == null? Container() :
                       Expanded(
-                          child: listRepairComplete==null? Center(child: Text("ทดสอบ")) : buildDurablerepaircomplete(listRepairComplete!)),
+                          child: listRepairComplete!.length == 0
+                              ?  Center(child: Text("ยังไม่มีครุภัณฑ์ที่ ซ่อมสำเร็จ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25))) : buildDurablerepaircomplete(listRepairComplete!),
+                      ),
                     ],
                   ),
                 );
@@ -280,8 +279,11 @@ class _Listrepair_PageState extends State<List_repair_page> {
                 return Center(
                   child: Column(
                     children: [
+                      listverifynotmaintenance2 == null? Container() :
                       Expanded(
-                          child: listverifynotmaintenance2==null? Center(child: Text("ทดสอบ")) : buildDurablenotmaintenance(listverifynotmaintenance2!)),
+                          child: listverifynotmaintenance2!.length == 0  ?
+                          Center(child: Text("ยังไม่มีครุภัณฑ์ที่ ซ่อมไม่สำเร็จ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25))) : buildDurablenotmaintenance(listverifynotmaintenance2!),
+                ),
                     ],
                   ),
                 );
@@ -347,50 +349,61 @@ class _Listrepair_PageState extends State<List_repair_page> {
                 radius: 24,
                 backgroundImage: NetworkImage(img),
               ),
-              title:
-              Text("ชื่อครุภัณฑ์ : " + durable.durable.Durable_name),
               subtitle: SizedBox(
                 child: Column(
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.durable.Durable_code),
+                        Text("ชื่อครุภัณฑ์ : " ,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(durable.durable.Durable_name,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(durable.durable.Durable_code,style: TextStyle(fontSize: 25,fontWeight:FontWeight.bold,color:Colors.indigo))),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.durable.room.Room_number),
+                        const Text("ห้อง : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Text(durable.durable.room.Room_number,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo)),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("วันที่แจ้ง : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(showDate+" "+informtime+" น.",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("ผู้แจ้ง : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(durable.staff.Staff_status.toString(),style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("วันที่แจ้ง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(showDate+" "+informtime+" น."),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("ผู้แจ้ง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.staff.Staff_status.toString()),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("สถานะ : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("สถานะ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                         durable.Informtype == "ส่งซ่อม"
                             ? Text(durable.Informtype,
                             style: TextStyle(
+                              fontSize: 25,
                                 color: Colors.blueAccent,
                                 fontWeight: FontWeight.bold))
                             : durable.Informtype == "ซ่อมเอง"
                             ? Text(durable.Informtype,
                             style: TextStyle(
+                                fontSize: 25,
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold))
                             : Text(durable.Informtype,
                             style: TextStyle(
+                                fontSize: 25,
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold)),
                       ],
@@ -441,50 +454,63 @@ class _Listrepair_PageState extends State<List_repair_page> {
                 radius: 24,
                 backgroundImage: NetworkImage(img),
               ),
-              title:
-              Text("ชื่อครุภัณฑ์ : " + durable.informrepair.durable.Durable_name),
+
+
               subtitle: SizedBox(
                 child: Column(
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.informrepair.durable.Durable_code),
+                        const Text("ชื่อครุภัณฑ์ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(durable.informrepair.durable.Durable_name,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(durable.informrepair.durable.Durable_code,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.informrepair.durable.room.Room_number),
+                        const Text("ห้อง : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Text(durable.informrepair.durable.room.Room_number,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo)),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("วันที่ตรวจสอบ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(showDate+" "+verifytime+" น.",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("รายละเอียด : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(durable.verify_detail.toString(),style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("วันที่ตรวจสอบ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(showDate+" "+verifytime+" น."),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("รายละเอียด : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.verify_detail.toString()),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("สถานะ : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("สถานะ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                         durable.verify_status== "ส่งซ่อม"
                             ? Text(durable.verify_status,
                             style: TextStyle(
+                              fontSize: 25,
                                 color: Colors.blueAccent,
                                 fontWeight: FontWeight.bold))
                             : durable.verify_status == "ซ่อมเอง"
                             ? Text(durable.verify_status,
                             style: TextStyle(
+                                fontSize: 25,
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold))
                             : Text(durable.verify_status,
                             style: TextStyle(
+                                fontSize: 25,
                                 color: Colors.orange,
                                 fontWeight: FontWeight.bold)),
                       ],
@@ -535,50 +561,61 @@ class _Listrepair_PageState extends State<List_repair_page> {
                 radius: 24,
                 backgroundImage: NetworkImage(img),
               ),
-              title:
-              Text("ชื่อครุภัณฑ์ : " + durable.informrepair.durable.Durable_name),
+
               subtitle: SizedBox(
                 child: Column(
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.informrepair.durable.Durable_code),
+                        const Text("ชื่อครุภัณฑ์ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(durable.informrepair.durable.Durable_name,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(durable.informrepair.durable.Durable_code,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.informrepair.durable.room.Room_number),
+                        const Text("ห้อง : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Text(durable.informrepair.durable.room.Room_number,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo)),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("วันที่ตรวจสอบ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(showDate+" "+verifytime+" น.",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("วันที่ตรวจสอบ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(showDate+" "+verifytime+" น."),
+                        const Text("รายละเอียด : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Text(durable.verify_detail.toString(),style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo)),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("รายละเอียด : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.verify_detail.toString()),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("สถานะ : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("สถานะ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                         durable.verify_status== "ไม่สามารถซ่อมได้"
                             ? Text(durable.verify_status,
                             style: TextStyle(
+                                fontSize: 25,
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold))
                             : durable.verify_status == "ยกเลิกการแจ้งซ่อม"
                             ? Text(durable.verify_status,
                             style: TextStyle(
+                                fontSize: 25,
                                 color: Colors.blueAccent,
                                 fontWeight: FontWeight.bold))
                             : Text(durable.verify_status,
                             style: TextStyle(
+                                fontSize: 25,
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold)),
                       ],
@@ -630,56 +667,66 @@ class _Listrepair_PageState extends State<List_repair_page> {
                 radius: 24,
                 backgroundImage: NetworkImage(img),
               ),
-              title:
-              Text("ชื่อครุภัณฑ์ : " + durable.durable.Durable_name),
               subtitle: SizedBox(
                 child: Column(
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.durable.Durable_code),
+                        const Text("ชื่อครุภัณฑ์ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(durable.durable.Durable_name,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(durable.durable.Durable_code,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.durable.room.Room_number),
+                        const Text("ห้อง : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Text(durable.durable.room.Room_number,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo)),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("วันที่ซ่อม : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.Date_of_repair.toString()+" "+timerepair+" น."),
+                        const Text("วันที่ซ่อม : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Text(durable.Date_of_repair.toString()+" "+timerepair+" น.",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo)),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("รายละเอียดการซ่อม : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(durable.repair_detail,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo))),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("รายละเอียดการซ่อม : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.repair_detail),
+                        const Text("จำนวนเงิน : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                        Text(durable.repair_charges,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color:Colors.indigo)),
                       ],
                     ),
                     Row(
                       children: [
-                        const Text("จำนวนเงิน : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text(durable.repair_charges),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Text("สถานะ : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                        const Text("สถานะ : ",style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
                         durable.Repair_status == "ดี"
                             ? Text(durable.Repair_status,
                             style: TextStyle(
+                                fontSize: 25,
                                 color: Colors.green,
                                 fontWeight: FontWeight.bold))
                             : durable.Repair_status == "ชำรุด"
                             ? Text(durable.Repair_status,
                             style: TextStyle(
+                                fontSize: 25,
                                 color: Colors.red,
                                 fontWeight: FontWeight.bold))
                             : Text(durable.Repair_status,
                             style: TextStyle(
+                                fontSize: 25,
                                 color: Colors.orange,
                                 fontWeight: FontWeight.bold)),
                       ],
@@ -752,7 +799,7 @@ class _Listrepair_PageState extends State<List_repair_page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
@@ -780,7 +827,7 @@ class _Listrepair_PageState extends State<List_repair_page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),

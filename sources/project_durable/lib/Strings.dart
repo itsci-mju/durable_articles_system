@@ -1,7 +1,7 @@
 class Strings {
   //URL CONNECTION
-  static const String url = "http://192.168.43.166:8080/DurableWebservices";
- // static const String url = "http://192.168.42.198:8080/DurableWebservices";
+   static const String url = "http://192.168.43.166:8080/DurableWebservices";
+ //static const String url = "http://192.168.42.198:8080/DurableWebservices";
 
 
   //USER

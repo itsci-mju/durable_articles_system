@@ -216,7 +216,7 @@ class _Inform_PageState extends State<Inform_Page> {
                 style: TextStyle(color: Colors.white, fontSize: 20)),
             onPressed: () {
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => HomePage()));
+                  .push(MaterialPageRoute(builder: (context) => Viewdurablepage()));
             },
             width: 130,
           ),
@@ -291,11 +291,10 @@ class _Inform_PageState extends State<Inform_Page> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('ระบบจัดการครุภัณฑ์'),
+          title: const Text('ระบบจัดการครุภัณฑ์', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
           leading: IconButton(
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => Viewdurablepage()));
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.keyboard_backspace),
           ),
@@ -330,28 +329,30 @@ class _Inform_PageState extends State<Inform_Page> {
                             children: [
 
                               Image.network(img!+"?v=1", width: 300, height: 300),
+                              SizedBox(height: 20),
                               Column(
                                 children: [
                                   Row(
                                     children: [
                                       Text("แจ้งซ่อมครุภัณฑ์",
                                           style: TextStyle(
-                                              fontSize: 22, fontWeight: FontWeight.bold)),
+                                              fontSize: 25, fontWeight: FontWeight.bold)),
                                     ],
                                   ),
                                   SizedBox(height: 20),
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        children: [
-                                          Text("ชื่อครุภัณฑ์ : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(durablename_controller.text, style: TextStyle(fontSize: 16)),
-                                        ],
-                                      ),
+                                      Text("ชื่อครุภัณฑ์ : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                                      Flexible(child: Text(durablename_controller.text, style: TextStyle(fontSize: 25))),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("รหัสครุภัณฑ์ : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                                      Flexible(child: Text(durablecode_controller.text, style: TextStyle(fontSize: 25))),
                                     ],
                                   ),
                                   SizedBox(height: 10),
@@ -359,98 +360,17 @@ class _Inform_PageState extends State<Inform_Page> {
                                     children: [
                                       Column(
                                         children: [
-                                          Text("รหัสครุภัณฑ์ : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                          Text("สถานะ : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                       Column(
                                         children: [
-                                          Text(durablecode_controller.text, style: TextStyle(fontSize: 16)),
+                                          Text(selectedValuestatus!, style: TextStyle(fontSize: 25)),
                                         ],
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Text("สถานะ :",
-                                          style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          DropdownButtonHideUnderline(
-                                            child: DropdownButton2<String>(
-                                              isExpanded: true,
-                                              hint: Row(
-                                                children: const [
-                                                  Expanded(
-                                                    child: Text(
-                                                      'ชำรุด',
-                                                      overflow:
-                                                      TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              value: selectedValuestatus,
-                                              icon: const Icon(
-                                                  Icons.keyboard_arrow_down),
-                                              items: statusdurable
-                                                  .map((item) =>
-                                                  DropdownMenuItem<String>(
-                                                    value: item,
-                                                    child: Text(
-                                                      item,
-                                                      style: const TextStyle(
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  ))
-                                                  .toList(),
-                                              onChanged: (String? newValue) {
-                                                setState(() {
-                                                  selectedValuestatus = newValue!;
-                                                });
-                                              },
-                                              buttonHeight: 40,
-                                              buttonWidth: 160,
-                                              buttonPadding:
-                                              const EdgeInsets.only(
-                                                  left: 14, right: 14),
-                                              buttonDecoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.circular(14),
-                                                border: Border.all(
-                                                  color: Colors.black26,
-                                                ),
-                                                color: Colors.white,
-                                              ),
-                                              buttonElevation: 2,
-                                              itemHeight: 40,
-                                              itemPadding: const EdgeInsets.only(
-                                                  left: 14, right: 14),
-                                              dropdownMaxHeight: 200,
-                                              dropdownWidth: 200,
-                                              dropdownPadding: null,
-                                              dropdownDecoration: BoxDecoration(
-                                                borderRadius:
-                                                BorderRadius.circular(14),
-                                                color: Colors.white,
-                                              ),
-                                              dropdownElevation: 8,
-                                              scrollbarRadius:
-                                              const Radius.circular(40),
-                                              scrollbarThickness: 6,
-                                              scrollbarAlwaysShow: true,
-                                              offset: const Offset(-20, 0),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
+
                                   SizedBox(height: 20),
                                   Row(
                                     children: [
@@ -460,10 +380,12 @@ class _Inform_PageState extends State<Inform_Page> {
                                             width: 50,
                                             height: 80,
                                             child: TextFormField(
+                                              style: TextStyle(fontSize:25),
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(),
+
                                                 label:  Text("อาการเสีย",
-                                                    style: TextStyle(fontWeight: FontWeight.bold)),
+                                                    style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
                                                 hintText: "กรุณากรอกอาการเสีย",
                                               ),
                                               controller: noteController,
@@ -484,8 +406,8 @@ class _Inform_PageState extends State<Inform_Page> {
                                     children: [
                                       Column(
                                         children: const [
-                                          Text("สภาพครุภัณฑ์ :",
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                          Text("อัปโหลดรูป :",
+                                              style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                       const SizedBox(width: 20),
@@ -504,6 +426,7 @@ class _Inform_PageState extends State<Inform_Page> {
                                                           title: Text(
                                                               "เลือกรายการอัปโหลด",
                                                               style: TextStyle(
+                                                                fontSize: 25,
                                                                   fontWeight:
                                                                   FontWeight
                                                                       .bold,
@@ -545,7 +468,7 @@ class _Inform_PageState extends State<Inform_Page> {
                                                                               width:
                                                                               10),
                                                                           Text(
-                                                                              "กล้อง")
+                                                                              "กล้อง", style: TextStyle(fontSize: 25))
                                                                         ],
                                                                       ),
                                                                     ),
@@ -581,7 +504,7 @@ class _Inform_PageState extends State<Inform_Page> {
                                                                               width:
                                                                               10),
                                                                           Text(
-                                                                              "แกลลอรี่")
+                                                                              "แกลลอรี่", style: TextStyle(fontSize: 25))
                                                                         ],
                                                                       ),
                                                                     ),
@@ -593,9 +516,7 @@ class _Inform_PageState extends State<Inform_Page> {
                                                         );
                                                       });
                                                 },
-                                                child: Text("อัปโหลด",
-                                                    style: TextStyle(
-                                                        color: Colors.white)),
+                                                child: Text("อัปโหลด", style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300,color: Colors.white)),
                                                 color: Colors.blueAccent,
                                               )
                                             ],
@@ -623,12 +544,12 @@ class _Inform_PageState extends State<Inform_Page> {
                                 children: [
                                   Column(
                                     children: [
-                                      Text("ผู้ทำรายการ : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                      Text("ผู้ทำรายการ : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                     ],
                                   ),
                                   Column(
                                     children: [
-                                      s == null? Text(""):Text(s!.Staff_name.toString() +"  "+ s!.Staff_lastname.toString(), style: TextStyle(fontSize: 16)),
+                                      s == null? Text(""):Text(s!.Staff_status.toString(), style: TextStyle(fontSize: 25)),
                                     ],
                                   ),
                                 ],
@@ -644,7 +565,7 @@ class _Inform_PageState extends State<Inform_Page> {
                                   style: ButtonStyle(
                                     backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
                                   ),
-                                  child: const Text("บันทึกข้อมูล")),
+                                  child: const Text("บันทึกข้อมูล", style: TextStyle(fontSize: 25))),
                             ],
                           ),
                         ),
@@ -753,7 +674,7 @@ class _Inform_PageState extends State<Inform_Page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
@@ -781,7 +702,7 @@ class _Inform_PageState extends State<Inform_Page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),

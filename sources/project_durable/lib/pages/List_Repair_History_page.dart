@@ -169,11 +169,12 @@ class ListRepairHistory_PageState extends State<ListRepairHistory_Page> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ประวัติการส่งซ่อมครุภัณฑ์'),
+        title: const Text('ประวัติการซ่อมครุภัณฑ์',
+            style: TextStyle(
+                fontSize: 25, fontWeight: FontWeight.bold)),
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => Viewdurablepage()));
+            Navigator.pop(context);
           },
           icon: const Icon(Icons.keyboard_backspace),
         ),
@@ -200,7 +201,13 @@ class ListRepairHistory_PageState extends State<ListRepairHistory_Page> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: Align(
-                    child: Text("รหัสครุภัณฑ์ : " + d!.Durable_code,style: TextStyle(fontSize: 18)),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(d!.Durable_code,style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.indigoAccent))),
+                      ],
+                    ),
                     alignment: Alignment.centerLeft,
                   ),
                 ),
@@ -210,7 +217,13 @@ class ListRepairHistory_PageState extends State<ListRepairHistory_Page> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: Align(
-                    child: Text("ชื่อครุภัณฑ์ : " + d!.Durable_name,style: TextStyle(fontSize: 18)),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("ชื่อครุภัณฑ์ : ", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                        Flexible(child: Text(d!.Durable_name, style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.indigoAccent))),
+                      ],
+                    ),
                     alignment: Alignment.centerLeft,
                   ),
                 ),
@@ -218,8 +231,8 @@ class ListRepairHistory_PageState extends State<ListRepairHistory_Page> {
                   height: 10,
                 ),
                 Expanded(
-                    child: listRepairComplete == null
-                        ? Center(child: Text("ทดสอบ"))
+                    child: listRepairComplete!.length == 0
+                        ? Center(child: Text("ยังไม่มีประวัติการซ่อม",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)))
                         : buildDurablerepaircomplete(listRepairComplete!)),
               ],
             ),
@@ -284,47 +297,58 @@ class ListRepairHistory_PageState extends State<ListRepairHistory_Page> {
               padding: const EdgeInsets.only(top: 5, bottom: 5),
               child: Expanded(
                 child: ListTile(
-                  title:  Text("รายการซ่อมครั้งที่ : " + i.toString()),
                   subtitle: SizedBox(
                     child: Column(
                       children: [
                         Row(
                           children: [
-                            const Text("วันที่ซ่อม : ",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.Date_of_repair.toString()+" "+timerepair+" น."),
+                            const Text("รายการซ่อมครั้งที่ : ",
+                                style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
+                            Text(i.toString(), style: TextStyle(fontSize:25,color: Colors.indigo,fontWeight: FontWeight.bold)),
                           ],
                         ),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("วันที่ซ่อม : ",
+                                style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
+                            Flexible(child: Text(durable.Date_of_repair.toString()+" "+timerepair+" น.", style: TextStyle(fontSize:25,color: Colors.indigo,fontWeight: FontWeight.bold))),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text("รายละเอียดการซ่อม : ",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.repair_detail),
+                                style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
+                            Flexible(child: Text(durable.repair_detail, style: TextStyle(fontSize:25,color: Colors.indigo,fontWeight: FontWeight.bold))),
                           ],
                         ),
                         Row(
                           children: [
                             const Text("จำนวนเงิน : ",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.repair_charges),
+                                style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
+                            Text(durable.repair_charges, style: TextStyle(fontSize:25,color: Colors.indigo,fontWeight: FontWeight.bold)),
                           ],
                         ),
                         Row(
                           children: [
                             const Text("สถานะ : ",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                                style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
                             durable.Repair_status == "ดี"
                                 ? Text(durable.Repair_status,
                                     style: TextStyle(
+                                        fontSize:25,
                                         color: Colors.blueAccent,
                                         fontWeight: FontWeight.bold))
                                 : durable.Repair_status == "ชำรุด"
                                     ? Text(durable.Repair_status,
                                         style: TextStyle(
+                                            fontSize:25,
                                             color: Colors.red,
                                             fontWeight: FontWeight.bold))
                                     : Text(durable.Repair_status,
                                         style: TextStyle(
+                                            fontSize:25,
                                             color: Colors.orange,
                                             fontWeight: FontWeight.bold)),
                           ],
@@ -399,7 +423,7 @@ class ListRepairHistory_PageState extends State<ListRepairHistory_Page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
@@ -427,7 +451,7 @@ class ListRepairHistory_PageState extends State<ListRepairHistory_Page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),

@@ -153,7 +153,7 @@ class login_manager {
     if (response.statusCode == 200) {
       ResponseModel responseModel = ResponseModel.fromJson(jsonDecode(response.body));
       List<Durable> listdurable = (responseModel.result as List).map((item) => Durable.fromJson(item)).toList();
-      log.e(listdurable.toString());
+      //log.e(listdurable.toString());
 
       return listdurable;
     } else {

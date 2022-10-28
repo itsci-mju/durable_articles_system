@@ -93,12 +93,24 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
 
     setState(() {
       if (s!.major.ID_Major.toString() == "1") {
-        selectedValueyears = (datenow.year+543).toString();
+
         Majorlogin = "IT";
+        if(datenow.month >= 10 && datenow.month <= 12){
+          selectedValueyears = (datenow.year + 544).toString();
+        }else {
+          selectedValueyears = (datenow.year + 543).toString();
+        }
+
       }
       if (s!.major.ID_Major.toString() == "999") {
-        selectedValueyears = (datenow.year+543).toString();
         Majorlogin = "SCI";
+
+        if(datenow.month >= 10 && datenow.month <= 12){
+          selectedValueyears = (datenow.year + 544).toString();
+        }else {
+          selectedValueyears = (datenow.year + 543).toString();
+        }
+
       }
     });
   }
@@ -118,7 +130,12 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
     setState(() {
       if (s!.major.ID_Major.toString() == "999") {
         selectedValue = 'วิชาเทคโนโลยีสารสนเทศ';
-        selectedValueyears = (datenow.year + 543).toString();
+
+        if(datenow.month >= 10 && datenow.month <= 12){
+          selectedValueyears = (datenow.year + 544).toString();
+        }else {
+          selectedValueyears = (datenow.year + 543).toString();
+        }
       }
     });
 
@@ -328,7 +345,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
@@ -356,7 +373,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
@@ -391,7 +408,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ครุภัณฑ์ทั้งหมด'),
+        title: const Text('ครุภัณฑ์ทั้งหมด',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
         leading: IconButton(
           onPressed: () {
             Navigator.of(context)
@@ -426,7 +443,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                                "สาขา :", style: TextStyle(fontSize: 20)),
+                                "สาขา :", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                           ),
                         ),
                       ],
@@ -448,7 +465,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
                                   child: Text(
                                     item.Major_Name,
                                     style: const TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 25,
                                     ),
                                   ),
                                 ))
@@ -475,7 +492,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
                             itemPadding:
                             const EdgeInsets.only(left: 14, right: 14),
                             dropdownMaxHeight: 200,
-                            dropdownWidth: 200,
+                            dropdownWidth: 250,
                             dropdownPadding: null,
                             dropdownDecoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(14),
@@ -500,7 +517,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
                       Column(
                         children: const [
                           Text("ปีงบประมาณ :",
-                              style: TextStyle(fontSize: 16)),
+                              style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                         ],
                       ),
                       const SizedBox(width: 5),
@@ -513,10 +530,9 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
                               hint: Row(
                                 children: [
                                   Expanded(
-                                    child: Text(
-                                      (datenow.year + 543).toString(),
+                                    child: Text(selectedValueyears.toString(),
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 20,
                                         color: Colors.black,
                                       ),
                                       overflow: TextOverflow.ellipsis,
@@ -535,7 +551,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
                                     child: Text(
                                       item.Years,
                                       style: const TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 25,
                                       ),
                                     ),
                                   ))
@@ -635,7 +651,7 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
           .width * 0.80,
       child: Text(
         heading,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold
+        style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold
         ),
       ),
     );
@@ -650,7 +666,12 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
           children: [
             ListTile(
               //leading: const Icon(Icons.event_seat,color: Colors.indigo),
-              title: Text(numberalldurable ==null?"ครุภัณฑ์ทั้งหมด : ": "ครุภัณฑ์ทั้งหมด : "+numberalldurable!),
+              title: Row(
+                children: [
+                  Text(numberalldurable ==null?"ครุภัณฑ์ทั้งหมด : ": "ครุภัณฑ์ทั้งหมด : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Text(numberalldurable ==null?" ": numberalldurable!,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.indigoAccent)),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -658,7 +679,12 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
             ),
             ListTile(
               //leading: const Icon(Icons.favorite,color: Colors.indigo),
-              title: Text(numberdurabled ==null?"ตรวจแล้ว : ": "ตรวจแล้ว : "+numberdurabled!),
+              title: Row(
+                children: [
+                  Text(numberdurabled ==null?"ตรวจแล้ว : ": "ตรวจแล้ว : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Text(numberdurabled ==null?" ": numberdurabled!,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.green)),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -666,7 +692,12 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
             ),
             ListTile(
               //leading: const Icon(Icons.favorite_border,color: Colors.indigo),
-              title: Text(numbernotdurabled ==null?"ยังไม่ได้ตรวจ : ":"ยังไม่ได้ตรวจ : " + numbernotdurabled!),
+              title: Row(
+                children: [
+                  Text(numbernotdurabled ==null?"ยังไม่ได้ตรวจ : ":"ยังไม่ได้ตรวจ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Text(numbernotdurabled ==null?" ":numbernotdurabled!,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.redAccent)),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -687,8 +718,17 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
           children: [
             ListTile(
               //leading: const Icon(Icons.door_back_door,color: Colors.indigo),
-              title: verifystatus1 == null ? Text("ดี : ") : Text(
-                  "ดี : " + verifystatus1!),
+              title:  Row(
+                children: [
+            verifystatus1 == null ? Text("ดี : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.green))
+              :  Row(
+                children: [
+                  Text("ดี : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Text(verifystatus1!,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.green)),
+                ],
+              ),
+                ],
+              ),
                onTap: () =>go_statusgood(selectedValue.toString(), selectedValueyears.toString()),
             ),
             const Divider(
@@ -697,8 +737,17 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
             ),
             ListTile(
               //leading: const Icon(Icons.person,color: Colors.indigo),
-              title: verifystatus2 == null ? Text("ชำรุด : ") : Text(
-                  "ชำรุด : " + verifystatus2!),
+              title:  Row(
+                children: [
+                verifystatus2 == null ? Text("ชำรุด : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))
+                 :   Row(
+                   children: [
+                     Text("ชำรุด : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                     Text(verifystatus2!,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.red)),
+                   ],
+                 ),
+                ],
+              ),
               onTap: () =>go_statusdefective(selectedValue.toString(), selectedValueyears.toString()),
             ),
             const Divider(
@@ -707,8 +756,21 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
             ),
             ListTile(
               //leading: const Icon(Icons.signal_wifi_statusbar_4_bar,color: Colors.indigo),
-              title: verifystatus4 == null ? Text("รอซ่อม : ") : Text(
-                  "รอซ่อม : " + verifystatus4!),
+              title:  Row(
+                children: [
+                  Row(
+                    children: [
+        verifystatus4 == null ? Text("รอซ่อม : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)) :
+        Row(
+          children: [
+            Text("รอซ่อม : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+            Text(verifystatus4!,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.blue)),
+          ],
+        ),
+                    ],
+                  ),
+                ],
+              ) ,
               onTap: () =>go_statuswaitrepair(selectedValue.toString(), selectedValueyears.toString()),
 
             ),
@@ -718,8 +780,21 @@ class _viewverifybymajor_PageState extends State<View_verifybymajor_page> {
             ),
             ListTile(
               // leading: const Icon(Icons.report_problem,color: Colors.indigo),
-              title: verifystatus3 == null ? Text("แทงจำหน่าย : ") : Text(
-                  "แทงจำหน่าย : " + verifystatus3!),
+              title:  Row(
+                children: [
+                  Row(
+                    children: [
+                      verifystatus3 == null ? Text("แทงจำหน่าย : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)) :
+                      Row(
+                        children: [
+                          Text("แทงจำหน่าย : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                          Text(verifystatus3!,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.orange)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
               onTap: () =>go_statusSell(selectedValue.toString(), selectedValueyears.toString()),
             ),
             const Divider(

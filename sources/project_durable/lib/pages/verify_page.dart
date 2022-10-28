@@ -137,12 +137,16 @@ class _Verify_PageState extends State<Verify_Page> {
             isLoading = false;
           }),
         });
-
+    if(now.month >= 10 && now.month <= 12){
+      selectedValueyears = (now.year + 544).toString();
+    }else {
+      selectedValueyears = (now.year + 543).toString();
+    }
     dm.getdurablebyCode(codedurable.toString()).then((value) => {
           d = value,
       durablename_controller.text = d!.Durable_name.toString(),
       durablecode_controller.text = d!.Durable_code.toString(),
-      selectedValueyears = (now.year+543).toString(),
+
       selectedValuestatus= "ดี",
           setState(() {
             isLoading = false;
@@ -214,7 +218,7 @@ class _Verify_PageState extends State<Verify_Page> {
                 style: TextStyle(color: Colors.white, fontSize: 20)),
             onPressed: () {
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => HomePage()));
+                  .push(MaterialPageRoute(builder: (context) => Viewdurablepage()));
             },
             width: 130,
           ),
@@ -294,11 +298,11 @@ class _Verify_PageState extends State<Verify_Page> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('ระบบจัดการครุภัณฑ์'),
+          title: const Text('ระบบจัดการครุภัณฑ์',
+              style: TextStyle(fontWeight: FontWeight.bold , fontSize: 25)),
           leading: IconButton(
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => Viewdurablepage()));
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.keyboard_backspace),
           ),
@@ -332,46 +336,51 @@ class _Verify_PageState extends State<Verify_Page> {
                           child: Column(
                             children: [
                               SizedBox(width: 5),
-                             /* FutureBuilder(
-                                  future: storage.downloadURL(d!.durable_code.toString().replaceAll('/', "-")+'.jpg'),
-                                  builder: (BuildContext context, AsyncSnapshot<String> snapshot){
-                                    if(snapshot.connectionState == ConnectionState.done &&
-                                    snapshot.hasData){
-                                      return Container(
-                                          width: 200, height: 200,
-                                        child: Image.network(snapshot.data!,
-                                        fit: BoxFit.cover),
-                                      );
-                                    }
-                                    if(snapshot.connectionState == ConnectionState.waiting &&
-                                        snapshot.hasData){
-                                      return CircularProgressIndicator();
-                                    }
-                                    return Container();
-                                  },
-                              ),*/
                              Image.network(img!, width: 300, height: 300),
                               SizedBox(width: 5),
                               Column(
                                 children: [
+                                  SizedBox(height: 20),
                                   Row(
                                     children: [
                                       Text("ตรวจสอบครุภัณฑ์ประจำปี",
                                           style: TextStyle(
-                                              fontSize: 22, fontWeight: FontWeight.bold)),
+                                              fontSize: 27, fontWeight: FontWeight.bold)),
                                     ],
                                   ),
                                   SizedBox(height: 20),
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("ชื่อครุภัณฑ์ : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                                      Flexible(child: Text(durablename_controller.text, style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300))),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Text("รหัสครุภัณฑ์ : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                                      Flexible(child: Text(durablecode_controller.text, style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300))),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Text("ห้อง : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                                      Flexible(child: Text(d!.room.Room_number.toString(), style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300))),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
                                     children: [
                                       Column(
                                         children: [
-                                          Text("ชื่อครุภัณฑ์ : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                          Text("ปีงบประมาณ : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                       Column(
                                         children: [
-                                          Text(durablename_controller.text, style: TextStyle(fontSize: 16)),
+                                          Text(selectedValueyears!, style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300)),
                                         ],
                                       ),
                                     ],
@@ -381,114 +390,7 @@ class _Verify_PageState extends State<Verify_Page> {
                                     children: [
                                       Column(
                                         children: [
-                                          Text("รหัสครุภัณฑ์ : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(durablecode_controller.text, style: TextStyle(fontSize: 16)),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(children: [
-                                    Column(
-                                      children: [
-                                        Text("ปีงบประมาณ :",
-                                            style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                                      ],
-                                    ),
-                                    SizedBox(width: 5),
-                                  ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          DropdownButtonHideUnderline(
-                                            child: DropdownButton2<String>(
-
-                                              isExpanded: true,
-                                              hint: Row(
-                                                children:  [
-                                                  Expanded(
-                                                    child: Text(
-                                                      (now.year +543).toString(),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              value: selectedValueyears,
-                                              icon: const Icon(
-                                                  Icons.keyboard_arrow_down),
-                                              items: v == null
-                                                  ? []
-                                                  : v!
-                                                      .map((item) =>
-                                                          DropdownMenuItem<
-                                                              String>(
-                                                            value: item.Years,
-                                                            child: Text(
-                                                              item.Years,
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontSize: 14,
-                                                              ),
-                                                            ),
-                                                          ))
-                                                      .toList(),
-                                              onChanged: (String? newValue) {
-                                                setState(() {
-                                                  selectedValueyears = newValue!;
-                                                });
-                                              },
-                                              buttonHeight: 40,
-                                              buttonWidth: 160,
-                                              buttonPadding:
-                                                  const EdgeInsets.only(
-                                                      left: 14, right: 14),
-                                              buttonDecoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                                border: Border.all(
-                                                  color: Colors.black26,
-                                                ),
-                                                color: Colors.white,
-                                              ),
-                                              buttonElevation: 2,
-                                              itemHeight: 40,
-                                              itemPadding: const EdgeInsets.only(
-                                                  left: 14, right: 14),
-                                              dropdownMaxHeight: 200,
-                                              dropdownWidth: 200,
-                                              dropdownPadding: null,
-                                              dropdownDecoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                                color: Colors.white,
-                                              ),
-                                              dropdownElevation: 8,
-                                              scrollbarRadius:
-                                                  const Radius.circular(40),
-                                              scrollbarThickness: 6,
-                                              scrollbarAlwaysShow: true,
-                                              offset: const Offset(-20, 0),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Text("สถานะ :",
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                          Text("สถานะ :", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                     ],
@@ -520,7 +422,7 @@ class _Verify_PageState extends State<Verify_Page> {
                                                         child: Text(
                                                           item,
                                                           style: const TextStyle(
-                                                            fontSize: 14,
+                                                            fontSize: 20,
                                                           ),
                                                         ),
                                                       ))
@@ -583,10 +485,10 @@ class _Verify_PageState extends State<Verify_Page> {
                                             width: 50,
                                             height: 80,
                                             child: TextFormField(
+                                              style: TextStyle(fontSize:25),
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(),
-                                                label:  Text("รายละเอียด",
-                                                    style: TextStyle(fontWeight: FontWeight.bold)),
+                                                label:  Text("รายละเอียด", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                                 hintText: "กรุณากรอกรายละเอียด",
                                               ),
                                               controller: noteController,
@@ -608,8 +510,7 @@ class _Verify_PageState extends State<Verify_Page> {
                                       children: [
                                         Column(
                                           children: const [
-                                            Text("รูปภาพ :",
-                                                style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                            Text("รูปภาพ :", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                           ],
                                         ),
                                         const SizedBox(width: 20),
@@ -626,11 +527,7 @@ class _Verify_PageState extends State<Verify_Page> {
                                                             (BuildContext context) {
                                                           return AlertDialog(
                                                             title: Text(
-                                                                "เลือกรายการอัปโหลด",
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
+                                                                "เลือกรายการอัปโหลด", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,
                                                                     color: Colors
                                                                         .indigo)),
                                                             content: Container(
@@ -669,7 +566,7 @@ class _Verify_PageState extends State<Verify_Page> {
                                                                                 width:
                                                                                     10),
                                                                             Text(
-                                                                                "กล้อง")
+                                                                                "กล้อง", style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300))
                                                                           ],
                                                                         ),
                                                                       ),
@@ -705,7 +602,7 @@ class _Verify_PageState extends State<Verify_Page> {
                                                                                 width:
                                                                                     10),
                                                                             Text(
-                                                                                "แกลลอรี่")
+                                                                                "แกลลอรี่", style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300))
                                                                           ],
                                                                         ),
                                                                       ),
@@ -717,9 +614,7 @@ class _Verify_PageState extends State<Verify_Page> {
                                                           );
                                                         });
                                                   },
-                                                  child: Text("อัปโหลด",
-                                                      style: TextStyle(
-                                                          color: Colors.white)),
+                                                  child: Text("อัปโหลด", style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300,color: Colors.white)),
                                                   color: Colors.blueAccent,
                                                 )
                                               ],
@@ -734,17 +629,10 @@ class _Verify_PageState extends State<Verify_Page> {
                                       ?  _image!=null? Column(
                                     children: [
                                       Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Column(
-                                            children: [
-                                              Text("คำเตือน : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
-                                            ],
-                                          ),
-                                          Column(
-                                            children: [
-                                              Text("**รูปจะไปแทนที่รูปเดิมที่อยู่ในระบบ**", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
-                                            ],
-                                          ),
+                                          Text("คำเตือน : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.red)),
+                                          Flexible(child: Text("**รูปจะไปแทนที่รูปเดิมที่อยู่ในระบบ**", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.red))),
                                         ],
                                       ),
                                       SizedBox(height: 10),
@@ -774,12 +662,12 @@ class _Verify_PageState extends State<Verify_Page> {
                                 children: [
                                   Column(
                                     children: [
-                                      Text("ผู้ทำรายการ : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                      Text("ผู้ทำรายการ : ", style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                     ],
                                   ),
                                   Column(
                                     children: [
-                                      s == null? Text(""):Text(s!.Staff_status.toString(), style: TextStyle(fontSize: 16)),
+                                      s == null? Text(""):Text(s!.Staff_name+"  "+s!.Staff_lastname, style: TextStyle(fontSize: 25,fontWeight: FontWeight.w300)),
                                     ],
                                   ),
                                 ],
@@ -801,7 +689,7 @@ class _Verify_PageState extends State<Verify_Page> {
                                   style: ButtonStyle(
                                     backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
                                   ),
-                                  child: const Text("บันทึกข้อมูล")),
+                                  child: const Text("บันทึกข้อมูล", style: TextStyle(fontSize: 25))),
                             ],
                           ),
                         ),
@@ -849,8 +737,11 @@ class _Verify_PageState extends State<Verify_Page> {
      if (selectedValuestatus.toString() == "null") {
     editinform_error('กรุณาเลือกสถานะ !');
     }
-     else if((selectedValuestatus.toString() == "ชำรุด" || selectedValuestatus.toString() == "แทงจำหน่าย")  && _image == null){
-       editinform_error("กรุณาอัปโหลดรูปภาพ");
+    else if ((selectedValuestatus.toString() == "ชำรุด" ||selectedValuestatus.toString() == "แทงจำหน่าย" )&& noteController.text== "") {
+      editinform_error('กรุณากรอกรายละเอียด !');
+    }
+     else if ((selectedValuestatus.toString() == "ชำรุด" ||selectedValuestatus.toString() == "แทงจำหน่าย" )&& _image == null) {
+       editinform_error('กรุณาเลือกรูปครุภัณฑ์ !');
      }
     else if (result.toString() != "") {
      if (noteController.text== ""){
@@ -867,7 +758,6 @@ class _Verify_PageState extends State<Verify_Page> {
           selectedValueyears.toString(),
           d!.Durable_code.toString());
           uploadfile();
-      //storage.uploadFile(image!.path,d!.Durable_code.toString().replaceAll('/', '-')+".jpg").then((value) => print('สำเร็จ'));
           editinform_suc('บันทึกข้อมูลสำเร็จ !');
 
     } else {
@@ -917,7 +807,7 @@ class _Verify_PageState extends State<Verify_Page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
@@ -945,7 +835,7 @@ class _Verify_PageState extends State<Verify_Page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),

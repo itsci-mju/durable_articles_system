@@ -175,11 +175,10 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ประวัติการส่งซ่อมครุภัณฑ์'),
+        title: const Text('ประวัติการซ่อมครุภัณฑ์',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => ListRepairHistory_Page()));
+            Navigator.pop(context);
           },
           icon: const Icon(Icons.keyboard_backspace),
         ),
@@ -207,7 +206,13 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Align(
-                      child: Text("รหัสครุภัณฑ์ : " + d!.Durable_code,style: TextStyle(fontSize: 18)),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                          Flexible(child: Text(d!.Durable_code,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.green))),
+                        ],
+                      ),
                       alignment: Alignment.centerLeft,
                     ),
                   ),
@@ -217,7 +222,13 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Align(
-                      child: Text("ชื่อครุภัณฑ์ : " + d!.Durable_name,style: TextStyle(fontSize: 18)),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("ชื่อครุภัณฑ์ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                          Flexible(child: Text(d!.Durable_name,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.green))),
+                        ],
+                      ),
                       alignment: Alignment.centerLeft,
                     ),
                   ),
@@ -278,7 +289,7 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
       width: MediaQuery.of(context).size.width * 0.80,
       child: Text(
         heading,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -294,7 +305,13 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
           children: [
             ListTile(
               //leading: const Icon(Icons.event_seat,color: Colors.indigo),
-              title: Text("อาการเสีย : " + getRepair!.verifyinform_.informrepair.details.toString() ),
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("อาการเสีย : " ,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Flexible(child: Text(getRepair!.verifyinform_.informrepair.details.toString(),style: TextStyle(fontSize: 25,color: Colors.indigo,fontWeight: FontWeight.bold))),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -302,7 +319,13 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
             ),
             ListTile(
               //leading: const Icon(Icons.key,color: Colors.indigo),
-              title: Text("วันที่แจ้งซ่อม : " + informdate+" "+informtime +" น."),
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("วันที่แจ้งซ่อม : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Flexible(child: Text(informdate+" "+informtime +" น.",style: TextStyle(fontSize: 25,color: Colors.indigo,fontWeight: FontWeight.bold))),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -310,7 +333,13 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
             ),
             ListTile(
               // leading: const Icon(Icons.branding_watermark_sharp,color: Colors.indigo),
-              title: Text("ผู้แจ้ง : " + getRepair!.verifyinform_.informrepair.staff.Staff_status.toString()),
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("ผู้แจ้ง : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Flexible(child: Text(getRepair!.verifyinform_.informrepair.staff.Staff_status.toString(),style: TextStyle(fontSize: 25,color: Colors.indigo,fontWeight: FontWeight.bold))),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -335,7 +364,13 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
           children: [
             ListTile(
               //leading: const Icon(Icons.event_seat,color: Colors.indigo),
-              title: Text("รายละเอียด : " + getRepair!.repair_detail.toString() ),
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("รายละเอียด : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Flexible(child: Text(getRepair!.repair_detail.toString() ,style: TextStyle(fontSize: 25,color: Colors.indigo,fontWeight: FontWeight.bold))),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -343,7 +378,12 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
             ),
             ListTile(
               //leading: const Icon(Icons.key,color: Colors.indigo),
-              title: Text("จำนวนเงิน : " + getRepair!.repair_charges),
+              title: Row(
+                children: [
+                  Text("จำนวนเงิน : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Text(getRepair!.repair_charges,style: TextStyle(fontSize: 25,color: Colors.indigo,fontWeight: FontWeight.bold)),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -351,10 +391,22 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
             ),
             getRepair!.verifyinform_.verify_status.toString()=="ส่งซ่อม"? ListTile(
               // leading: const Icon(Icons.branding_watermark_sharp,color: Colors.indigo),
-              title: Text("บริษัทที่เข้ารับการซ่อม : " + getRepair!.company_.companyname.toString()),
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("บริษัทที่เข้ารับการซ่อม : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Flexible(child: Text(getRepair!.company_.companyname.toString(),style: TextStyle(fontSize: 25,color: Colors.indigo,fontWeight: FontWeight.bold))),
+                ],
+              ),
             ):ListTile(
               // leading: const Icon(Icons.branding_watermark_sharp,color: Colors.indigo),
-              title: Text("ผู้รับผิดชอบการซ่อม : " + getRepair!.company_.companyname.toString()),
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("ผู้รับผิดชอบการซ่อม : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Flexible(child: Text(getRepair!.company_.companyname.toString(),style: TextStyle(fontSize: 25,color: Colors.indigo,fontWeight: FontWeight.bold))),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -362,7 +414,13 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
             ),
             ListTile(
               // leading: const Icon(Icons.branding_watermark_sharp,color: Colors.indigo),
-              title: Text("วันที่ซ่อมเสร็จ : " + getRepair!.Date_of_repair.toString() + " "+timerepair+" น."),
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("วันที่ซ่อมเสร็จ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Flexible(child: Text(getRepair!.Date_of_repair.toString() + " "+timerepair+" น.",style: TextStyle(fontSize: 25,color: Colors.indigo,fontWeight: FontWeight.bold))),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -370,7 +428,12 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
             ),
             ListTile(
               // leading: const Icon(Icons.branding_watermark_sharp,color: Colors.indigo),
-              title: Text("ผู้ทำรายการ : เจ้าหน้าที่ส่วนกลาง " ),
+              title: Row(
+                children: [
+                  Text("ผู้ทำรายการ : ",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                  Text("เจ้าหน้าที่ส่วนกลาง ",style: TextStyle(fontSize: 25,color: Colors.indigo,fontWeight: FontWeight.bold)),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -434,7 +497,7 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
@@ -462,7 +525,7 @@ class ViewRepairHistory_PageState extends State<ViewRepairHistory_Page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),

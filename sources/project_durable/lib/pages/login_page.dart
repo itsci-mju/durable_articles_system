@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../manager/login_manager.dart';
 import '../model/durable_model.dart';
 import '../model/staff_model.dart';
+
 import '../utils/form_helper.dart';
 import 'home_page.dart';
 
@@ -27,10 +28,12 @@ class _Login_PageState extends State<Login_Page> {
     Alert(context: context,
         type: AlertType.error,
         title: "แจ้งเตือนการเข้าสู่ระบบ",desc: alert,
+        style : AlertStyle(titleStyle: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),descStyle: TextStyle(fontWeight: FontWeight.bold,fontSize: 25,color: Colors.indigoAccent) ),
+
     buttons: [
       DialogButton(
           child: const Text("ตกลง",
-          style: TextStyle(color: Colors.white,fontSize: 20)),
+          style: TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold)),
           onPressed: ()=> Navigator.pop(context),
       width: 120,)
     ]).show();
@@ -75,10 +78,11 @@ class _Login_PageState extends State<Login_Page> {
                children: [
                  Align(
                    alignment: Alignment.centerLeft,
-                   child: Text("เข้าสู่ระบบ",style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),),
+                   child: Text("เข้าสู่ระบบ",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
                  ),
                  SizedBox(height: 20,),
-                 TextField(
+                 TextFormField(
+                   style: TextStyle(fontSize: 25),
                    controller: emailController,
                    decoration: InputDecoration(
                      hintText: "อีเมล",
@@ -87,10 +91,16 @@ class _Login_PageState extends State<Login_Page> {
                        borderRadius: BorderRadius.circular(20)
                      )
                    ),
+                   validator: (value){
+                     if(value!.isEmpty){
+                       return "กรุณากรอกอีเมล";
+                     }
+                   },
 
                  ),
                  SizedBox(height: 20,),
-                 TextField(
+                 TextFormField(
+                   style: TextStyle(fontSize: 25),
                    obscureText: hide,
                    controller: passController,
                    decoration: InputDecoration(
@@ -109,6 +119,11 @@ class _Login_PageState extends State<Login_Page> {
                            borderRadius: BorderRadius.circular(20)
                        )
                    ),
+                   validator: (value){
+                     if(value!.isEmpty){
+                       return "กรุณากรอกรหัสผ่าน";
+                     }
+                   },
                  ),
                  SizedBox(height: 20,),
                  ElevatedButton(
@@ -134,6 +149,8 @@ class _Login_PageState extends State<Login_Page> {
 
                          setState(() {
                            isLoading = true;
+
+
                          });
 
                          Future.delayed(Duration(seconds: 3),(){
@@ -159,11 +176,12 @@ class _Login_PageState extends State<Login_Page> {
                      CircularProgressIndicator(color: Colors.white),
                      SizedBox(width: 15),
                      Container(
+
                          height: 45,
                          child: Column(
                            mainAxisAlignment: MainAxisAlignment.center,
                            children: [
-                             const Text("กำลังเข้าสู่ระบบ..."),
+                             const Text("กำลังเข้าสู่ระบบ...", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
                            ],
                          )
                      ),
@@ -173,7 +191,7 @@ class _Login_PageState extends State<Login_Page> {
                      child: Column(
                        mainAxisAlignment: MainAxisAlignment.center,
                        children: [
-                         const Text("เข้าสู่ระบบ"),
+                         const Text("เข้าสู่ระบบ", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold)),
                        ],
                      )
                      )),
@@ -193,13 +211,15 @@ class _Login_PageState extends State<Login_Page> {
 
                      ),
                    ),
-
-             Text("ระบบจัดการครุภัณฑ์",style: TextStyle(fontSize: 30,color: Colors.white,fontWeight: FontWeight.bold),
+             Align(
+               alignment: Alignment.center,
+               child: Text("ระบบจัดการครุภัณฑ์",style: TextStyle(fontSize: 40,color: Colors.white,fontWeight: FontWeight.bold),
+               ),
              ),
-                 Padding(
-                   padding: EdgeInsets.only(left: 10),
+                   Align(
+                     alignment: Alignment.center,
                    child: Text("คณะวิทยาศาสตร์  มหาวิทยาลัยแม่โจ้",style:
-                     TextStyle(color: Colors.white,fontWeight: FontWeight.w300,fontSize: 17),),
+                     TextStyle(color: Colors.white,fontWeight: FontWeight.w300,fontSize: 25),),
                  )
            ],))
          ],

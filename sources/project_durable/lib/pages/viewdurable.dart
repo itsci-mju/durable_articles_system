@@ -51,6 +51,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
   String? checkinformrepair;
   String? checkinformrepairnotrepair;
   String? selectyear;
+  String? selectroom;
   inform_repair? informrepair;
   VerifyDurable? verify;
   VerifyDurable? verify2;
@@ -68,7 +69,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
     codedurable = preferences.getString('durable_code')!;
    // verifydate = preferences.getString('verifydurabledate')!;
     selectyear = preferences.getString('selectyear')!;
-
+    //selectroom = preferences.getString('selectroom')!;
     staff = preferences.getString('Staff')!;
     Map<String, dynamic> map = jsonDecode(staff!);
     s = Staff.fromJson(map);
@@ -89,9 +90,21 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
               }),
               // log.e("ลิสตรวจสอบ" + checkverifynumber.toString()),
             });
-    vm
-        .getverifybydurablecurrent(
-            codedurable.toString(), (now.year + 543).toString())
+    String? selectedValueyears;
+    String? selectedValueyears2;
+    String? selectedValueyears3;
+    if(now.month >= 10 && now.month <= 12){
+      selectedValueyears = (now.year + 544).toString();
+      selectedValueyears2 = (now.year + 543).toString();
+      selectedValueyears3 = (now.year + 542).toString();
+    }else {
+      selectedValueyears = (now.year + 543).toString();
+      selectedValueyears2 = (now.year + 542).toString();
+      selectedValueyears3 = (now.year + 541).toString();
+    }
+
+    vm.getverifybydurablecurrent(
+            codedurable.toString(), (selectedValueyears).toString())
         .then((value) => {
               verify = value,
               setState(() {
@@ -110,7 +123,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
     });
     vm
         .getverifybydurablecurrent(
-            codedurable.toString(), (now.year + 542).toString())
+            codedurable.toString(), (selectedValueyears2).toString())
         .then((value) => {
               verify2 = value,
               setState(() {
@@ -119,7 +132,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
             });
     vm
         .getverifybydurablecurrent(
-            codedurable.toString(), (now.year + 541).toString())
+            codedurable.toString(), (selectedValueyears3).toString())
         .then((value) => {
               verify3 = value,
               setState(() {
@@ -285,7 +298,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
               Expanded(
                 flex: 3,
                 child: Text("รายการแจ้งซ่อมครุภัณฑ์",
-                    style: TextStyle(color: Colors.black, fontSize: 16)),
+                    style: TextStyle(color: Colors.black, fontSize: 25)),
               ),
             ],
           ),
@@ -313,7 +326,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
@@ -353,11 +366,10 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ข้อมูลครุภัณฑ์'),
+        title: const Text('ข้อมูลครุภัณฑ์',style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
         leading: IconButton(
           onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => HomePage()));
+            Navigator.pop(context);
           },
           icon: const Icon(Icons.keyboard_backspace),
         ),
@@ -403,7 +415,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
             ),
 
             verify !=null||verify2 !=null||verify3!=null?
-            _heading("สถานะการตรวจสอบแต่ละปี"):Container(),
+            _heading("สถานะการตรวจสอบ 3ปี ย้อนหลัง"):Container(),
             const SizedBox(
               height: 2,
             ),
@@ -479,7 +491,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
       width: MediaQuery.of(context).size.width * 0.80,
       child: Text(
         heading,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -497,199 +509,243 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
             formatter.formatInBuddhistCalendarThai(informrepair!.dateinform);
     //  var informtime = DateFormat('kk:mm').format(inform!.dateinform);
 
-    return Padding(
-      padding: const EdgeInsets.only(
-        bottom: 20,
-      ),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                checkverify == "1"
-                    ? Align(
-                        alignment: Alignment.center,
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: ElevatedButton.icon(
-                            style: TextButton.styleFrom(
-                              backgroundColor: Colors.blueAccent,
-                            ),
-                            icon: const Icon(
-                              Icons.warning,
-                              color: Colors.white,
-                              size: 30.0,
-                            ),
-                            label: Text('เคยตรวจแล้วเมื่อ ' + verifydurablebycode!.Save_date),
-                            onPressed: () {
-                              getdurable3(d!.Durable_code.toString());
-                            },
-                          ),
-                        ),
-                      )
-                    : Align(
-                        alignment: Alignment.center,
-                        child: ElevatedButton.icon(
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
-                          ),
-                          icon: const Icon(
-                            Icons.zoom_in,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                          label: const Text('ตรวจสอบครุภัณฑ์'),
-                          onPressed: () {
-                            getdurable();
-                          },
-                        ),
-                      ),
-                const SizedBox(width: 10),
-              ],
+    return Column(
+      children: [
+        checkverify == "1"? Text('**มีการตรวจแล้วเมื่อ ' + verifydurablebycode!.Save_date,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.red)) : Text(''),
+        checkverify == "1"
+            ? Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height *0.060,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10,right: 10),
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+
+              ),
+              icon: const Icon(
+                Icons.edit,
+                color: Colors.white,
+                size: 30.0,
+              ),
+              label: Text('แก้ไขการตรวจสอบ',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+              onPressed: () {
+                getdurable3(d!.Durable_code.toString());
+              },
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                checkinformrepair == "1"
-                    ? Align(
-                        alignment: Alignment.center,
-                        child: ElevatedButton.icon(
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.green,
-                          ),
-                          icon: const Icon(
-                            Icons.warning,
-                            color: Colors.white,
-                            size: 30.0,
-                          ),
-                          label: Text('มีคนแจ้งมาเมื่อวันที่ ' + dateinform),
-                          onPressed: () {
-                            getdurable2(d!.Durable_code.toString());
-                          },
-                        ),
-                      )
-                    : checkinformrepairnotrepair == "1"
-                        ? Align(
-                            alignment: Alignment.center,
-                            child: ElevatedButton.icon(
-                              style: TextButton.styleFrom(
-                                backgroundColor: Colors.green,
-                              ),
-                              icon: const Icon(
-                                Icons.warning,
-                                color: Colors.white,
-                                size: 30.0,
-                              ),
-                              label: Text('เจ้าหน้าที่ทำการตรวจสอบแล้ว สถานะรอซ่อม'),
-                              onPressed: () {
-                                getdurable2(d!.Durable_code.toString());
-                              },
-                            ),
-                          )
-                        : Align(
-                  alignment: Alignment.center,
-                  child: ElevatedButton.icon(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                    icon: const Icon(
-                      Icons.build,
-                      color: Colors.white,
-                      size: 30.0,
-                    ),
-                    label: const Text('แจ้งซ่อมครุภัณฑ์'),
-                    onPressed: () {
-                      informdurable();
-                    },
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(''),
-                ElevatedButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                  ),
-                  icon: const Icon(
-                    Icons.schedule,
-                    color: Colors.white,
-                    size: 30.0,
-                  ),
-                  label: const Text('ประวัติการส่งซ่อม'),
-                  onPressed: () {
-                    getdurablegohistory(d!.Durable_code.toString());
-                  },
-                ),
-              ],
-            ),
-          ],
+          ),
+        ):
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height *0.060,
+         child: Padding(
+           padding: const EdgeInsets.only(left: 10,right: 10),
+           child: ElevatedButton.icon(
+             style: ElevatedButton.styleFrom(
+               backgroundColor: Colors.blueAccent,
+             ),
+             icon: const Icon(
+               Icons.zoom_in,
+               color: Colors.white,
+               size: 30.0,
+             ),
+             label: const Text('ตรวจสอบครุภัณฑ์',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+             onPressed: () {
+               getdurable();
+             },
+           ),
+         ),
         ),
-      ),
+        SizedBox(height: 10),
+        checkinformrepair == "1"?  Text('**มีการแจ้งมาเมื่อวันที่ ' + dateinform,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.red)):
+        checkinformrepairnotrepair == "1" ?  Text('**เจ้าหน้าที่ทำการตรวจสอบแล้ว สถานะรอซ่อม ' + dateinform,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.red)):Text(''),
+        checkinformrepair == "1"?
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height *0.060,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10,right: 10),
+            child: ElevatedButton.icon(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
+              icon: const Icon(
+                Icons.build,
+                color: Colors.white,
+                size: 30.0,
+              ),
+              label: Text('ดูรายการแจ้งซ่อม',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+              onPressed: () {
+                getdurable2(d!.Durable_code.toString());
+              },
+            ),
+          ),
+        )
+            :
+        checkinformrepairnotrepair == "1"?
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height *0.060,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10,right: 10),
+            child: ElevatedButton.icon(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
+              icon: const Icon(
+                Icons.build,
+                color: Colors.white,
+                size: 30.0,
+              ),
+              label: Text('ดูรายการแจ้งซ่อม',style: TextStyle(fontSize: 25)),
+              onPressed: () {
+                getdurable2(d!.Durable_code.toString());
+              },
+            ),
+          ),
+        )
+        :
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height *0.060,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10,right: 10),
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+              primary: Colors.green,
+              ),
+              icon: const Icon(
+                Icons.build,
+                color: Colors.white,
+                size: 30.0,
+              ),
+              label: const Text('แจ้งซ่อมครุภัณฑ์',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+              onPressed: () {
+                informdurable();
+              },
+            ),
+          ),
+        ),
+        SizedBox(height: 15),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height *0.060,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10,right: 10),
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+              ),
+              icon: const Icon(
+                Icons.schedule,
+                color: Colors.white,
+                size: 30.0,
+              ),
+              label: const Text('ประวัติการส่งซ่อม',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+              onPressed: () {
+                getdurablegohistory(d!.Durable_code.toString());
+              },
+            ),
+          ),
+        ),
+        SizedBox(height: 15),
+      ],
     );
   }
 
   Widget _detailsCard() {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Card(
-        elevation: 4,
-        child: Column(
-          children: [
-            ListTile(
-              // leading: const Icon(Icons.favorite,color: Colors.indigo),
-              title: Text("รหัสครุภัณฑ์ : " + d!.Durable_code),
-            ),
-            const Divider(
-              height: 0.6,
-              color: Colors.black87,
-            ),
-            ListTile(
-              //leading: const Icon(Icons.event_seat,color: Colors.indigo),
-              title: Text("ชื่อครุภัณฑ์ : " + d!.Durable_name),
-            ),
-            const Divider(
-              height: 0.6,
-              color: Colors.black87,
-            ),
-            ListTile(
-              //leading: const Icon(Icons.key,color: Colors.indigo),
-              title: Text("จำนวน : " + d!.Durable_number),
-            ),
-            const Divider(
-              height: 0.6,
-              color: Colors.black87,
-            ),
-            ListTile(
-              // leading: const Icon(Icons.branding_watermark_sharp,color: Colors.indigo),
-              title: Text("ยี่ห้อ : " + d!.Durable_brandname),
-            ),
-            const Divider(
-              height: 0.6,
-              color: Colors.black87,
-            ),
-            ListTile(
-              // leading: const Icon(Icons.payments,color: Colors.indigo),
-              title: Text("ราคาต่อหน่วย : " + d!.Durable_price),
-            ),
-            const Divider(
-              height: 0.6,
-              color: Colors.black87,
-            ),
-            ListTile(
-              // leading: const Icon(Icons.watch_later,color: Colors.indigo),
-              title: Text("วันที่ได้รับ : " + d!.Durable_entrancedate),
-            ),
-            const Divider(
-              height: 0.6,
-              color: Colors.black87,
-            ),
-          ],
+      child: Flexible(
+        child: Card(
+          elevation: 4,
+          child: Column(
+            children: [
+              ListTile(
+                // leading: const Icon(Icons.favorite,color: Colors.indigo),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                    Flexible(child: Text(d!.Durable_code,style: TextStyle(color: Colors.indigoAccent,fontWeight: FontWeight.bold,fontSize: 25))),
+                  ],
+                ),
+              ),
+              const Divider(
+                height: 0.6,
+                color: Colors.black87,
+              ),
+              ListTile(
+                //leading: const Icon(Icons.event_seat,color: Colors.indigo),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("ชื่อครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                    Flexible(child: Text(d!.Durable_name,style: TextStyle(color: Colors.indigoAccent,fontWeight: FontWeight.bold,fontSize: 25))),
+
+                  ],
+                ),
+              ),
+              const Divider(
+                height: 0.6,
+                color: Colors.black87,
+              ),
+              ListTile(
+                //leading: const Icon(Icons.key,color: Colors.indigo),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("จำนวน : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                    Text(d!.Durable_number,style: TextStyle(color: Colors.indigoAccent,fontWeight: FontWeight.bold,fontSize: 25)),
+                  ],
+                ),
+              ),
+              const Divider(
+                height: 0.6,
+                color: Colors.black87,
+              ),
+              ListTile(
+                // leading: const Icon(Icons.branding_watermark_sharp,color: Colors.indigo),
+                title: Row(
+
+                  children: [
+                    Text("ยี่ห้อ : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                    Text(d!.Durable_brandname,style: TextStyle(color: Colors.indigoAccent,fontWeight: FontWeight.bold,fontSize: 25)),
+                  ],
+                ),
+              ),
+              const Divider(
+                height: 0.6,
+                color: Colors.black87,
+              ),
+              ListTile(
+                // leading: const Icon(Icons.payments,color: Colors.indigo),
+                title: Row(
+                  children: [
+                    Text("ราคาต่อหน่วย : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                    Text(d!.Durable_price,style: TextStyle(color: Colors.indigoAccent,fontWeight: FontWeight.bold,fontSize: 25)),
+                  ],
+                ),
+              ),
+              const Divider(
+                height: 0.6,
+                color: Colors.black87,
+              ),
+              ListTile(
+                // leading: const Icon(Icons.watch_later,color: Colors.indigo),
+                title: Row(
+                  children: [
+                    Text("วันที่ได้รับ : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                    Text(d!.Durable_entrancedate,style: TextStyle(color: Colors.indigoAccent,fontWeight: FontWeight.bold,fontSize: 25)),
+                  ],
+                ),
+              ),
+              const Divider(
+                height: 0.6,
+                color: Colors.black87,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -704,7 +760,12 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
           children: [
             ListTile(
               //leading: const Icon(Icons.door_back_door,color: Colors.indigo),
-              title: Text("ห้องที่ใช้ครุภัณฑ์ : " + d!.room.Room_number),
+              title: Row(
+                children: [
+                  Text("ห้องที่ใช้ครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                  Text(d!.room.Room_number,style: TextStyle(color: Colors.indigoAccent,fontWeight: FontWeight.bold,fontSize: 25)),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -712,7 +773,12 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
             ),
             ListTile(
               //leading: const Icon(Icons.person,color: Colors.indigo),
-              title: Text("ผู้ใช้ครุภัณฑ์ : " + d!.Responsible_person),
+              title: Row(
+                children: [
+                  Text("ผู้ใช้ครุภัณฑ์ : " ,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                  Text(d!.Responsible_person,style: TextStyle(color: Colors.indigoAccent,fontWeight: FontWeight.bold,fontSize: 25)),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -722,20 +788,20 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
               // leading: const Icon(Icons.signal_wifi_statusbar_4_bar,color: Colors.indigo),
               title: d!.Durable_statusnow=="ดี"?Row(
                 children: [
-                  Text("สถานะครุภัณฑ์ : "),
-                  Text(d!.Durable_statusnow,style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold)),
+                  Text("สถานะครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                  Text(d!.Durable_statusnow,style: TextStyle(color: Colors.green,fontWeight: FontWeight.bold,fontSize: 25)),
                 ],
               )
                   :d!.Durable_statusnow == "ชำรุด"
                   ? Row(
                 children: [
-                  Text("สถานะครุภัณฑ์ : "),
-                  Text(d!.Durable_statusnow,style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold)),
+                  Text("สถานะครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                  Text(d!.Durable_statusnow,style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 25)),
                 ],
               ):Row(
                 children: [
-                  Text("สถานะครุภัณฑ์ : "),
-                  Text(d!.Durable_statusnow,style: TextStyle(color: Colors.orange,fontWeight: FontWeight.bold)),
+                  Text("สถานะครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                  Text(d!.Durable_statusnow,style: TextStyle(color: Colors.orange,fontWeight: FontWeight.bold,fontSize: 25)),
                 ],
               ),
             ),
@@ -745,7 +811,13 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
             ),
             ListTile(
               // leading: const Icon(Icons.report_problem,color: Colors.indigo),
-              title: Text("รายละเอียด : " + d!.note),
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("รายละเอียด : ",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+                  Flexible(child: Text(d!.note,style: TextStyle(color: Colors.indigoAccent,fontWeight: FontWeight.bold,fontSize: 25))),
+                ],
+              ),
             ),
             const Divider(
               height: 0.6,
@@ -774,7 +846,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
               title: Text("การตรวจสอบปี " +
                   verify!.pk.verify.Years.toString() +
                   " : " +
-                  verify!.Durable_status.toString()),
+                  verify!.Durable_status.toString(),style: TextStyle(fontWeight:FontWeight.w600,fontSize: 25)),
             ),
             const Divider(
               height: 0.6,
@@ -788,7 +860,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
               title: Text("การตรวจสอบปี " +
                   verify2!.pk.verify.Years.toString() +
                   " : " +
-                  verify2!.Durable_status.toString()),
+                  verify2!.Durable_status.toString(),style: TextStyle(fontWeight:FontWeight.w600,fontSize: 25)),
             ),
             const Divider(
               height: 0.6,
@@ -802,7 +874,7 @@ class _ViewdurablePageState extends State<Viewdurablepage> {
               title: Text("การตรวจสอบปี " +
                   verify3!.pk.verify.Years.toString() +
                   " : " +
-                  verify3!.Durable_status.toString()),
+                  verify3!.Durable_status.toString(),style: TextStyle(fontWeight:FontWeight.w600,fontSize: 25)),
             ),
             const Divider(
               height: 0.6,

@@ -180,7 +180,7 @@ class _StatusWaitrepairState extends State<StatusWaitrepairPage> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          title: const Text('ข้อมูลครุภัณฑ์ สถานะรอซ่อม'),
+          title: const Text('ข้อมูลครุภัณฑ์ สถานะรอซ่อม',style: TextStyle(fontWeight:FontWeight.bold,fontSize: 25)),
           leading: IconButton(
             onPressed: () {
               Navigator.of(context)
@@ -286,7 +286,7 @@ class _StatusWaitrepairState extends State<StatusWaitrepairPage> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
@@ -314,7 +314,7 @@ class _StatusWaitrepairState extends State<StatusWaitrepairPage> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
@@ -360,58 +360,70 @@ class _StatusWaitrepairState extends State<StatusWaitrepairPage> {
                     radius: 24,
                     backgroundImage: NetworkImage(img+"?v=1"),
                   ),
-                  title:
-                      Text("ชื่อครุภัณฑ์ : " + durable.informrepair.durable.Durable_name),
+
                   subtitle: SizedBox(
                     child: Column(
                       children: [
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.informrepair.durable.Durable_code),
+                            const Text("ชื่อครุภัณฑ์ : ",style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
+                            Flexible(child: Text(durable.informrepair.durable.Durable_name,style: TextStyle(fontSize:25,color: Colors.indigo,fontWeight:  FontWeight.bold))),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("รหัสครุภัณฑ์ : ",style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
+                            Flexible(child: Text(durable.informrepair.durable.Durable_code,style: TextStyle(fontSize:25,color: Colors.indigo,fontWeight:  FontWeight.bold))),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("วันที่ตรวจสอบการซ่อม : ",style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
+                            Flexible(child: Text(showDate,style: TextStyle(fontSize:25,color: Colors.indigo,fontWeight:  FontWeight.bold))),
                           ],
                         ),
                         Row(
                           children: [
-                            const Text("วันที่ตรวจสอบการซ่อม : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(showDate),
+                            const Text("ห้อง : ",style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
+                            Text(durable.informrepair.durable.room.Room_number,style: TextStyle(fontSize:25,color: Colors.indigo,fontWeight:  FontWeight.bold)),
                           ],
                         ),
                         Row(
                           children: [
-                            const Text("ห้อง : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.informrepair.durable.room.Room_number),
+                            const Text("ผู้ใช้: ",style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
+                            Text(durable.informrepair.durable.Responsible_person,style: TextStyle(fontSize:25,color: Colors.indigo,fontWeight:  FontWeight.bold)),
                           ],
                         ),
                         Row(
                           children: [
-                            const Text("ผู้ใช้: ",style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.informrepair.durable.Responsible_person),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text("สถานะ : ",style: TextStyle(fontWeight: FontWeight.bold)),
+                            const Text("สถานะ : ",style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
                             durable.verify_status == "ส่งซ่อม"
                                 ? Text(durable.verify_status ,
                                     style: TextStyle(
+                                        fontSize:25,
                                         color: Colors.blueAccent,
                                         fontWeight: FontWeight.bold))
                                 : durable.verify_status  == "ซ่อมเอง"
                                     ? Text(durable.verify_status ,
                                         style: TextStyle(
+                                            fontSize:25,
                                             color: Colors.red,
                                             fontWeight: FontWeight.bold))
                                     : Text(durable.verify_status ,
                                         style: TextStyle(
+                                            fontSize:25,
                                             color: Colors.orange,
                                             fontWeight: FontWeight.bold)),
                           ],
                         ),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("รายละเอียด : ",style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(durable.informrepair.durable.note),
+                            const Text("รายละเอียด : ",style: TextStyle(fontSize:25,fontWeight: FontWeight.bold)),
+                            Flexible(child: Text(durable.informrepair.durable.note,style: TextStyle(fontSize:25,color: Colors.indigo,fontWeight:  FontWeight.bold))),
                           ],
                         ),
                       ],

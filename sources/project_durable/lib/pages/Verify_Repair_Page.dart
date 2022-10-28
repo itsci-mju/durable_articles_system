@@ -304,8 +304,9 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
   @override
   Widget build(BuildContext context) {
     var showDate;
+    var informtime;
     ir==null? "": showDate = formatter.formatInBuddhistCalendarThai(ir!.dateinform);
-
+     ir==null? "": informtime = DateFormat('kk:mm').format(ir!.dateinform);
 
     final Storage storage = Storage();
     if (isLoading) {
@@ -325,7 +326,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
     String durableimg = d == null ? "" : d!.Durable_image.toString();
     if (durableimg != "-") {
       img = Strings.url+"/file/durable_image/" + durableimg;
-      img2 =  Strings.url+"/file/inform_repair/" + d!.Durable_image.toString();
+      d == null ? "" : img2 =  Strings.url+"/file/inform_repair/" + d!.Durable_image.toString();
       log.e(img);
       setState(() {
         urlimg = img;
@@ -335,446 +336,385 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
       img =
       "https://w7.pngwing.com/pngs/29/173/png-transparent-null-pointer-symbol-computer-icons-pi-miscellaneous-angle-trademark.png";
     }
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('ระบบจัดการครุภัณฑ์'),
-        leading: IconButton(
-          onPressed: () {
-            if (Majorlogin =="IT") {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => List_repair_page() ));
-            }
-            if (Majorlogin == "SCI") {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => List_repairadmin_page() ));
-            }
-          },
-          icon: const Icon(Icons.keyboard_backspace),
-        ),
-      ),
-      endDrawer: Drawer(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              MyHeaderDrawer(),
-              MyDrawerList(),
-            ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('ระบบจัดการครุภัณฑ์',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
+          leading: IconButton(
+            onPressed: () {
+              if (Majorlogin =="IT") {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => List_repair_page() ));
+              }
+              if (Majorlogin == "SCI") {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => List_repairadmin_page() ));
+              }
+            },
+            icon: const Icon(Icons.keyboard_backspace),
           ),
         ),
-      ),
+        endDrawer: Drawer(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                MyHeaderDrawer(),
+                MyDrawerList(),
+              ],
+            ),
+          ),
+        ),
 
-      resizeToAvoidBottomInset: false,
-      body: Builder(
-        builder: (BuildContext context) {
-          return Center(
-            child: SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.only(bottom: 30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20),
-                    Card(
-                      elevation: 10,
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
+        resizeToAvoidBottomInset: false,
+        body: Builder(
+          builder: (BuildContext context) {
+            return Center(
+              child: SingleChildScrollView(
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 30),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20),
+                      Card(
+                        elevation: 10,
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              SizedBox(height: 10),
+                              Column(
+                                children: [
+                                  SizedBox(height: 10),
+                                  Text("รูปครุภัณฑ์ :",
+                                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.green)),
+                                  SizedBox(height: 10),
+                                  Column(
+                                    children: [
+                                      Image.network(img!, width: 250, height: 200),
+                                    ],
+                                  ),
 
+                                  SizedBox(height: 10),
+                                  Text("รูปครุภัณฑ์ชำรุดที่แจ้ง :",
+                                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.red)),
+                                  SizedBox(height: 10),
+                                  Column(
+                                    children: [
+                                      Image.network(img2==""?"":img2!, width: 250, height: 200),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text("ตรวจสอบการแจ้งซ่อม",
+                                      style: TextStyle(
+                                          fontSize: 25, fontWeight: FontWeight.bold)),
 
-                           /* FutureBuilder(
-                              future: storage.getimagerepair(d!.Durable_code.toString().replaceAll('/', "-")+'-repair.jpg'),
-                              builder: (BuildContext context, AsyncSnapshot<String> snapshot){
-                                if(snapshot.connectionState == ConnectionState.done &&
-                                    snapshot.hasData){
-                                  return Container(
-                                    width: 200, height: 200,
-                                    child: Image.network(snapshot.data!,
-                                        fit: BoxFit.cover),
-                                  );
-                                }
-                                if(snapshot.connectionState == ConnectionState.waiting &&
-                                    snapshot.hasData){
-                                  return CircularProgressIndicator();
-                                }
-                                return Container();
-                              },
-                            ),*/
-                            SizedBox(height: 10),
-                            Column(
-                              children: [
-                              /*  SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text("รหัสการแจ้งซ่อม :",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                    SizedBox(width: 10),
-                                    Column(
-                                      children: [
-                                        Text(
-                                            ir == null
-                                                ? ""
-                                                : ir!.Informid.toString(),
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    )
-                                  ],
-                                ),*/
-                                SizedBox(height: 10),
-                                Text("รูปครุภัณฑ์ :",
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.green)),
-                                SizedBox(height: 10),
-                                Column(
-                                  children: [
-                                    Image.network(img!, width: 250, height: 200),
-                                  ],
-                                ),
-
-                                SizedBox(height: 10),
-                                Text("รูปครุภัณฑ์ชำรุดที่แจ้ง :",
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.red)),
-                                SizedBox(height: 10),
-                                Column(
-                                  children: [
-                                    Image.network(img2!, width: 250, height: 200),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Text("ตรวจสอบการแจ้งซ่อม",
-                                    style: TextStyle(
-                                        fontSize: 22, fontWeight: FontWeight.bold)),
-
-                                SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text("ชื่อครุภัณฑ์ :",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                    SizedBox(width: 10),
-                                    Column(
-                                      children: [
-                                        Text(
+                                  SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("ชื่อครุภัณฑ์ :",
+                                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                                      SizedBox(width: 5),
+                                      Flexible(
+                                        child: Text(
                                             ir == null
                                                 ? ""
                                                 : ir!.durable.Durable_name.toString(),
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text("รหัสครุภัณฑ์ :",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                    SizedBox(width: 5),
-                                    Column(
-                                      children: [
-                                        Text(
+                                            style: TextStyle(fontSize: 25)),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("รหัสครุภัณฑ์ :",
+                                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                                      SizedBox(width: 5),
+                                      Flexible(
+                                        child: Text(
                                             ir == null
                                                 ? ""
                                                 : ir!.durable.Durable_code.toString(),
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text("ห้อง :",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                    SizedBox(width: 5),
-                                    Column(
-                                      children: [
-                                        Text(
+                                            style: TextStyle(fontSize: 25)),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text("ห้อง :",
+                                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      SizedBox(width: 5),
+                                      Column(
+                                        children: [
+                                          Text(
+                                              ir == null
+                                                  ? ""
+                                                  : ir!.durable.room.Room_number.toString(),
+                                              style: TextStyle(fontSize: 25)),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("อาการเสีย :",
+                                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                                      SizedBox(width: 5),
+                                      Flexible(
+                                        child: Text(noteController.text,
+                                            style: TextStyle(fontSize: 25)),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("วันที่แจ้งซ่อม :",
+                                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                                      SizedBox(width: 5),
+                                      Flexible(
+                                        child: Text(
                                             ir == null
                                                 ? ""
-                                                : ir!.durable.room.Room_number.toString(),
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text("อาการเสีย :",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                    SizedBox(width: 5),
-                                    Column(
-                                      children: [
-                                        Text(noteController.text,
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text("วันที่แจ้งซ่อม :",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                    SizedBox(width: 5),
-                                    Column(
-                                      children: [
-                                        Text(
-                                            ir == null
-                                                ? ""
-                                                : showDate,
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text("ผู้แจ้ง :",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                    SizedBox(width: 5),
-                                    Column(
-                                      children: [
-                                        Text(
+                                                : showDate+" " +informtime+" น." ,
+                                            style: TextStyle(fontSize: 25)),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text("ผู้แจ้ง :",
+                                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                                      SizedBox(width: 5),
+                                      Flexible(
+                                        child: Text(
                                             ir == null
                                                 ? ""
                                                 : ir!.staff.Staff_status.toString(),
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text("สถานะ :",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                    SizedBox(width: 5),
-                                    Column(
-                                      children: [
-                                        DropdownButtonHideUnderline(
-                                          child: DropdownButton2<String>(
-                                            isExpanded: true,
-                                            hint: Row(
-                                              children:  [
-                                                Expanded(
-                                                  child: Text(
-                                                    ir == null
-                                                        ? "ส่งซ่อม"
-                                                        : ir!.Informtype.toString(),
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black,
-                                                    ),
-                                                    overflow:
-                                                    TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            value:  selectedValuestatus,
-                                            icon: const Icon(
-                                                Icons.keyboard_arrow_down),
-                                            items: statusdurable
-                                                .map((item) =>
-                                                DropdownMenuItem<String>(
-                                                  value: item,
-                                                  child: Text(
-                                                    item,
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
+                                            style: TextStyle(fontSize: 25)),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text("สถานะ :",
+                                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      SizedBox(width: 5),
+                                      Column(
+                                        children: [
+                                          DropdownButtonHideUnderline(
+                                            child: DropdownButton2<String>(
+                                              isExpanded: true,
+                                              hint: Row(
+                                                children:  [
+                                                  Expanded(
+                                                    child: Text(
+                                                      ir == null
+                                                          ? "ส่งซ่อม"
+                                                          : ir!.Informtype.toString(),
+                                                      style: const TextStyle(
+                                                        fontSize: 25,
+                                                        color: Colors.black,
+                                                      ),
+                                                      overflow:
+                                                      TextOverflow.ellipsis,
                                                     ),
                                                   ),
-                                                ))
-                                                .toList(),
-                                            onChanged: (String? newValue) {
-                                              setState(() {
-                                                selectedValuestatus = newValue!;
-                                              });
-                                            },
-                                            buttonHeight: 40,
-                                            buttonWidth: 180,
-                                            buttonPadding:
-                                            const EdgeInsets.only(
-                                                left: 14, right: 14),
-                                            buttonDecoration: BoxDecoration(
-                                              borderRadius:
-                                              BorderRadius.circular(14),
-                                              border: Border.all(
-                                                color: Colors.black26,
+                                                ],
                                               ),
-                                              color: Colors.white,
+                                              value:  selectedValuestatus,
+                                              icon: const Icon(
+                                                  Icons.keyboard_arrow_down),
+                                              items: statusdurable
+                                                  .map((item) =>
+                                                  DropdownMenuItem<String>(
+                                                    value: item,
+                                                    child: Text(
+                                                      item,
+                                                      style: const TextStyle(
+                                                        fontSize: 25,
+                                                      ),
+                                                    ),
+                                                  ))
+                                                  .toList(),
+                                              onChanged: (String? newValue) {
+                                                setState(() {
+                                                  selectedValuestatus = newValue!;
+                                                });
+                                              },
+                                              buttonHeight: 40,
+                                              buttonWidth: 180,
+                                              buttonPadding:
+                                              const EdgeInsets.only(
+                                                  left: 14, right: 14),
+                                              buttonDecoration: BoxDecoration(
+                                                borderRadius:
+                                                BorderRadius.circular(14),
+                                                border: Border.all(
+                                                  color: Colors.black26,
+                                                ),
+                                                color: Colors.white,
+                                              ),
+                                              buttonElevation: 2,
+                                              itemHeight: 40,
+                                              itemPadding: const EdgeInsets.only(
+                                                  left: 14, right: 14),
+                                              dropdownMaxHeight: 200,
+                                              dropdownWidth: 200,
+                                              dropdownPadding: null,
+                                              dropdownDecoration: BoxDecoration(
+                                                borderRadius:
+                                                BorderRadius.circular(14),
+                                                color: Colors.white,
+                                              ),
+                                              dropdownElevation: 8,
+                                              scrollbarRadius:
+                                              const Radius.circular(40),
+                                              scrollbarThickness: 6,
+                                              scrollbarAlwaysShow: true,
+                                              offset: const Offset(-20, 0),
                                             ),
-                                            buttonElevation: 2,
-                                            itemHeight: 40,
-                                            itemPadding: const EdgeInsets.only(
-                                                left: 14, right: 14),
-                                            dropdownMaxHeight: 200,
-                                            dropdownWidth: 200,
-                                            dropdownPadding: null,
-                                            dropdownDecoration: BoxDecoration(
-                                              borderRadius:
-                                              BorderRadius.circular(14),
-                                              color: Colors.white,
-                                            ),
-                                            dropdownElevation: 8,
-                                            scrollbarRadius:
-                                            const Radius.circular(40),
-                                            scrollbarThickness: 6,
-                                            scrollbarAlwaysShow: true,
-                                            offset: const Offset(-20, 0),
                                           ),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children:  [
-                                        selectedValuestatus == "ไม่สามารถซ่อมได้"? Text("เหตุผล :",
-                                            style: TextStyle(fontSize: 16)): selectedValuestatus == "ยกเลิกการแจ้งซ่อม"?  Text("เหตุผล :",
-                                            style: TextStyle(fontSize: 16)):Text("รายละเอียด :",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Expanded(
-                                      child: Container(
-                                        child: SizedBox(
-                                          child: TextFormField(
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Column(
+                                        children:  [
+                                          selectedValuestatus == "ไม่สามารถซ่อมได้"? Text("เหตุผล :",
+                                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)): selectedValuestatus == "ยกเลิกการแจ้งซ่อม"?  Text("เหตุผล :",
+                                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)):Text("รายละเอียด :",
+                                              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: Container(
+                                          child: SizedBox(
+                                            child: TextFormField(
+                                              style: TextStyle(fontSize: 25),
+                                              decoration: InputDecoration(
+                                                border: OutlineInputBorder(),
+                                              ),
+                                              controller: detailController,
+                                              minLines: 2,
+                                              maxLength: 1000,
+                                              keyboardType:
+                                              TextInputType.multiline,
+                                              maxLines: null,
                                             ),
-                                            controller: detailController,
-                                            minLines: 2,
-                                            maxLength: 1000,
-                                            keyboardType:
-                                            TextInputType.multiline,
-                                            maxLines: null,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                           /* const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Column(
-                                  children: [
-                                    Text("คำเตือน : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    Text("**รูปจะไปแทนที่รูปเดิมที่อยู่ในระบบ**", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
-                                  ],
-                                ),
-                              ],
-                            ),*/
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                    onPressed: ()  {
-                                      AlertConfirm("ท่านยืนยันที่จะบันทึกข้อมูลนี้ ?");
-                                    },
-                                    style: ButtonStyle(
-                                      backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
-                                    ),
-                                    child: const Text("บันทึกข้อมูล")),
-                               /* SizedBox(width: 10),
-                                ElevatedButton(
-                                    onPressed: ()  {
-                                      AlertDelete("ท่านลบการแจ้งซ่อมนี้ ?");
-                                    },
-                                    style: ButtonStyle(
-                                      backgroundColor:  MaterialStateProperty.all(Colors.red),
-                                    ),
-                                    child: const Text("ลบการแจ้งซ่อม")),*/
+                                    ],
+                                  ),
+                                ],
+                              ),
+                             /* const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text("คำเตือน : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Text("**รูปจะไปแทนที่รูปเดิมที่อยู่ในระบบ**", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
+                                    ],
+                                  ),
+                                ],
+                              ),*/
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                      onPressed: ()  {
+                                        AlertConfirm("ท่านยืนยันที่จะบันทึกข้อมูลนี้ ?");
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
+                                      ),
+                                      child: const Text("บันทึกข้อมูล",style: TextStyle(fontSize: 25))),
+                                 /* SizedBox(width: 10),
+                                  ElevatedButton(
+                                      onPressed: ()  {
+                                        AlertDelete("ท่านลบการแจ้งซ่อมนี้ ?");
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor:  MaterialStateProperty.all(Colors.red),
+                                      ),
+                                      child: const Text("ลบการแจ้งซ่อม")),*/
 
 
-                              ],
-                            ),
+                                ],
+                              ),
 
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
+        bottomNavigationBar: CurvedNavigationBar(
+          key: navigationKey,
+          color: Colors.orange.shade900,
+          backgroundColor: Colors.transparent,
+          height: 50,
+          animationCurve: Curves.easeInOut,
+          animationDuration: const Duration(milliseconds: 300),
+          index: index,
+          items: items,
+          onTap: (index) => setState(() {
+            this.index = index;
+            if (index.toString() == "0") {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => screens[index]));
+            }
+            if (index.toString() == "1") {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => screens[index]));
+            }
+            if (index.toString() == "2") {
+              showAlert();
+            }
+          }),
+        ),
+        backgroundColor: Colors.grey[100],
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        key: navigationKey,
-        color: Colors.orange.shade900,
-        backgroundColor: Colors.transparent,
-        height: 50,
-        animationCurve: Curves.easeInOut,
-        animationDuration: const Duration(milliseconds: 300),
-        index: index,
-        items: items,
-        onTap: (index) => setState(() {
-          this.index = index;
-          if (index.toString() == "0") {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => screens[index]));
-          }
-          if (index.toString() == "1") {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => screens[index]));
-          }
-          if (index.toString() == "2") {
-            showAlert();
-          }
-        }),
-      ),
-      backgroundColor: Colors.grey[100],
     );
   }
 
@@ -784,7 +724,10 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
 
     if (selectedValuestatus.toString() == "") {
       alertverify_error('กรุณาเลือกสถานะ !');
-    }else if(selectedValuestatus.toString() != "ส่งซ่อม" && selectedValuestatus.toString() != "ซ่อมเอง" ){
+    }else if ((selectedValuestatus.toString() == "ไม่สามารถซ่อมได้" || selectedValuestatus.toString() == "ยกเลิกการแจ้งซ่อม" ) && detailController.text == "") {
+        alertverify_error('กรุณากรอกเหตุผล !');
+    }
+    else if(selectedValuestatus.toString() != "ส่งซ่อม" && selectedValuestatus.toString() != "ซ่อมเอง" ){
       result = await vrm.insertverifyinForm(ir!.Informid.toString(),selectedValuestatus!,detailController.text);
       alertverify_suc('บันทึกข้อมูลสำเร็จ !');
     }
@@ -792,7 +735,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
       result = await vrm.insertverifyinForm(ir!.Informid.toString(),selectedValuestatus!,detailController.text);
      // uploadfile();
       alertverify_suc('บันทึกข้อมูลสำเร็จ !');
-    } else {
+    }else {
       alertverify_error('เกิดข้อผิดพลาดลองใหม่อีกครั้ง !');
     }
   }
@@ -846,7 +789,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
@@ -874,7 +817,7 @@ class Verify_Repair_PageState extends State<Verify_Repair_Page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),

@@ -331,15 +331,17 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
     }
     var showDate;
     var showDate2;
+    var informtime;
+    var verifytime;
      ir==null? "":  showDate = formatter.formatInBuddhistCalendarThai(ir!.dateinform);
-    var informtime = DateFormat('kk:mm').format(ir!.dateinform);
+    ir==null? "": informtime = DateFormat('kk:mm').format(ir!.dateinform);
     vi==null? "":  showDate2 = formatter.formatInBuddhistCalendarThai(vi!.verify_date);
-    var verifytime = DateFormat('kk:mm').format(vi!.verify_date);
+    vi==null? "": verifytime = DateFormat('kk:mm').format(vi!.verify_date);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('ระบบจัดการครุภัณฑ์'),
+          title: const Text('ระบบจัดการครุภัณฑ์',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25)),
           leading: IconButton(
             onPressed: () {
               if (Majorlogin =="IT") {
@@ -385,7 +387,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
 
                               SizedBox(height: 10),
                               Text("รูปครุภัณฑ์ :",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.green)),
+                                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.green)),
                               SizedBox(height: 10),
                               Column(
                                 children: [
@@ -395,7 +397,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
 
                               SizedBox(height: 10),
                               Text("รูปครุภัณฑ์ชำรุดที่แจ้ง :",
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.red)),
+                                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold,color: Colors.red)),
                               SizedBox(height: 10),
                               Column(
                                 children: [
@@ -405,42 +407,40 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                               SizedBox(height: 10),
                               Text("บันทึกการซ่อมบำรุง",
                                   style: TextStyle(
-                                      fontSize: 22, fontWeight: FontWeight.bold)),
+                                      fontSize: 25, fontWeight: FontWeight.bold)),
                               SizedBox(height: 10),
                               Column(
                                 children: [
                                   Row(children: [
                                     Text("ข้อมูลการส่งซ่อม",
                                         style: TextStyle(
-                                            fontSize: 22, fontWeight: FontWeight.bold)),
+                                            fontSize: 25, fontWeight: FontWeight.bold)),
                                   ]
                                   ),
                                   SizedBox(height: 10),
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        children: const [
-                                          Text("ชื่อครุภัณฑ์ :",
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
+                                      Text("ชื่อครุภัณฑ์ :",
+                                          style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                       const SizedBox(width: 5),
-                                      Text(namedurableController.text,
-                                          style: TextStyle(fontSize: 16)),
+                                      Flexible(
+                                        child: Text(namedurableController.text,
+                                            style: TextStyle(fontSize: 25)),
+                                      ),
                                     ],
                                   ),
                                   SizedBox(height: 5),
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        children: const [
-                                          Text("รหัสครุภัณฑ์ :",
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
+                                      Text("รหัสครุภัณฑ์ :",
+                                          style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                       const SizedBox(width: 5),
-                                      Text(durablecodeController.text,
-                                          style: TextStyle(fontSize: 16)),
+                                      Flexible(
+                                        child: Text(durablecodeController.text,
+                                            style: TextStyle(fontSize: 25)),
+                                      ),
                                     ],
                                   ),
                                   SizedBox(height: 5),
@@ -449,55 +449,52 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                       Column(
                                         children: const [
                                           Text("ห้องที่ใช้งาน :",
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                              style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                       const SizedBox(width: 5),
                                       Text( durableroomController.text,
-                                          style: TextStyle(fontSize: 16)),
+                                          style: TextStyle(fontSize: 25)),
                                     ],
                                   ),
 
                                   SizedBox(height: 5),
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        children: const [
-                                          Text("รายละเอียดการส่งซ่อม :",
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
+                                      Text("รายละเอียดการส่งซ่อม :",
+                                          style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                       const SizedBox(width: 5),
-                                      Text(noteController.text,
-                                          style: TextStyle(fontSize: 16)),
+                                      Flexible(
+                                        child: Text(noteController.text,
+                                            style: TextStyle(fontSize: 25)),
+                                      ),
                                     ],
                                   ),
                                   SizedBox(height: 5),
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        children: const [
-                                          Text("วันที่แจ้งซ่อม :",
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
+                                      Text("วันที่แจ้งซ่อม :",
+                                          style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                       const SizedBox(width: 5),
-                                      Text(showDate+" "+informtime+" น.",
-                                          style: TextStyle(fontSize: 16)),
+                                      Flexible(
+                                        child: Text(showDate+" "+informtime+" น.",
+                                            style: TextStyle(fontSize: 25)),
+                                      ),
                                     ],
                                   ),
                                   SizedBox(height: 5),
                                   Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Column(
-                                        children: const [
-                                          Text("วันที่ตรวจสอบ :",
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                                        ],
-                                      ),
+                                      Text("วันที่ตรวจสอบ :",
+                                          style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                       const SizedBox(width: 5),
-                                      Text(showDate2+" "+verifytime+" น.",
-                                          style: TextStyle(fontSize: 16)),
+                                      Flexible(
+                                        child: Text(showDate2+" "+verifytime+" น.",
+                                            style: TextStyle(fontSize: 25)),
+                                      ),
                                     ],
                                   ),
                                   SizedBox(height: 5),
@@ -506,20 +503,20 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                       Column(
                                         children: const [
                                           Text("สถานะตรวจสอบ :",
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                              style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                       const SizedBox(width: 5),
                                       vi!.verify_status.toString()=="ส่งซ่อม"?
-                                      Text(vi!.verify_status.toString(),style: TextStyle(fontSize: 16,color: Colors.blueAccent,fontWeight: FontWeight.bold))
-                                          :Text(vi!.verify_status.toString(),style: TextStyle(fontSize: 16,color: Colors.red,fontWeight: FontWeight.bold)),
+                                      Text(vi!.verify_status.toString(),style: TextStyle(fontSize: 25,color: Colors.blueAccent,fontWeight: FontWeight.bold))
+                                          :Text(vi!.verify_status.toString(),style: TextStyle(fontSize: 25,color: Colors.red,fontWeight: FontWeight.bold)),
                                     ],
                                   ),
                                   SizedBox(height: 20),
                                   Row(children: [
                                     Text("ข้อมูลการซ่อม",
                                         style: TextStyle(
-                                            fontSize: 22, fontWeight: FontWeight.bold)),
+                                            fontSize: 25, fontWeight: FontWeight.bold)),
                                   ]
 
                                   ),
@@ -529,7 +526,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                       Column(
                                         children: [
                                           Text("สถานะ :",
-                                              style: TextStyle(fontSize: 16)),
+                                              style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                       SizedBox(width: 5),
@@ -544,7 +541,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                                     child: Text(
                                                       'ดี',
                                                       style: TextStyle(
-                                                        fontSize: 14,
+                                                        fontSize: 25,
                                                         fontWeight:
                                                         FontWeight.bold,
                                                         color: Colors.black,
@@ -565,7 +562,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                                     child: Text(
                                                       item,
                                                       style: const TextStyle(
-                                                        fontSize: 14,
+                                                        fontSize: 25,
                                                       ),
                                                     ),
                                                   ))
@@ -576,7 +573,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                                 });
                                               },
                                               buttonHeight: 40,
-                                              buttonWidth: 160,
+                                              buttonWidth: 200,
                                               buttonPadding:
                                               const EdgeInsets.only(
                                                   left: 14, right: 14),
@@ -621,11 +618,12 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                             width: 50,
                                             height: 80,
                                             child: TextFormField(
+                                            style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(),
                                                 label:  Text("เหตุผลที่ไม่สามารถซ่อมได้",
                                                     style: TextStyle(
-                                                        fontSize: 22, fontWeight: FontWeight.bold)),
+                                                        fontSize: 25, fontWeight: FontWeight.bold)),
                                                 hintText: "กรุณากรอกเหคุผล",
                                               ),
                                               controller: detailrepairController,
@@ -645,11 +643,12 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                             width: 50,
                                             height: 80,
                                             child: TextFormField(
+                                              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(),
                                                 label:  Text("รายละเอียดการซ่อม",
                                                     style: TextStyle(
-                                                        fontSize: 22, fontWeight: FontWeight.bold)),
+                                                        fontSize: 25, fontWeight: FontWeight.bold)),
                                                 hintText: "กรุณากรอกรายละเอียดการซ่อม",
                                               ),
                                               controller: detailrepairController,
@@ -671,11 +670,12 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                             width: 50,
                                             height: 80,
                                             child: TextFormField(
+                                              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(),
                                                 label:  Text("จำนวนเงิน",
                                                     style: TextStyle(
-                                                        fontSize: 22, fontWeight: FontWeight.bold)),
+                                                        fontSize: 25, fontWeight: FontWeight.bold)),
                                                 hintText: "กรุณากรอกจำนวนเงิน",
                                               ),
                                               controller: moneyController,
@@ -698,11 +698,12 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                             width: 50,
                                             height: 80,
                                             child: TextFormField(
+                                              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(),
                                                 label:  Text("บริษัทที่เข้ารับการซ่อม",
                                                     style: TextStyle(
-                                                        fontSize: 22, fontWeight: FontWeight.bold)),
+                                                        fontSize: 25, fontWeight: FontWeight.bold)),
                                                 hintText: "กรุณากรอกบริษัทที่รับการซ่อม",
                                               ),
                                               controller: companyController,
@@ -719,11 +720,12 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                             width: 50,
                                             height: 80,
                                             child: TextFormField(
+                                              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 25),
                                               decoration: InputDecoration(
                                                 border: OutlineInputBorder(),
                                                 label:  Text("ผู้รับผิดชอบการซ่อม",
                                                     style: TextStyle(
-                                                        fontSize: 22, fontWeight: FontWeight.bold)),
+                                                        fontSize: 25, fontWeight: FontWeight.bold)),
                                                 hintText: "กรุณากรอก ชื่อผู้รับผิดชอบ",
                                               ),
                                               controller: companyController,
@@ -737,12 +739,12 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                     ],
                                   ),
 
-                                  /*   Row(
+                                    Row(
                                     children: [
                                       Column(
                                         children: const [
                                           Text("รูปภาพ :",
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                              style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                       const SizedBox(width: 20),
@@ -761,6 +763,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                                           title: Text(
                                                               "เลือกรายการอัปโหลด",
                                                               style: TextStyle(
+                                                                fontSize: 25,
                                                                   fontWeight:
                                                                   FontWeight
                                                                       .bold,
@@ -802,7 +805,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                                                               width:
                                                                               10),
                                                                           Text(
-                                                                              "กล้อง")
+                                                                              "กล้อง",style: TextStyle(fontSize: 25))
                                                                         ],
                                                                       ),
                                                                     ),
@@ -838,7 +841,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                                                               width:
                                                                               10),
                                                                           Text(
-                                                                              "แกลลอรี่")
+                                                                              "แกลลอรี่",style: TextStyle(fontSize: 25))
                                                                         ],
                                                                       ),
                                                                     ),
@@ -851,7 +854,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                                       });
                                                 },
                                                 child: Text("อัปโหลด",
-                                                    style: TextStyle(
+                                                    style: TextStyle(fontSize: 25,
                                                         color: Colors.white)),
                                                 color: Colors.blueAccent,
                                               )
@@ -860,13 +863,13 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                         ],
                                       ),
                                     ],
-                                  ),*/
+                                  ),
                                   const SizedBox(
                                     height: 10,
                                   ),
 
 
-                                /*  const SizedBox(height: 10),
+                                  const SizedBox(height: 10),
                                   _files != null
                                       ?  _image!=null? Column(
                                         children: [
@@ -874,12 +877,12 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                             children: [
                                               Column(
                                                 children: [
-                                                  Text("คำเตือน : ", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
+                                                  Text("คำเตือน : ", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.red)),
                                                 ],
                                               ),
                                               Column(
                                                 children: [
-                                                  Text("**รูปจะไปแทนที่รูปเดิมที่อยู่ในระบบ**", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.red)),
+                                                  Text("**รูปจะไปแทนที่รูปเดิมที่อยู่ในระบบ**", style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.red)),
                                                 ],
                                               ),
                                             ],
@@ -900,7 +903,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                   _image!=null? Image.file(_image!,
                                       width: 160,
                                       height: 160,
-                                      fit: BoxFit.cover):Text(""),*/
+                                      fit: BoxFit.cover):Text(""),
                                   const SizedBox(height: 10),
 
                                   Row(
@@ -908,12 +911,12 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                       Column(
                                         children: const [
                                           Text("ผู้ทำรายการ :",
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                                              style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
                                         ],
                                       ),
                                       const SizedBox(width: 5),
                                       Text(s!.Staff_status,
-                                          style: TextStyle(fontSize: 16)),
+                                          style: TextStyle(fontSize: 25)),
                                     ],
                                   ),
                                 ],
@@ -929,7 +932,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
                                   style: ButtonStyle(
                                     backgroundColor:  MaterialStateProperty.all(Colors.blueAccent),
                                   ),
-                                  child: const Text("บันทึกข้อมูล")),
+                                  child: const Text("บันทึกข้อมูล",style: TextStyle(fontSize: 25))),
                             ],
                           ),
                         ),
@@ -982,24 +985,18 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
     else if(companyController.text =="") {
       Alert_error("กรุณากรอก บริษัทที่เข้ารับการซ่อม!");
     }
-    /*else if(selectedValuestatus! == "ดี" &&_image == null){
+    else if(selectedValuestatus! == "ดี" &&_image == null){
       Alert_error("กรุณาอัปโหลดรูปภาพ!");
-    }*/
+    }
     else if (result.toString() != "") {
-      /* String date =  ir!.dateinform.year.toString()+"-"+ ir!.dateinform.month.toString()+"-"+ir!.dateinform.dayOfMonth.toString()+" "
-          +ir!.dateinform.hourOfDay.toString()+":"+ir!.dateinform.minute.toString()+":"+ir!.dateinform.second.toString();
-      log.e(date);*/
-
       result = await rdm.insertrepairdurable(companyController.text, moneyController.text, detailrepairController.text,  selectedValuestatus!,durablecodeController.text, verifyid!);
-     // uploadfile();
+      uploadfile();
       Alert_suc("บันทึกข้อมูลสำเร็จ");
       /* Scaffold.of(context).showSnackBar(const SnackBar(
         content: Text('บันทึกข้อมูลสำเร็จ !'),
       ));*/
     } else {
-      Scaffold.of(context).showSnackBar(const SnackBar(
-        content: Text('เกิดข้อผิดพลาดลองใหม่อีกครั้ง !'),
-      ));
+
     }
   }
   Widget MyDrawerList() {
@@ -1045,7 +1042,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("รายการแจ้งซ่อมครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
@@ -1073,7 +1070,7 @@ class Create_Maintenance_PageState extends State<Create_Maintenance_Page> {
               ),
               Expanded(
                 flex: 3,
-                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 16)),
+                child: Text("ข้อมูลครุภัณฑ์",style: TextStyle(color: Colors.black,fontSize: 25)),
               ),
             ],
           ),
