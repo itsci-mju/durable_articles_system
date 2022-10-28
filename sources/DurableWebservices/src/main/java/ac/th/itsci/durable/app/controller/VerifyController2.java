@@ -83,45 +83,9 @@ public class VerifyController2 {
 			
 			vd.getPk().setDurable(d);
 			
-			
 			message = vm.insertverifyform2(vd);
-			/*if (!file.isEmpty()) {
-				String original_file_name = file.getOriginalFilename();
-				String type_image = original_file_name.substring(original_file_name.lastIndexOf("."));
-				durable_image = durablecode.replaceAll("/", "_") + "" + type_image;
-				System.out.println(durable_image);
-
-				String path = request.getServletContext().getRealPath("/") + "file/durable_image";
-
-				File uploadPic = convert(file, path + "/" + durable_image);
-
-				BufferedImage image = ImageIO.read(uploadPic);
-				int width = 0;
-				int height = 0;
-
-				if (image.getWidth() > image.getHeight()) {
-					width = 400;
-					height = 400;
-				} else {
-					width = 400;
-					height = 400;
-				}
-
-				BufferedImage imageWrite = getScaledInstance(image, width, height,
-						RenderingHints.VALUE_RENDER_QUALITY, true);
-
-				if (type_image.equalsIgnoreCase(".png")) {
-					ImageIO.write(imageWrite, "png", new File(path + "/" + durable_image));
-				} else if (type_image.equalsIgnoreCase(".jpeg")) {
-					ImageIO.write(imageWrite, "jpeg", new File(path + "/" + durable_image));
-				} else {
-					ImageIO.write(imageWrite, "jpg", new File(path + "/" + durable_image));
-				}
-			} else {
-				durable_image = "-";
-			}*/
-			
-			
+			vm.updateStatusdurable(vd);	
+	
 			if (message == 1) {
 				return new ResponseObj(200, "1");
 			} else {
@@ -182,6 +146,8 @@ public class VerifyController2 {
 				} else {
 					ImageIO.write(imageWrite, "jpg", new File(path + "/" + durable_image));
 				}
+				VerifyManager vm = new VerifyManager();
+				vm.updateimagedurable(durable_image,code);
 			} else {
 				durable_image = "-";
 			}
@@ -343,6 +309,7 @@ public class VerifyController2 {
 			vd.getPk().setVerify(v);
 			vd.getPk().setDurable(d);
 			message = vm.updateverifyform(vd);
+			vm.updateStatusdurable(vd);	
 			if (message == 1) {
 				return new ResponseObj(200, "1");
 			} else {

@@ -1373,6 +1373,7 @@ public class InformManager {
 		ConnectionDB condb = new ConnectionDB();
 		Connection con = condb.getConnection();
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+		
 		try {
 			Statement stmt = con.createStatement();
 			String sql = "SELECT vi.verify_id,vi.verify_date,vi.verify_detail,vi.verify_status,vi.informid,ir.Informtype,ir.dateinform,ir.details,ir.picture_inform,ir.id_staff,s.id_card,s.staff_name,s.staff_lastname,s.staff_status,s.email,s.brithday\n"

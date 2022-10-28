@@ -58,7 +58,14 @@ public class verifyInformController {
 			inform_repair ir = new inform_repair();
 			ir = im.getinform_repairbyid2(Informid);
 			vir.setInform_repair(ir);
-
+			
+			
+			String durablecode = vir.getInform_repair().getDurable().getDurable_code();
+			if(verify_status.equals("ไม่สามารถซ่อมได้")) {
+				vim.updateStatusdurable("ชำรุด",durablecode);	
+			}
+			
+			
 			message = vim.insertverifyinform2(vir);
 			if (message == 1) {
 				return new ResponseObj(200, "1");

@@ -69,6 +69,28 @@ public class VerifyManager {
 
 		return -1;
 	}
+	public int updateimagedurable(String durable_image,String code) {
+		ConnectionDB condb = new ConnectionDB();
+		Connection con = condb.getConnection();
+
+		try {
+			Statement stmt = con.createStatement();
+			String sql = "UPDATE durable\n"
+					+ "SET\n"
+					+ "durable_image = '" + durable_image + "'\n"
+					+ "WHERE durable_code = '" + code+ "';";
+			int result = stmt.executeUpdate(sql);
+
+			con.close();
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return -1;
+	}
+	
+	
 	public int updateverifyform(VerifyDurable vd) {
 		ConnectionDB condb = new ConnectionDB();
 		Connection con = condb.getConnection();
@@ -92,6 +114,27 @@ public class VerifyManager {
 
 		return -1;
 	}
+	public int updateStatusdurable(VerifyDurable vd) {
+		ConnectionDB condb = new ConnectionDB();
+		Connection con = condb.getConnection();
+
+		try {
+			Statement stmt = con.createStatement();
+			String sql = "UPDATE durable\n"
+					+ "SET\n"
+					+ "durable_statusnow = '" + vd.getDurable_status() + "'\n"
+					+ "WHERE  durable_code = '" + vd.getPk().getDurable().getDurable_code()+ "';";
+			int result = stmt.executeUpdate(sql);
+
+			con.close();
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return -1;
+	}
+
 
 	public Staff getstaff(int staffid) {
 		try {

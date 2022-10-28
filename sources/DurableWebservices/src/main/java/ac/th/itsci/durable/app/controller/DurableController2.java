@@ -159,7 +159,7 @@ public class DurableController2 {
 		List<Durable> durable = null;
 		try {
 			DurableManager dm = new DurableManager();
-			durable = dm.listAlldurable();
+			durable = dm.ListallDurable2();
 			System.out.println(durable.toString());
 			return new ResponseObj(200, durable);
 		} catch (Exception e) {

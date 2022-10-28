@@ -77,6 +77,10 @@ public class MaintenanceController2 {
 			if(repair_status.equals("ไม่สามารถซ่อมได้")) {
 				vim.updateverifyinform(repair_detail,repair_status,verify_id);
 			}
+			
+			if(repair_status.equals("ไม่สามารถซ่อมได้")) {
+				vim.updateStatusdurable("ชำรุด",durable_code);	
+			}
 			VerifyManager vm = new VerifyManager();
 			Durable d = new Durable();
 			d = vm.getDurable2(durable_code);

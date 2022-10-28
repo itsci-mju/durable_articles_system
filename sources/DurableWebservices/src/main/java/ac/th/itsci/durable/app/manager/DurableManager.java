@@ -84,7 +84,7 @@ public class DurableManager {
 					+ "From Verify_Durable vd right join  durable d on vd.durable_durable_code = d.Durable_code right join verify v on vd.verify_years = v.years \n"
 					+ " inner join staff s on s.id_staff = vd.staff_id_staff inner join major m on s.id_major = m.id_major inner join login l on s.username = l.username \n"
 					+ " left join room r on r.room_number = d.room_number \n" + " where d.id_major = '" + majorid
-					+ "' and d.room_number= '" + roomnumber + "' and vd.verify_years = '" + year + "';";
+					+ "' and d.room_number= '" + roomnumber + "' and vd.verify_years = '" + year + "' and d.durable_statusnow != 'แทงจำหน่าย';";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				String Durable_status = rs.getString(1);
@@ -209,7 +209,7 @@ public class DurableManager {
 					+ " from durable d inner join major m on d.id_major = m.id_major  left join room r on r.room_number = d.room_number \n"
 					+ " where d.durable_code NOT IN  (select vd.durable_durable_code from verify_durable vd where vd.verify_years = '"
 					+ years + "' ) \n" + " and d.room_number= '" + roomnumber + "' and d.ID_Major = '" + majorid
-					+ "' ;";
+					+ "' and d.durable_statusnow != 'แทงจำหน่าย';";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				/* เริ่ม durable */
@@ -282,7 +282,7 @@ public class DurableManager {
 					+ ",d.durable_statusnow,d.responsible_person,d.durable_image,d.durable_borrow_status,d.durable_entrancedate,d.note,d.id_major,m.major_name,d.room_number,r.build,r.room_name,r.floor \n"
 					+ " from durable d inner join major m on d.id_major = m.id_major  left join room r on r.room_number = d.room_number \n"
 					+ " where d.durable_code NOT IN  (select vd.durable_durable_code from verify_durable vd where vd.verify_years = '"
-					+ years + "' ) \n" + " and d.room_number= '" + roomnumber + "'  ;";
+					+ years + "' ) \n" + " and d.room_number= '" + roomnumber + "'  and d.durable_statusnow != 'แทงจำหน่าย';";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				/* เริ่ม durable */
@@ -360,7 +360,7 @@ public class DurableManager {
 					+ "From Verify_Durable vd right join  durable d on vd.durable_durable_code = d.Durable_code right join verify v on vd.verify_years = v.years \n"
 					+ " inner join staff s on s.id_staff = vd.staff_id_staff inner join major m on s.id_major = m.id_major inner join login l on s.username = l.username \n"
 					+ " left join room r on r.room_number = d.room_number  where  d.room_number= '" + roomnumber
-					+ "' and vd.verify_years = '" + year + "';";
+					+ "' and vd.verify_years = '" + year + "' and d.durable_statusnow != 'แทงจำหน่าย';";
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				String Durable_status = rs.getString(1);
@@ -538,7 +538,7 @@ public class DurableManager {
 			Session session = sessionFactory.openSession();
 			TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 			session.beginTransaction();
-			List<Durable> durable = session.createQuery("From VerifyDurable").list();
+			List<Durable> durable = session.createQuery("From durable").list();
 			session.close();
 
 			return durable;
@@ -546,6 +546,54 @@ public class DurableManager {
 		} catch (Exception e) {
 			return null;
 		}
+	}
+	public List<Durable> ListallDurable2() {
+		List<Durable> list = new ArrayList<>();
+		ConnectionDB condb = new ConnectionDB();
+		Connection con = condb.getConnection();
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+		try {
+			Statement stmt = con.createStatement();
+			String sql = "select  d.durable_code,d.durable_name,d.durable_number,d.durable_brandname,d.durable_model,d.durable_price\n"
+					+ "	,d.durable_statusnow,d.responsible_person,d.durable_image,d.durable_borrow_status,d.durable_entrancedate,d.note\n"
+					+ ",d.id_major,m.major_name,d.room_number,r.build,r.room_name,r.floor  from  durable d inner join major m on d.id_major = m.id_major  left join room r on r.room_number = d.room_number\n"
+					+ ";";
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				String durable_code = rs.getString(1);
+				String Durable_name = rs.getString(2);
+				String Durable_number = rs.getString(3);
+				String Durable_brandname = rs.getString(4);
+				String Durable_model = rs.getString(5);
+				String Durable_price = rs.getString(6);
+				String Durable_statusnow = rs.getString(7);
+				String Responsible_person = rs.getString(8);
+				String Durable_image = rs.getString(9);
+				String Durable_Borrow_Status = rs.getString(10);
+				String Durable_entrancedate = rs.getString(11);
+				String durablenote = rs.getString(12);
+				int idmajor = rs.getInt(13);
+				String majorname = rs.getString(14);
+				String Room_number = rs.getString(15);
+				String Room_name = rs.getString(16);
+				String Build = rs.getString(17);
+				String floor = rs.getString(18);
+
+				Major m = new Major(idmajor, majorname);
+				Room r = new Room(Room_number, Room_name, Build, floor, m);
+
+				Durable d = new Durable(durable_code, Durable_name, Durable_number, Durable_brandname, Durable_model,
+						Durable_price, Durable_statusnow, Responsible_person, Durable_image, Durable_Borrow_Status,
+						Durable_entrancedate, durablenote, m, r);
+				list.add(d);
+			}
+			// System.out.println(sql);
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
 	}
 	
 	

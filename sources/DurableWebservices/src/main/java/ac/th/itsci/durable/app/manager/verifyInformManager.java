@@ -92,6 +92,29 @@ public class verifyInformManager {
 		return -1;
 	}
 	
+	
+	public int updateStatusdurable(String status,String durable_code) {
+		ConnectionDB condb = new ConnectionDB();
+		Connection con = condb.getConnection();
+
+		try {
+			Statement stmt = con.createStatement();
+			String sql = "UPDATE durable\n"
+					+ "SET\n"
+					+ "durable_statusnow = '" + status + "'\n"
+					+ "WHERE  durable_code = '" + durable_code+ "';";
+			int result = stmt.executeUpdate(sql);
+
+			con.close();
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return -1;
+	}
+
+	
 	public int getMaxverifyinformID() {
 		ConnectionDB condb = new ConnectionDB();
 		Connection con = condb.getConnection();
